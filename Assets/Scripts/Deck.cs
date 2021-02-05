@@ -33,6 +33,7 @@ public class Deck : MonoBehaviour
         this.image = transform.Find("Image").GetComponent<Image>();
 
         LoadCards();
+        SetTopCardPreview();
     }
 
 
@@ -42,15 +43,14 @@ public class Deck : MonoBehaviour
         {
             CardData topCard = cards.Peek();
 
+            Debug.Log(topCard);
+
             this.title.text = topCard.Title;
             this.description.text = topCard.Description;
             this.image.sprite = topCard.Artwork;
-
-            GetComponent<Image>().enabled = true;
         } catch (InvalidOperationException)
         {
-            // if no cards in deck, make invisible
-            GetComponent<Image>().enabled = false;
+            // TODO: if no cards in deck, make invisible
         }
         
     }
@@ -87,8 +87,6 @@ public class Deck : MonoBehaviour
                 Card card = Instantiate(cardPrefab, receivingCardContainer);
                 card.CardData = cardData;
                 card.initCardData();
-
-                Debug.Log("Deck: " + cards.Count);
 
                 // if cards is empty after giving a card,
                 // only break the loop, deck should still be in game

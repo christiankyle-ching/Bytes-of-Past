@@ -8,16 +8,25 @@ public class SinglePlayerGameController : MonoBehaviour
     private int startingCardsCount = 4;
     private int playerLives = 5;
 
-    // References
+    // Scene References
     private Transform player;
+    private PlayerStats playerStats;
+
     private DropZone timeline;
     private Transform timelineCardContainer;
+
     private Deck deck;
     private Graveyard graveyard;
 
+    private Transform livesContainer;
+    [SerializeField]
+    private GameObject lifePrefab;
+
+    // GAME: Start
     private void Awake()
     {
         this.player = GameObject.FindGameObjectWithTag("Player").transform;
+        this.playerStats = player.gameObject.GetComponent<PlayerStats>();
 
         GameObject _timelineObj = GameObject.FindGameObjectWithTag("Timeline");
         this.timeline = _timelineObj.GetComponent<DropZone>();
@@ -25,33 +34,72 @@ public class SinglePlayerGameController : MonoBehaviour
 
         this.deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<Deck>();
         this.graveyard = GameObject.FindGameObjectWithTag("Graveyard").GetComponent<Graveyard>();
+
+        this.livesContainer = GameObject.FindGameObjectWithTag("PlayerLives").transform;
     }
-    // Start is called before the first frame update
+
     void Start()
+    {
+        InitLives();
+        DrawCards();
+    }
+
+    void InitLives()
+    {
+        for (int i = 0; i < playerLives; i++)
+        {
+            Instantiate(lifePrefab, livesContainer);
+        }
+    }
+
+    // Game Actions
+    public void DecreaseLife()
+    {
+        playerLives--;
+
+        int lastIndex = livesContainer.transform.childCount - 1;
+
+        if (lastIndex >= 0)
+        {
+            Destroy(livesContainer.transform.GetChild(lastIndex).gameObject);
+        } else
+        {
+            EndGame();
+        }
+    }
+
+    void DrawCards()
     {
         deck.GiveCard(player, startingCardsCount);
     }
 
+    // Game Flow Functions
     public void HandleDropInTimeline(Card droppedCard, int dropPos)
     {
         if (IsDropValid(droppedCard, dropPos))
         {
             timeline.AcceptDrop(droppedCard);
+
+            playerStats.CorrectDrop();
         } else
         {
             HandleInvalidDrop(droppedCard);
+
+            playerStats.IncorrectDrop();
         }
     }
 
     private void HandleInvalidDrop(Card droppedCard)
     {
+        DecreaseLife();
+
         graveyard.AddCard(droppedCard.CardData);
         Destroy(droppedCard.gameObject);
 
         try
         {
             deck.GiveCard(player, 1);
-        } catch (InvalidOperationException ex)
+        } catch (InvalidOperationException)
         {
             // if deck is empty
             graveyard.PushAllToDeck();
@@ -66,7 +114,9 @@ public class SinglePlayerGameController : MonoBehaviour
 
         // Shorten code
         int yearBefore, cardYear, yearAfter;
-        cardYear = droppedCard.randomYear; // DEBUG: Use Card.CardData.Year on implementation, replace all randomYear
+
+        // DEBUG: Use Card.CardData.Year on implementation, replace all randomYear
+        cardYear = droppedCard.randomYear; 
         try
         {
             yearBefore = timelineCards[dropPos - 1].randomYear;
@@ -85,10 +135,18 @@ public class SinglePlayerGameController : MonoBehaviour
             yearAfter = int.MaxValue;
         }
 
-        //Debug.Log("Before: " + yearBefore);
-        //Debug.Log("Dropped: " + cardYear);
-        //Debug.Log("After: " + yearAfter);
+        Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
 
         return (yearBefore <= cardYear && cardYear <= yearAfter);
     }
+
+    // GAME: End
+    private void EndGame()
+    {
+        Debug.Log("END GAME");
+
+        // TODO: Handle End Game (i.e. Show Menu, Save Accuracy)
+        throw new NotImplementedException();
+    }
+
 }

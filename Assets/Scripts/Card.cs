@@ -82,12 +82,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (!canDrag) return;
@@ -113,10 +107,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public void OnEndDrag(PointerEventData eventData)
     {
         // on drag end, set the card's parent
-        // to wherever the placeholder is currently at.
+        // to wherever the placeholder is currently at, with its index
         // NOTE: placeholderContainer's value is manipulated by
         // DropZone class [see DropZone.OnPointer events]
         transform.SetParent(placeholderContainer);
+        transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
         Destroy(placeholder);
     }
 

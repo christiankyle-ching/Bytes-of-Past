@@ -8,6 +8,7 @@ TagManager:
   - Card
   - Timeline
   - Graveyard
+  - PlayerLives
   layers:
   - Default
   - TransparentFX
