@@ -93,6 +93,10 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         DecreaseLife();
 
+        // Add card first in graveyard, so that
+        // if there's no card left in deck, something in graveyard
+        // can be pulled by the deck
+        // then give it back again
         graveyard.AddCard(droppedCard.CardData);
         Destroy(droppedCard.gameObject);
 
@@ -135,7 +139,7 @@ public class SinglePlayerGameController : MonoBehaviour
             yearAfter = int.MaxValue;
         }
 
-        Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
+        //Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
 
         return (yearBefore <= cardYear && cardYear <= yearAfter);
     }

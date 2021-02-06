@@ -17,10 +17,13 @@ public class Graveyard : MonoBehaviour
     public void AddCard(CardData cardData)
     {
         cards.Push(cardData);
+
+        Debug.Log("Graveyard: " + cards.Count);
     }
 
     public void PushAllToDeck()
     {
+        Debug.Log("Graveyard to Deck: " + cards.Count);
         foreach (CardData cardData in cards)
         {
             deck.AddCard(cardData);

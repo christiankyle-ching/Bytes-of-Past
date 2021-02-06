@@ -16,12 +16,14 @@ public class Deck : MonoBehaviour
 
     // Cards
     private Stack<CardData> cards;
+    public int CardsCount { get => this.cards.Count; }
 
     // UI Child Elements
     private TextMeshProUGUI title;
     private TextMeshProUGUI description;
+    private TextMeshProUGUI count;
     private Image image;
-    
+
     void Awake()
     {
         this.cards = new Stack<CardData>();
@@ -30,6 +32,7 @@ public class Deck : MonoBehaviour
 
         this.title = transform.Find("Title").GetComponent<TextMeshProUGUI>();
         this.description = transform.Find("Description").GetComponent<TextMeshProUGUI>();
+        this.count = transform.Find("Count").GetComponent<TextMeshProUGUI>();
         this.image = transform.Find("Image").GetComponent<Image>();
 
         LoadCards();
@@ -43,16 +46,34 @@ public class Deck : MonoBehaviour
         {
             CardData topCard = cards.Peek();
 
-            Debug.Log(topCard);
-
             this.title.text = topCard.Title;
             this.description.text = topCard.Description;
             this.image.sprite = topCard.Artwork;
-        } catch (InvalidOperationException)
+            this.count.text = cards.Count.ToString();
+
+            SetVisible(true);
+        }
+        catch (InvalidOperationException)
         {
             // TODO: if no cards in deck, make invisible
+            SetVisible(false);
         }
-        
+
+    }
+
+    void SetVisible(bool isVisible)
+    {
+        GetComponent<Image>().color = isVisible ? Color.white : Color.clear;
+
+        foreach (Image img in GetComponentsInChildren<Image>())
+        {
+            img.color = isVisible ? Color.white : Color.clear;
+        }
+
+        foreach (TextMeshProUGUI txt in GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            if (!isVisible) txt.text = "";
+        }
     }
 
     void LoadCards()
@@ -61,7 +82,7 @@ public class Deck : MonoBehaviour
         foreach (string guid in cardAssets)
         {
             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-            CardData loadedCard = (CardData) AssetDatabase.LoadAssetAtPath(assetPath, typeof(CardData));
+            CardData loadedCard = (CardData)AssetDatabase.LoadAssetAtPath(assetPath, typeof(CardData));
 
             cards.Push(loadedCard);
         }
@@ -72,7 +93,7 @@ public class Deck : MonoBehaviour
         throw new System.NotImplementedException();
     }
 
-    public void GiveCard(Transform playerDropZone, int count) 
+    public void GiveCard(Transform playerDropZone, int count)
     {
         Transform receivingCardContainer = playerDropZone.GetChild(0);
 
@@ -90,9 +111,10 @@ public class Deck : MonoBehaviour
 
                 // if cards is empty after giving a card,
                 // only break the loop, deck should still be in game
-                if (cards.Count <= 0) break; 
+                if (cards.Count <= 0) break;
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             throw ex;
         }
