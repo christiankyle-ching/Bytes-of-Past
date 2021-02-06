@@ -16,7 +16,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         get => tag == "Timeline";
     }
 
-    // Start is called before the first frame update
     void Awake()
     {
         cardContainer = this.transform.GetChild(0);

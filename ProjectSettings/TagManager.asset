@@ -9,6 +9,7 @@ TagManager:
   - Timeline
   - Graveyard
   - PlayerLives
+  - Menu
   layers:
   - Default
   - TransparentFX
@@ -45,4 +46,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI Menu
+    uniqueID: 2915022497
     locked: 0
