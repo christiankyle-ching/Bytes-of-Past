@@ -135,11 +135,10 @@ public class SinglePlayerGameController : MonoBehaviour
         // Shorten code
         int yearBefore, cardYear, yearAfter;
 
-        // DEBUG: Use Card.CardData.Year on implementation, replace all randomYear
-        cardYear = droppedCard.randomYear;
+        cardYear = droppedCard.CardData.Year;
         try
         {
-            yearBefore = timelineCards[dropPos - 1].randomYear;
+            yearBefore = timelineCards[dropPos - 1].CardData.Year;
         }
         catch
         {
@@ -148,15 +147,14 @@ public class SinglePlayerGameController : MonoBehaviour
 
         try
         {
-            yearAfter = timelineCards[dropPos].randomYear;
+            yearAfter = timelineCards[dropPos].CardData.Year;
         }
         catch
         {
             yearAfter = int.MaxValue;
         }
 
-        //Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
-
+        Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
         return (yearBefore <= cardYear && cardYear <= yearAfter);
     }
 

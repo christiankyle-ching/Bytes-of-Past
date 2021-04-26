@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="New Card", menuName ="Card" )]
+[CreateAssetMenu(fileName = "New Card", menuName = "Card")]
 public class CardData : ScriptableObject
 {
     // public -> private to prevent access, used getter methods instead
 
-    // Changed name to title, to avoid hiding GameObject.name
     [SerializeField]
     private string title;
     [SerializeField]
@@ -29,7 +28,9 @@ public class CardData : ScriptableObject
 
     public int Year
     {
-        get => this.year;
+        get {
+            return this.year;
+        }
     }
 
     public Sprite Artwork

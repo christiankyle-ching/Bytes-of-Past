@@ -22,8 +22,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private TextMeshProUGUI description;
     private Image image;
 
-    // DEBUG
-    public int randomYear;
     private TextMeshProUGUI yearObj;
 
     // Container
@@ -61,12 +59,10 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         this.description.text = this.cardData.Description;
         this.image.sprite = this.cardData.Artwork;
 
-        // DEBUG
-        int randYear = Mathf.RoundToInt(Random.Range(1f, 2f) * 1000);
-        this.randomYear = randYear;
-        this.yearObj.text = randYear.ToString();
+        this.yearObj.text = this.cardData.Year.ToString().Insert(2, "\n");
 
-        name = randYear.ToString();
+        // Name in Scene
+        name = this.cardData.Year.ToString();
     }
 
     void CreatePlaceholder()
