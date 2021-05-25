@@ -974,7 +974,7 @@ RectTransform:
   - {fileID: 276199840}
   - {fileID: 1808487632}
   m_Father: {fileID: 861154716}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1675,7 +1675,7 @@ GameObject:
   - component: {fileID: 861154718}
   - component: {fileID: 861154717}
   m_Layer: 5
-  m_Name: SAD Border
+  m_Name: SD Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1692,6 +1692,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1558331431}
   - {fileID: 331059400}
   m_Father: {fileID: 1388533831}
   m_RootOrder: 2
@@ -2517,7 +2518,6 @@ RectTransform:
   - {fileID: 861154716}
   - {fileID: 1703833588}
   - {fileID: 2068633128}
-  - {fileID: 1558331431}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2806,7 +2806,7 @@ GameObject:
   - component: {fileID: 1558331433}
   - component: {fileID: 1558331432}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Difficulty Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2823,12 +2823,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1388533831}
-  m_RootOrder: 5
+  m_Father: {fileID: 861154716}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1310.2, y: -263.88837}
+  m_AnchoredPosition: {x: 318.7962, y: -87.21393}
   m_SizeDelta: {x: 430.47583, y: 100.237045}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1558331432
