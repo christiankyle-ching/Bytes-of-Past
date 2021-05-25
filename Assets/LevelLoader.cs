@@ -2,10 +2,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 public class LevelLoader : MonoBehaviour
 {
     public GameObject loadingScreen;
     public Slider slider;
+    [SerializeField] TMP_Text progressText;
 
 
     private void Start()
@@ -36,6 +38,8 @@ public class LevelLoader : MonoBehaviour
 
         }
 
+       
         
     }
+   
 }
