@@ -78,14 +78,13 @@ public class Deck : MonoBehaviour
 
     void LoadCards()
     {
-        string[] cardAssets = AssetDatabase.FindAssets("t:CardData");
-        foreach (string guid in cardAssets)
-        {
-            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-            CardData loadedCard = (CardData)AssetDatabase.LoadAssetAtPath(assetPath, typeof(CardData));
+        CardData[] cardAssets = Resources.LoadAll<CardData>("Cards/Data");
 
-            cards.Push(loadedCard);
+        foreach(CardData cardData in cardAssets)
+        {
+            cards.Push(cardData);
         }
+
     }
 
     void ShuffleCards()
