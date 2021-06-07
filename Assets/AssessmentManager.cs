@@ -4,39 +4,53 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum TOPIC
+{
+    Computer = 0,
+    Networking = 1,
+    Software = 2
+}
+
 public class AssessmentManager : MonoBehaviour
 {
-    public GameObject QuestionText;
+    public GameObject questionText;
 
-    public GameObject BtnAnswer1;
+    public GameObject btnAnswer1;
 
-    public GameObject BtnAnswer2;
+    public GameObject btnAnswer2;
 
-    public GameObject BtnAnswer3;
+    public GameObject btnAnswer3;
 
+    public GameObject endGameMenu;
+
+    public GameObject txtScore;
+
+    public GameObject txtTopic;
+
+    // QUESTIONS DATA
     private Stack<QuestionData> questions = new Stack<QuestionData>();
 
     private QuestionData currentQuestion;
 
     private string[] currentChoices;
 
-    private int correctAnswerCount = 0;
+    private int currentScore = 0;
 
     private int totalQuestionCount;
 
     void Awake()
     {
-        BtnAnswer1
+        btnAnswer1
             .GetComponent<Button>()
             .onClick
             .AddListener(() => SelectAnswer1());
 
-        BtnAnswer2
+        btnAnswer2
             .GetComponent<Button>()
             .onClick
             .AddListener(() => SelectAnswer2());
 
-        BtnAnswer3
+        btnAnswer3
             .GetComponent<Button>()
             .onClick
             .AddListener(() => SelectAnswer3());
@@ -61,29 +75,54 @@ public class AssessmentManager : MonoBehaviour
 
     void ShowNextQuestion()
     {
-        Debug.Log("SCORE: " + correctAnswerCount + "/" + totalQuestionCount);
+        Debug.Log($"SCORE: {currentScore}/{totalQuestionCount}");
 
         // TODO: If no questions left, show score and save and exit.
-        if (questions.Count <= 0) return;
+        if (questions.Count <= 0)
+        {
+            EndTest();
+            return;
+        }
 
         currentQuestion = questions.Pop();
         currentChoices = currentQuestion.Choices;
 
-        QuestionText.GetComponent<TextMeshProUGUI>().text =
-            currentQuestion.Question;
-        BtnAnswer1.GetComponentInChildren<TextMeshProUGUI>().text =
+        questionText.GetComponent<TextMeshProUGUI>().text =
+            $@"Question: {totalQuestionCount - questions.Count}/{
+                totalQuestionCount}
+
+            {currentQuestion.Question}";
+        btnAnswer1.GetComponentInChildren<TextMeshProUGUI>().text =
             currentChoices[0] ?? "NO DATA";
-        BtnAnswer2.GetComponentInChildren<TextMeshProUGUI>().text =
+        btnAnswer2.GetComponentInChildren<TextMeshProUGUI>().text =
             currentChoices[1] ?? "NO DATA";
-        BtnAnswer3.GetComponentInChildren<TextMeshProUGUI>().text =
+        btnAnswer3.GetComponentInChildren<TextMeshProUGUI>().text =
             currentChoices[2] ?? "NO DATA";
     }
 
+    void EndTest()
+    {
+        txtScore.GetComponent<TextMeshProUGUI>().text =
+            $"Score: {currentScore}/{totalQuestionCount}";
+
+        // TODO: Set Topic
+        txtTopic.GetComponent<TextMeshProUGUI>().text = "Computer";
+
+        endGameMenu.SetActive(true);
+    }
+
+    void SaveAssessmentTestScore(TOPIC topic)
+    {
+        float accuracy = currentScore / totalQuestionCount;
+        PlayerPrefs.SetFloat($"topic{topic}", accuracy);
+    }
+
+    // Answer Methods
     void SelectAnswer1()
     {
         if (currentQuestion.isAnswerCorrect(currentChoices[0]))
         {
-            correctAnswerCount++;
+            currentScore++;
         }
         ShowNextQuestion();
     }
@@ -92,7 +131,7 @@ public class AssessmentManager : MonoBehaviour
     {
         if (currentQuestion.isAnswerCorrect(currentChoices[1]))
         {
-            correctAnswerCount++;
+            currentScore++;
         }
         ShowNextQuestion();
     }
@@ -101,7 +140,7 @@ public class AssessmentManager : MonoBehaviour
     {
         if (currentQuestion.isAnswerCorrect(currentChoices[2]))
         {
-            correctAnswerCount++;
+            currentScore++;
         }
         ShowNextQuestion();
     }

@@ -34,7 +34,6 @@ public class QuestionData : ScriptableObject
             // Set Correct Answer
             int correctAnswerPos = Random.Range(0,3);
             choices[correctAnswerPos] = correctAnswer;
-            Debug.Log(correctAnswerPos);
 
             return choices;
         }

@@ -12,15 +12,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: e7e5eecc270dae94e8fc6e10c31c5174
   - enabled: 1
-    path: Assets/Scenes/Multi Play.unity
+    path: Assets/Scenes/Multiplayer Lobby.unity
     guid: 6d35286527312dc43b4072d1cc39a302
   - enabled: 1
-    path: Assets/Scenes/Post Assessment.unity
+    path: Assets/Scenes/Post Assessment Test.unity
     guid: 6a71d9e1c6f1b2640b2d1293d9f30ee0
   - enabled: 1
-    path: Assets/Scenes/SinglePlayerScene.unity
+    path: Assets/Scenes/Single Player Game.unity
     guid: 814650453b4cbe146b4e9cfc1ce77a88
   - enabled: 1
-    path: Assets/Scenes/Solo Play.unity
+    path: Assets/Scenes/Single Player Lobby.unity
     guid: 664514f57b636a74ca228ca5880569ad
   m_configObjects: {}

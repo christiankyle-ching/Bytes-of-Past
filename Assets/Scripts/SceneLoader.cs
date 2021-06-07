@@ -18,16 +18,21 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadSoloPlay()
     {
-        SceneManager.LoadScene("Solo Play");
+        SceneManager.LoadScene("Single Player Lobby");
     }
 
     public void LoadMultiPlay()
     {
-        SceneManager.LoadScene("Multi Play");
+        SceneManager.LoadScene("Multiplayer Lobby");
     }
 
     public void LoadPostAssessment()
     {
-        SceneManager.LoadScene("Post Assessment");
+        SceneManager.LoadScene("Post Assessment Test");
+    }
+
+    public void ExitApp()
+    {
+        Application.Quit();
     }
 }
