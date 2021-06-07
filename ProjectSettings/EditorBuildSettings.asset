@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Post Assessment.unity
     guid: 6a71d9e1c6f1b2640b2d1293d9f30ee0
   - enabled: 1
-    path: Assets/Scenes/Single Player Scene.unity
+    path: Assets/Scenes/SinglePlayerScene.unity
     guid: 814650453b4cbe146b4e9cfc1ce77a88
   - enabled: 1
     path: Assets/Scenes/Solo Play.unity
