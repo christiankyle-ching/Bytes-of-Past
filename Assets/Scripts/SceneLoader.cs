@@ -26,9 +26,21 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("Multiplayer Lobby");
     }
 
-    public void LoadPostAssessment()
+    public void LoadAssessmentLobby()
     {
-        SceneManager.LoadScene("Post Assessment Test");
+        SceneManager.LoadScene("Assessment Lobby");
+    }
+
+    /* 
+    isPostAssessment = 0 is false, 1 is true
+    */
+    public void LoadAssessment(TOPIC topic, int isPostAssessment = 0)
+    {
+        // Store the selected topic temporarily for the other scene
+        PlayerPrefs.SetInt("Assessment_SelectedTopic", (int) topic);
+        PlayerPrefs.SetInt("Assessment_IsPostAssessment", isPostAssessment);
+
+        SceneManager.LoadScene("Assessment Test");
     }
 
     public void ExitApp()

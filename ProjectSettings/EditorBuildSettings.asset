@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Multiplayer Lobby.unity
     guid: 6d35286527312dc43b4072d1cc39a302
   - enabled: 1
-    path: Assets/Scenes/Post Assessment Test.unity
+    path: Assets/Scenes/Assessment Test.unity
     guid: 6a71d9e1c6f1b2640b2d1293d9f30ee0
   - enabled: 1
     path: Assets/Scenes/Single Player Game.unity
@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Single Player Lobby.unity
     guid: 664514f57b636a74ca228ca5880569ad
+  - enabled: 1
+    path: Assets/Scenes/Assessment Lobby.unity
+    guid: 931e4140ca3033e429a19eeeb0d3efc7
   m_configObjects: {}

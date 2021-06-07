@@ -11,8 +11,27 @@ public enum TOPIC
     Software = 2
 }
 
+public static class TopicUtils
+{
+    public static string GetName(TOPIC topic)
+    {
+        switch (topic)
+        {
+            case TOPIC.Computer:
+                return "Computer";
+            case TOPIC.Networking:
+                return "Networking and Web";
+            case TOPIC.Software:
+                return "Software and Languages";
+            default:
+                return "NO TOPIC";
+        }
+    }
+}
+
 public class AssessmentManager : MonoBehaviour
 {
+    // GAMEOBJECT REFERENCES
     public GameObject questionText;
 
     public GameObject btnAnswer1;
@@ -27,6 +46,8 @@ public class AssessmentManager : MonoBehaviour
 
     public GameObject txtTopic;
 
+    public GameObject txtTestTopic;
+
     // QUESTIONS DATA
     private Stack<QuestionData> questions = new Stack<QuestionData>();
 
@@ -38,8 +59,14 @@ public class AssessmentManager : MonoBehaviour
 
     private int totalQuestionCount;
 
+    // INIT DATA
+    private TOPIC selectedTopic;
+
+    private bool isPostAssessment;
+
     void Awake()
     {
+        // Bind OnClick to functions
         btnAnswer1
             .GetComponent<Button>()
             .onClick
@@ -61,9 +88,32 @@ public class AssessmentManager : MonoBehaviour
 
     void LoadQuestions()
     {
-        // TODO: Apply Different Topics
-        QuestionData[] resourcesQuestions =
-            Resources.LoadAll<QuestionData>("AssessmentTests/Computer");
+        // Load Question depending on Topic
+        selectedTopic = (TOPIC) PlayerPrefs.GetInt("Assessment_SelectedTopic");
+        isPostAssessment =
+            PlayerPrefs.GetInt("Assessment_IsPostAssessment") == 1;
+
+        txtTestTopic.GetComponent<TextMeshProUGUI>().text =
+            TopicUtils.GetName((TOPIC) selectedTopic);
+
+        QuestionData[] resourcesQuestions = null;
+
+        switch (selectedTopic)
+        {
+            case TOPIC.Computer:
+                resourcesQuestions =
+                    Resources.LoadAll<QuestionData>("AssessmentTests/Computer");
+                break;
+            case TOPIC.Networking:
+                resourcesQuestions =
+                    Resources
+                        .LoadAll<QuestionData>("AssessmentTests/Networking");
+                break;
+            case TOPIC.Software:
+                resourcesQuestions =
+                    Resources.LoadAll<QuestionData>("AssessmentTests/Software");
+                break;
+        }
 
         foreach (QuestionData question in resourcesQuestions)
         {
@@ -87,11 +137,13 @@ public class AssessmentManager : MonoBehaviour
         currentQuestion = questions.Pop();
         currentChoices = currentQuestion.Choices;
 
-        questionText.GetComponent<TextMeshProUGUI>().text =
-            $@"Question: {totalQuestionCount - questions.Count}/{
-                totalQuestionCount}
+        string _questionText =
+            $"Question: {totalQuestionCount - questions.Count}/" +
+            totalQuestionCount +
+            "\n\n" +
+            currentQuestion.Question;
 
-            {currentQuestion.Question}";
+        questionText.GetComponent<TextMeshProUGUI>().text = _questionText;
         btnAnswer1.GetComponentInChildren<TextMeshProUGUI>().text =
             currentChoices[0] ?? "NO DATA";
         btnAnswer2.GetComponentInChildren<TextMeshProUGUI>().text =
@@ -105,16 +157,25 @@ public class AssessmentManager : MonoBehaviour
         txtScore.GetComponent<TextMeshProUGUI>().text =
             $"Score: {currentScore}/{totalQuestionCount}";
 
-        // TODO: Set Topic
-        txtTopic.GetComponent<TextMeshProUGUI>().text = "Computer";
+        txtTopic.GetComponent<TextMeshProUGUI>().text =
+            TopicUtils.GetName((TOPIC) selectedTopic);
 
         endGameMenu.SetActive(true);
     }
 
     void SaveAssessmentTestScore(TOPIC topic)
     {
-        float accuracy = currentScore / totalQuestionCount;
-        PlayerPrefs.SetFloat($"topic{topic}", accuracy);
+        float score = currentScore / totalQuestionCount;
+
+        // TODO: XML and Class Serializers might be better
+        if (isPostAssessment)
+        {
+            PlayerPrefs.SetFloat($"Topic{topic}_Post_Score", score);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat($"Topic{topic}_Score", score);
+        }
     }
 
     // Answer Methods

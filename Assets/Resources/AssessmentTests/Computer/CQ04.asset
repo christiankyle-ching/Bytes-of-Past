@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faac82a699ef59443b4cf013887af7ab, type: 3}
   m_Name: CQ04
   m_EditorClassIdentifier: 
-  question: This is a sample question for Computer Topic?
+  question: COMPUTER Sample Question
   wrongAnswers:
   - Wrong
   - Wrong

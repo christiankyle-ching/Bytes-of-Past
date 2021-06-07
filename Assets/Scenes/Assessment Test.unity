@@ -1172,7 +1172,7 @@ GameObject:
   - component: {fileID: 884030964}
   - component: {fileID: 884030963}
   m_Layer: 5
-  m_Name: Topic
+  m_Name: Test Topic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1244,7 +1244,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.1
+  m_fontSize: 28.5
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1464,6 +1464,7 @@ MonoBehaviour:
   endGameMenu: {fileID: 1981534069}
   txtScore: {fileID: 910489982}
   txtTopic: {fileID: 2002733017}
+  txtTestTopic: {fileID: 884030961}
 --- !u!4 &967478265
 Transform:
   m_ObjectHideFlags: 0
