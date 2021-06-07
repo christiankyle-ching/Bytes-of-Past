@@ -94,6 +94,8 @@ public class Deck : MonoBehaviour
 
     public void GiveCard(Transform playerDropZone, int count)
     {
+        if (cards.Count <= 0) return;
+        
         Transform receivingCardContainer = playerDropZone.GetChild(0);
 
         try
