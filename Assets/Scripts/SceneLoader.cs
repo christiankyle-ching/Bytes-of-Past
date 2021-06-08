@@ -21,6 +21,10 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("Single Player Lobby");
     }
 
+    public void backToLoadingScreen()
+    {
+        SceneManager.LoadScene("Loading Screen");
+    }
     public void LoadMultiPlay()
     {
         SceneManager.LoadScene("Multiplayer Lobby");
@@ -29,6 +33,10 @@ public class SceneLoader : MonoBehaviour
     public void LoadAssessmentLobby()
     {
         SceneManager.LoadScene("Assessment Lobby");
+    }
+    public void LoadProfile()
+    {
+        SceneManager.LoadScene("Profile");
     }
 
     /* 
