@@ -36,10 +36,6 @@ public class ButtonHandler : MonoBehaviour
         
     }
 
-    public void BackButton()
-    {
-        SceneManager.LoadScene("Main Menu");
-    }
-
+   
  
 }
