@@ -36,6 +36,10 @@ public class ButtonHandler : MonoBehaviour
         
     }
 
+    public void buttonTouch()
+    {
+        GetComponent<Animation>().Play("Button_Touch");
+    }
    
  
 }

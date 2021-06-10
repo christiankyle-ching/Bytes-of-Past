@@ -39,6 +39,10 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("Profile");
     }
 
+    public void LoadDifficulty()
+    {
+        SceneManager.LoadScene("Difficulty Scene");
+    }
     /* 
     isPostAssessment = 0 is false, 1 is true
     */
