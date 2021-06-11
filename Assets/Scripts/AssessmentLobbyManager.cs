@@ -7,7 +7,7 @@ public class AssessmentLobbyManager : MonoBehaviour
 {
     public GameObject sceneLoader;
 
-    private SceneLoader _sceneLoader;
+    // private SceneLoader _sceneLoader;
 
     // SELECTED
     public GameObject
@@ -24,7 +24,7 @@ public class AssessmentLobbyManager : MonoBehaviour
 
     void Awake()
     {
-        _sceneLoader = sceneLoader.GetComponent<SceneLoader>();
+        // _sceneLoader = sceneLoader.GetComponent<SceneLoader>();
         OnTopicSelected(selectedTopic);
     }
 
@@ -60,6 +60,6 @@ public class AssessmentLobbyManager : MonoBehaviour
 
     public void StartMatch()
     {
-        _sceneLoader.LoadAssessment((TOPIC) selectedTopic, 1);
+        // _sceneLoader.LoadAssessment((TOPIC) selectedTopic, 1);
     }
 }
