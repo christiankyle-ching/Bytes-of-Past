@@ -40,6 +40,8 @@ public class AssessmentManager : MonoBehaviour
 
     public GameObject btnAnswer3;
 
+    public GameObject btnAnswer4;
+
     public GameObject endGameMenu;
 
     public GameObject txtScore;
@@ -81,6 +83,11 @@ public class AssessmentManager : MonoBehaviour
             .GetComponent<Button>()
             .onClick
             .AddListener(() => SelectAnswer3());
+
+        btnAnswer4
+            .GetComponent<Button>()
+            .onClick
+            .AddListener(() => SelectAnswer4());
 
         LoadQuestions();
         ShowNextQuestion();
@@ -200,6 +207,15 @@ public class AssessmentManager : MonoBehaviour
     void SelectAnswer3()
     {
         if (currentQuestion.isAnswerCorrect(currentChoices[2]))
+        {
+            currentScore++;
+        }
+        ShowNextQuestion();
+    }
+
+    void SelectAnswer4()
+    {
+        if (currentQuestion.isAnswerCorrect(currentChoices[3]))
         {
             currentScore++;
         }

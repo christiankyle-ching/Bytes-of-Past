@@ -32,7 +32,7 @@ public class QuestionData : ScriptableObject
             }
 
             // Set Correct Answer
-            int correctAnswerPos = Random.Range(0,3);
+            int correctAnswerPos = Random.Range(0,4);
             choices[correctAnswerPos] = correctAnswer;
 
             return choices;
