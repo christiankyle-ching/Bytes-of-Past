@@ -10,6 +10,7 @@ TagManager:
   - Graveyard
   - PlayerLives
   - Menu
+  - UI Manager
   layers:
   - Default
   - TransparentFX
