@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5473216170783322124}
   - component: {fileID: 5473216170783322125}
   m_Layer: 0
-  m_Name: UI Manager
-  m_TagString: UI Manager
+  m_Name: _StaticData
+  m_TagString: Static Data
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,5 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b8d2f9741a036468f351ba994eeead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
   sceneLoader: {fileID: 0}
+  SelectedGameMode: 0
+  SelectedTopic: 0
+  SelectedDifficulty: 0
+  IsPostAssessment: 0

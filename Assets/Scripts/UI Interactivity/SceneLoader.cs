@@ -17,7 +17,7 @@ public class SceneLoader : MonoBehaviour
         try
         {
             staticData =
-                GameObject.FindWithTag("UI Manager").GetComponent<StaticData>();
+                GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
         }
         catch (System.Exception)
         {

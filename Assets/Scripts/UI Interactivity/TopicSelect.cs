@@ -33,7 +33,7 @@ public class TopicSelect : MonoBehaviour
     void OnTopicSelect(TOPIC topic)
     {
         StaticData staticData =
-            GameObject.FindWithTag("UI Manager").GetComponent<StaticData>();
+            GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
 
         staticData.SelectedTopic = topic;
 

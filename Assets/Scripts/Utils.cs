@@ -15,3 +15,21 @@
         }
     }
 }
+
+public static class DifficultyUtils
+{
+    public static string GetName(DIFFICULTY difficulty)
+    {
+        switch (difficulty)
+        {
+            case DIFFICULTY.Easy:
+                return "Easy";
+            case DIFFICULTY.Medium:
+                return "Medium";
+            case DIFFICULTY.Hard:
+                return "Hard";
+            default:
+                return "NO DIFFICULTY";
+        }
+    }
+}

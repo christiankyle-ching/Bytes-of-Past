@@ -46,7 +46,7 @@ public class AssessmentManager : MonoBehaviour
     void Awake()
     {
         staticData =
-            GameObject.FindWithTag("UI Manager").GetComponent<StaticData>();
+            GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
 
         // Bind OnClick to functions
         btnAnswer1

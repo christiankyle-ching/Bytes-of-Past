@@ -28,14 +28,14 @@ public class StaticData : MonoBehaviour
 {
     public GameObject sceneLoader;
 
-    // These variables are exposed to all Scenes to pass data between them.
-    public GAMEMODE SelectedGameMode { get; set; }
+    // These variables are exposed to all Scenes to pass data between them by DontDestroyOnLoad
+    public GAMEMODE SelectedGameMode;
 
-    public TOPIC SelectedTopic { get; set; }
+    public TOPIC SelectedTopic;
 
-    public DIFFICULTY SelectedDifficulty { get; set; }
+    public DIFFICULTY SelectedDifficulty;
 
-    public bool IsPostAssessment { get; set; }
+    public bool IsPostAssessment;
 
     public Stack<int> SceneIndexHistory = new Stack<int>();
 

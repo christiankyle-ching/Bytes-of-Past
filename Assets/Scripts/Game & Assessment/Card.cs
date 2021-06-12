@@ -84,7 +84,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
         CreatePlaceholder();
 
-        // placing the card one element up in the scene
+        // placing the card up in the Game Canvas
         // to remove effect of LayoutElement, while preserving
         // cards count in the container
         transform.SetParent(initialContainer.parent);

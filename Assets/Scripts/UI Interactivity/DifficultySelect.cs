@@ -33,8 +33,9 @@ public class DifficultySelect : MonoBehaviour
     void OnTopicSelect(DIFFICULTY difficulty)
     {
         StaticData staticData =
-            GameObject.FindWithTag("UI Manager").GetComponent<StaticData>();
+            GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
 
+        // Set Difficulty
         staticData.SelectedDifficulty = difficulty;
 
         GAMEMODE gameMode = staticData.SelectedGameMode;

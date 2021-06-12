@@ -1,111 +1,84 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class SinglePlayerMenuManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject pauseButton;
+    public SceneLoader sceneLoader;
 
-    private void Awake()
+    StaticData staticData;
+
+    // END GAME
+    public GameObject endGameMenu;
+
+    public GameObject
+
+            winOrLossText,
+            accuracyText;
+
+    public GameObject[] topicTexts;
+
+    public GameObject[] difficultyTexts;
+
+    // PAUSE GAME
+    public GameObject pauseGameMenu;
+
+    void Awake()
     {
-        InitEndMenu();
-        InitPauseMenu();
+        try
+        {
+            staticData =
+                GameObject
+                    .FindWithTag("Static Data")
+                    .GetComponent<StaticData>();
 
-        pauseButton
-            .GetComponent<Button>()
-            .onClick
-            .AddListener(() => PauseGame());
+            SetTopicTexts("Topic: " +
+            TopicUtils.GetName(staticData.SelectedTopic));
+            SetDifficultyTexts(DifficultyUtils
+                .GetName(staticData.SelectedDifficulty) +
+            " Difficulty");
+        }
+        catch (System.Exception)
+        {
+            SetTopicTexts("NO TOPIC FROM MAIN MENU");
+            SetDifficultyTexts("NO DIFFICULTY FROM MAIN MENU");
+        }
     }
 
-    // PauseGameMenu
-    [SerializeField]
-    private GameObject pauseMenuUI;
-
-    private Button
-
-            pause_ResumeButton,
-            pause_RestartButton,
-            pause_MenuButton,
-            pause_QuitButton;
-
-    private void InitPauseMenu()
+    public void ResumeGame()
     {
-        pauseMenuUI.SetActive(false);
-
-        pause_ResumeButton =
-            pauseMenuUI.transform.Find("Resume").GetComponent<Button>();
-        pause_RestartButton =
-            pauseMenuUI.transform.Find("Restart").GetComponent<Button>();
-        pause_MenuButton =
-            pauseMenuUI.transform.Find("Menu").GetComponent<Button>();
-        pause_QuitButton =
-            pauseMenuUI.transform.Find("Quit").GetComponent<Button>();
-
-        pause_ResumeButton.onClick.AddListener(() => ResumeGame());
-        pause_RestartButton.onClick.AddListener(() => RestartGame());
-        pause_MenuButton.onClick.AddListener(() => GotoMainMenu());
-        pause_QuitButton.onClick.AddListener(() => QuitGame());
+        pauseGameMenu.SetActive(false);
     }
 
-    // EndGameMenu
-    [SerializeField]
-    private GameObject endMenuUI;
-
-    private Button
-
-            end_RestartButton,
-            end_MenuButton,
-            end_QuitButton;
-
-    private void InitEndMenu()
+    public void PauseGame()
     {
-        endMenuUI.SetActive(false);
-
-        end_RestartButton =
-            endMenuUI.transform.Find("PlayAgain").GetComponent<Button>();
-        end_MenuButton =
-            endMenuUI.transform.Find("Menu").GetComponent<Button>();
-        end_QuitButton =
-            endMenuUI.transform.Find("Quit").GetComponent<Button>();
-
-        end_RestartButton.onClick.AddListener(() => RestartGame());
-        end_MenuButton.onClick.AddListener(() => GotoMainMenu());
-        end_QuitButton.onClick.AddListener(() => QuitGame());
+        pauseGameMenu.SetActive(true);
     }
 
-    public void EndGame(PlayerStats stats)
+    public void EndGame(bool isGameWon, PlayerStats playerStats)
     {
-        endMenuUI.SetActive(true);
+        // Set Texts
+        winOrLossText.GetComponent<TextMeshProUGUI>().text =
+            isGameWon ? "You Won!" : "You Lost";
+
+        accuracyText.GetComponent<TextMeshProUGUI>().text =
+            playerStats.AccuracyText;
+
+        endGameMenu.SetActive(true);
     }
 
-    private void ResumeGame()
+    public void SetTopicTexts(string text)
     {
-        pauseButton.SetActive(true);
-        pauseMenuUI.SetActive(false);
+        foreach (GameObject obj in topicTexts)
+        {
+            obj.GetComponent<TextMeshProUGUI>().text = text;
+        }
     }
 
-    private void PauseGame()
+    public void SetDifficultyTexts(string text)
     {
-        pauseButton.SetActive(false);
-        pauseMenuUI.SetActive(true);
-    }
-
-    private void RestartGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    private void GotoMainMenu()
-    {
-        SceneManager.LoadScene("Main Menu");
-    }
-
-    private void QuitGame()
-    {
-        Application.Quit();
+        foreach (GameObject obj in difficultyTexts)
+        {
+            obj.GetComponent<TextMeshProUGUI>().text = text;
+        }
     }
 }

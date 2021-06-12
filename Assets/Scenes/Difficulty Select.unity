@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 197609929}
   - component: {fileID: 197609930}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Difficulty Group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2748,12 +2748,18 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1485327131}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1485327134}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2832dc8011a041f4198245ef8bf6e5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1485327134 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4203800807348896168, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1485327131}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1493940415
 GameObject:
   m_ObjectHideFlags: 0
@@ -2783,10 +2789,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ae4ba961c989e442bfc9f8c27906798, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneLoader: {fileID: 0}
-  btnEasy: {fileID: 0}
-  btnMedium: {fileID: 0}
-  btnHard: {fileID: 0}
+  sceneLoader: {fileID: 1485327134}
+  btnEasy: {fileID: 51969193}
+  btnMedium: {fileID: 8448360}
+  btnHard: {fileID: 844126385}
 --- !u!4 &1493940417
 Transform:
   m_ObjectHideFlags: 0
