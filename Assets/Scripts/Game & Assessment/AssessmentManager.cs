@@ -4,31 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum TOPIC
-{
-    Computer = 0,
-    Networking = 1,
-    Software = 2
-}
-
-public static class TopicUtils
-{
-    public static string GetName(TOPIC topic)
-    {
-        switch (topic)
-        {
-            case TOPIC.Computer:
-                return "Computer";
-            case TOPIC.Networking:
-                return "Networking and Web";
-            case TOPIC.Software:
-                return "Software and Languages";
-            default:
-                return "NO TOPIC";
-        }
-    }
-}
-
 public class AssessmentManager : MonoBehaviour
 {
     // GAMEOBJECT REFERENCES
@@ -66,8 +41,13 @@ public class AssessmentManager : MonoBehaviour
 
     private bool isPostAssessment;
 
+    StaticData staticData;
+
     void Awake()
     {
+        staticData =
+            GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
+
         // Bind OnClick to functions
         btnAnswer1
             .GetComponent<Button>()
@@ -96,9 +76,8 @@ public class AssessmentManager : MonoBehaviour
     void LoadQuestions()
     {
         // Load Question depending on Topic
-        selectedTopic = (TOPIC) PlayerPrefs.GetInt("Assessment_SelectedTopic");
-        isPostAssessment =
-            PlayerPrefs.GetInt("Assessment_IsPostAssessment") == 1;
+        selectedTopic = staticData.SelectedTopic;
+        isPostAssessment = staticData.IsPostAssessment;
 
         txtTestTopic.GetComponent<TextMeshProUGUI>().text =
             TopicUtils.GetName((TOPIC) selectedTopic);
@@ -151,12 +130,19 @@ public class AssessmentManager : MonoBehaviour
             currentQuestion.Question;
 
         questionText.GetComponent<TextMeshProUGUI>().text = _questionText;
-        btnAnswer1.GetComponentInChildren<TextMeshProUGUI>().text =
-            currentChoices[0] ?? "NO DATA";
-        btnAnswer2.GetComponentInChildren<TextMeshProUGUI>().text =
-            currentChoices[1] ?? "NO DATA";
-        btnAnswer3.GetComponentInChildren<TextMeshProUGUI>().text =
-            currentChoices[2] ?? "NO DATA";
+
+        TextMeshProUGUI[] choicesTexts =
+        {
+            btnAnswer1.GetComponentInChildren<TextMeshProUGUI>(),
+            btnAnswer2.GetComponentInChildren<TextMeshProUGUI>(),
+            btnAnswer3.GetComponentInChildren<TextMeshProUGUI>(),
+            btnAnswer4.GetComponentInChildren<TextMeshProUGUI>()
+        };
+
+        for (int i = 0; i < choicesTexts.Length; i++)
+        {
+            choicesTexts[i].text = currentChoices[i] ?? "NO DATA";
+        }
     }
 
     void EndTest()

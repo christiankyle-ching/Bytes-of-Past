@@ -24,7 +24,7 @@ public class QuestionData : ScriptableObject
 
     public string[] Choices {
         get {
-            string[] choices = new string[3];
+            string[] choices = new string[4];
 
             // Set Wrong Answers
             for (int i = 0; i < choices.Length; i++) {

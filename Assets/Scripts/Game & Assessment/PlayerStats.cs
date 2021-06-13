@@ -8,8 +8,6 @@ public class PlayerStats : MonoBehaviour
     private decimal attemptCount;
     private decimal correctAttempts;
 
-    private string debugTextObjectName = "Debug_PlayerStats";
-    private TextMeshProUGUI debugText;
 
     public decimal Accuracy
     {
@@ -29,22 +27,16 @@ public class PlayerStats : MonoBehaviour
     {
         this.correctAttempts = 0;
         this.attemptCount = 0;
-        
-        this.debugText = GameObject.Find(debugTextObjectName).GetComponent<TextMeshProUGUI>();
     }
 
     public void CorrectDrop()
     {
         attemptCount++;
         correctAttempts++;
-
-        debugText.text = this.AccuracyText;
     }
 
     public void IncorrectDrop()
     {
         attemptCount++;
-
-        debugText.text = this.AccuracyText;
     }
 }

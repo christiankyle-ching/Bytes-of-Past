@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class SinglePlayerGameController : MonoBehaviour
 {
-    private int startingCardsCount = 4;
+    private int startingCardsCount = 8;
     private int playerLives = 5;
 
     // Scene References
@@ -75,7 +75,7 @@ public class SinglePlayerGameController : MonoBehaviour
         }
         else
         {
-            menuManager.EndGame(playerStats);
+            menuManager.EndGame(false, playerStats);
         }
     }
 
@@ -88,7 +88,7 @@ public class SinglePlayerGameController : MonoBehaviour
 
             playerStats.CorrectDrop();
 
-            if (IsHandEmpty()) menuManager.EndGame(playerStats);
+            if (IsHandEmpty()) menuManager.EndGame(true, playerStats);
         }
         else
         {

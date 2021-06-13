@@ -19,10 +19,10 @@ public class Deck : MonoBehaviour
     public int CardsCount { get => this.cards.Count; }
 
     // UI Child Elements
-    private TextMeshProUGUI title;
-    private TextMeshProUGUI description;
-    private TextMeshProUGUI count;
-    private Image image;
+    public TextMeshProUGUI title;
+    public TextMeshProUGUI description;
+    public TextMeshProUGUI count;
+    public Image image;
 
     void Awake()
     {
@@ -30,10 +30,10 @@ public class Deck : MonoBehaviour
 
         this.gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<SinglePlayerGameController>();
 
-        this.title = transform.Find("Title").GetComponent<TextMeshProUGUI>();
-        this.description = transform.Find("Description").GetComponent<TextMeshProUGUI>();
-        this.count = transform.Find("Count").GetComponent<TextMeshProUGUI>();
-        this.image = transform.Find("Image").GetComponent<Image>();
+        this.title = transform.GetChild(0).Find("Title").GetComponent<TextMeshProUGUI>();
+        this.description = transform.GetChild(0).Find("Description").GetComponent<TextMeshProUGUI>();
+        this.count = transform.GetChild(0).Find("Count").GetComponent<TextMeshProUGUI>();
+        this.image = transform.GetChild(0).Find("Image").GetComponent<Image>();
 
         LoadCards();
         SetTopCardPreview();
