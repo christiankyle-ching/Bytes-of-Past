@@ -41,7 +41,7 @@ public class StaticData : MonoBehaviour
 
     void Awake()
     {
-        if (GameObject.FindGameObjectsWithTag("UI Manager").Length > 1)
+        if (GameObject.FindGameObjectsWithTag("Static Data").Length > 1)
         {
             Destroy(this.gameObject);
         }
