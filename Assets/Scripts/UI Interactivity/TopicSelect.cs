@@ -55,6 +55,12 @@ public class TopicSelect : MonoBehaviour
                 staticData.IsPostAssessment = true;
                 sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();
                 break;
+            default:
+                Debug.Log("No Game Mode Selected");
+                sceneLoader.GetComponent<SceneLoader>().GoToDifficultySelect();
+                break;
         }
+
+        Debug.Log("Click!");
     }
 }

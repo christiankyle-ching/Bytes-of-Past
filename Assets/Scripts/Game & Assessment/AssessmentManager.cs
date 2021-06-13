@@ -45,8 +45,18 @@ public class AssessmentManager : MonoBehaviour
 
     void Awake()
     {
-        staticData =
-            GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
+        try
+        {
+            staticData =
+                GameObject
+                    .FindWithTag("Static Data")
+                    .GetComponent<StaticData>();
+        }
+        catch (System.NullReferenceException)
+        {
+            Debug.Log("Static Data Not Found: Play from the Main Menu");
+            staticData = new StaticData();
+        }
 
         // Bind OnClick to functions
         btnAnswer1
@@ -98,6 +108,10 @@ public class AssessmentManager : MonoBehaviour
             case TOPIC.Software:
                 resourcesQuestions =
                     Resources.LoadAll<QuestionData>("AssessmentTests/Software");
+                break;
+            default:
+                resourcesQuestions =
+                    Resources.LoadAll<QuestionData>("AssessmentTests");
                 break;
         }
 

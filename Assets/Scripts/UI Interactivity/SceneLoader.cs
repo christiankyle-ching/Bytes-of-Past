@@ -21,7 +21,7 @@ public class SceneLoader : MonoBehaviour
         }
         catch (System.Exception)
         {
-            Debug.Log("Still not in the main menu.");
+            Debug.Log("No Static Data Found: 'Main Menu' scene not loaded once");
         }
     }
 
