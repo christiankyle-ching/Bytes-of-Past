@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class SceneLoader : MonoBehaviour
 {
     public Animator transition;
@@ -11,6 +12,7 @@ public class SceneLoader : MonoBehaviour
     private float transitionTime = 0.5f;
 
     private StaticData staticData;
+    
 
     void Awake()
     {
@@ -21,6 +23,7 @@ public class SceneLoader : MonoBehaviour
         }
         catch (System.Exception)
         {
+            
             Debug.Log("No Static Data Found: 'Main Menu' scene not loaded once");
         }
     }
