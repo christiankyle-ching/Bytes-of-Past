@@ -54,7 +54,7 @@ public class AssessmentManager : MonoBehaviour
         }
         catch (System.NullReferenceException)
         {
-            Debug.Log("Static Data Not Found: Play from the Main Menu");
+            Debug.LogError("Static Data Not Found: Play from the Main Menu");
             staticData = new StaticData();
         }
 
@@ -168,6 +168,25 @@ public class AssessmentManager : MonoBehaviour
             TopicUtils.GetName((TOPIC) selectedTopic);
 
         endGameMenu.SetActive(true);
+
+        // Save Score
+        try
+        {
+            // Update Statistics first
+            staticData
+                .profileStatisticsData
+                .UpdateAssessmentScore(isPostAssessment
+                    ? GAMEMODE.PostAssessment
+                    : GAMEMODE.PreAssessment,
+                selectedTopic,
+                currentScore);
+            SaveLoadSystem
+                .SaveProfileStatisticsData(staticData.profileStatisticsData);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Failed to save data: " + ex);
+        }
     }
 
     void SaveAssessmentTestScore(TOPIC topic)
