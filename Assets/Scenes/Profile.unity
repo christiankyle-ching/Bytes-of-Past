@@ -3802,6 +3802,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
         type: 3}
+<<<<<<< HEAD
       propertyPath: txtAccuracy
       value: 
       objectReference: {fileID: 634871798}
@@ -3822,6 +3823,8 @@ PrefabInstance:
       objectReference: {fileID: 340301517}
     - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
         type: 3}
+=======
+>>>>>>> be2149b97c51ab8ec4373e144c89a24c4e859e78
       propertyPath: txtAssessment_Computer_Score.Array.size
       value: 2
       objectReference: {fileID: 0}
