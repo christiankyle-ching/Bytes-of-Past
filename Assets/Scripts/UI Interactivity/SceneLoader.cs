@@ -78,6 +78,10 @@ public class SceneLoader : MonoBehaviour
         StartCoroutine(LoadScene("Profile"));
     }
 
+    public void GoToAchievements()
+    {
+        StartCoroutine(LoadScene("Achievements"));
+    }
     IEnumerator LoadScene(string sceneName, bool isGoingBack = false)
     {
         transition.SetTrigger("Start");

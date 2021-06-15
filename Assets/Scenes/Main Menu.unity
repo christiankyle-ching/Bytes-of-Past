@@ -4569,7 +4569,6 @@ MonoBehaviour:
   switchBtn: {fileID: 1003878419}
   slider: {fileID: 1328286985}
   dropdown: {fileID: 496420920}
-  audioSource: {fileID: 1575079728}
 --- !u!1 &1111866648
 GameObject:
   m_ObjectHideFlags: 0
@@ -7136,12 +7135,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!82 &1575079728 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 5738370449724456027, guid: 4dfda5713932edb4882e1c8ff3a58561,
-    type: 3}
-  m_PrefabInstance: {fileID: 5738370448434754411}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1636419447
 GameObject:
   m_ObjectHideFlags: 0
@@ -8118,6 +8111,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Scene Loader
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203800807348896168, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4203800807348896175, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
         type: 3}
