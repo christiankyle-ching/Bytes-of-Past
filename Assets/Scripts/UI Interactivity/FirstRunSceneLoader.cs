@@ -10,7 +10,7 @@ public class FirstRunSceneLoader : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("IsFirstRun", 1) == 0)
         {
-            sceneLoader.GoToMainMenu(true);
+            // sceneLoader.GoToMainMenu(true);
         }
         else
         {

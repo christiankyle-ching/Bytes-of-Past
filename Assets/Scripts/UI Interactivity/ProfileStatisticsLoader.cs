@@ -122,6 +122,8 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
     void LoadGameWinLoss()
     {
+        // FIXME: Possibly not working / accurate
+
         int[,,,] gameWinLossCount =
             staticData.profileStatisticsData.gameWinLossCount;
 
@@ -142,7 +144,7 @@ public class ProfileStatisticsLoader : MonoBehaviour
             )
             {
                 spWin += gameWinLossCount[0, topicIndex, difficultyIndex, 0];
-                spLoss += gameWinLossCount[0, topicIndex, difficultyIndex, 0];
+                spLoss += gameWinLossCount[0, topicIndex, difficultyIndex, 1];
             }
         }
 
@@ -163,7 +165,7 @@ public class ProfileStatisticsLoader : MonoBehaviour
             )
             {
                 mpWin += gameWinLossCount[1, topicIndex, difficultyIndex, 0];
-                mpLoss += gameWinLossCount[1, topicIndex, difficultyIndex, 0];
+                mpLoss += gameWinLossCount[1, topicIndex, difficultyIndex, 1];
             }
         }
 

@@ -11,6 +11,7 @@ TagManager:
   - PlayerLives
   - Menu
   - Static Data
+  - BGMAudioSource
   layers:
   - Default
   - TransparentFX

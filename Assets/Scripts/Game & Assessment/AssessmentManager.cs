@@ -127,7 +127,6 @@ public class AssessmentManager : MonoBehaviour
     {
         Debug.Log($"SCORE: {currentScore}/{totalQuestionCount}");
 
-        // TODO: If no questions left, show score and save and exit.
         if (questions.Count <= 0)
         {
             EndTest();
@@ -183,21 +182,6 @@ public class AssessmentManager : MonoBehaviour
         catch (System.Exception ex)
         {
             Debug.LogError("Failed to save data: " + ex);
-        }
-    }
-
-    void SaveAssessmentTestScore(TOPIC topic)
-    {
-        float score = currentScore / totalQuestionCount;
-
-        // TODO: XML and Class Serializers might be better
-        if (isPostAssessment)
-        {
-            PlayerPrefs.SetFloat($"Topic{topic}_Post_Score", score);
-        }
-        else
-        {
-            PlayerPrefs.SetFloat($"Topic{topic}_Score", score);
         }
     }
 

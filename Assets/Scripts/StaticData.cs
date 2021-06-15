@@ -43,17 +43,8 @@ public class StaticData : MonoBehaviour
 
     void Awake()
     {
-        if (GameObject.FindGameObjectsWithTag("Static Data").Length > 1)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            DontDestroyOnLoad(this.gameObject);
-
-            // Load necessary data
-            LoadProfileData();
-        }
+        // Load necessary data
+        LoadProfileData();
     }
 
     void LoadProfileData()

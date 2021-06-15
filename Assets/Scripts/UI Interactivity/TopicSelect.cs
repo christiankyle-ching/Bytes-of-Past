@@ -28,6 +28,8 @@ public class TopicSelect : MonoBehaviour
             .GetComponent<Button>()
             .onClick
             .AddListener(() => OnTopicSelect(TOPIC.Software));
+
+        // TODO: Disable a topic's post assessment if already taken. Limits to 1 attempt.
     }
 
     void OnTopicSelect(TOPIC topic)
@@ -60,7 +62,5 @@ public class TopicSelect : MonoBehaviour
                 sceneLoader.GetComponent<SceneLoader>().GoToDifficultySelect();
                 break;
         }
-
-        Debug.Log("Click!");
     }
 }

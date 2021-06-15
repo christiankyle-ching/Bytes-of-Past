@@ -7,6 +7,7 @@ public class MainMenuButtonHandler : MonoBehaviour
     StaticData staticData;
 
     public SceneLoader sceneLoader;
+
     public GameObject settingsCanvas;
 
     void Awake()
@@ -38,12 +39,14 @@ public class MainMenuButtonHandler : MonoBehaviour
         staticData.SelectedGameMode = GAMEMODE.PostAssessment;
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
+
     public void onSelectGameSettings()
     {
-        settingsCanvas.gameObject.SetActive(true);
+        settingsCanvas.SetActive(true);
     }
+
     public void onClose()
     {
-        settingsCanvas.gameObject.SetActive(false);
+        settingsCanvas.SetActive(false);
     }
 }
