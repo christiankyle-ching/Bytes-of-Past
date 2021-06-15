@@ -64,6 +64,15 @@ public class SinglePlayerMenuManager : MonoBehaviour
             playerStats.AccuracyText;
 
         endGameMenu.SetActive(true);
+
+        // Save new accuracy
+        staticData
+            .profileStatisticsData
+            .UpdateGameAccuracy(GAMEMODE.SinglePlayer,
+            staticData.SelectedTopic,
+            staticData.SelectedDifficulty,
+            playerStats.Accuracy,
+            isGameWon);
     }
 
     public void SetTopicTexts(string text)

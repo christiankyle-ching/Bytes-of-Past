@@ -172,7 +172,6 @@ public class AssessmentManager : MonoBehaviour
         // Save Score
         try
         {
-            // Update Statistics first
             staticData
                 .profileStatisticsData
                 .UpdateAssessmentScore(isPostAssessment
@@ -180,8 +179,6 @@ public class AssessmentManager : MonoBehaviour
                     : GAMEMODE.PreAssessment,
                 selectedTopic,
                 currentScore);
-            SaveLoadSystem
-                .SaveProfileStatisticsData(staticData.profileStatisticsData);
         }
         catch (System.Exception ex)
         {

@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class ProfileStatisticsLoader : MonoBehaviour
 {
-    public GameObject txtSinglePlayer_Computer_Accuracy;
+    public GameObject txtAccuracy;
 
-    public GameObject txtSinglePlayer_Networking_Accuracy;
+    public GameObject txtTotalGames;
 
-    public GameObject txtSinglePlayer_Software_Accuracy;
+    public GameObject txtSPWinOrLoss;
+
+    public GameObject txtMPWinOrLoss;
 
     // ASSESSMENT SCORES
     // Size of [2]
@@ -45,6 +47,13 @@ public class ProfileStatisticsLoader : MonoBehaviour
     }
 
     void ShowStatisticsData()
+    {
+        LoadAssessmentScores();
+        LoadGameAccuracy();
+        LoadGameWinLoss();
+    }
+
+    void LoadAssessmentScores()
     {
         int[,] assessmentScores =
             staticData.profileStatisticsData.assessmentScores;
@@ -86,5 +95,86 @@ public class ProfileStatisticsLoader : MonoBehaviour
                 "/" +
                 totalQuestions;
         }
+    }
+
+    void LoadGameAccuracy()
+    {
+        float[,,] gameAccuracy = staticData.profileStatisticsData.gameAccuracy;
+
+        int totalAccuracyCount = 0;
+        float totalAccuracy = 0;
+        foreach (float accuracy in gameAccuracy)
+        {
+            if (accuracy != 0f)
+            {
+                totalAccuracy += accuracy;
+                totalAccuracyCount++;
+            }
+        }
+
+        // If there aren't accuracies to be averaged, return 0f immediately to avoid division by 0
+        float avgAccuracy =
+            (totalAccuracyCount > 0) ? totalAccuracy / totalAccuracyCount : 0f;
+
+        txtAccuracy.GetComponent<TextMeshProUGUI>().text =
+            (avgAccuracy * 100) + "%";
+    }
+
+    void LoadGameWinLoss()
+    {
+        int[,,,] gameWinLossCount =
+            staticData.profileStatisticsData.gameWinLossCount;
+
+        // gameWinLossCount[0] are all GAMEMODE.SinglePlayer games
+        int spWin = 0;
+        int spLoss = 0;
+
+        for (
+            int topicIndex = 0;
+            topicIndex < gameWinLossCount.GetLength(1);
+            topicIndex++
+        )
+        {
+            for (
+                int difficultyIndex = 0;
+                difficultyIndex < gameWinLossCount.GetLength(2);
+                difficultyIndex++
+            )
+            {
+                spWin += gameWinLossCount[0, topicIndex, difficultyIndex, 0];
+                spLoss += gameWinLossCount[0, topicIndex, difficultyIndex, 0];
+            }
+        }
+
+        // gameWinLossCount[1] are all GAMEMODE.Multiplayer games
+        int mpWin = 0;
+        int mpLoss = 0;
+
+        for (
+            int topicIndex = 0;
+            topicIndex < gameWinLossCount.GetLength(1);
+            topicIndex++
+        )
+        {
+            for (
+                int difficultyIndex = 0;
+                difficultyIndex < gameWinLossCount.GetLength(2);
+                difficultyIndex++
+            )
+            {
+                mpWin += gameWinLossCount[1, topicIndex, difficultyIndex, 0];
+                mpLoss += gameWinLossCount[1, topicIndex, difficultyIndex, 0];
+            }
+        }
+
+        txtSPWinOrLoss.GetComponent<TextMeshProUGUI>().text =
+            $"{spWin}W / {spLoss}L";
+        txtMPWinOrLoss.GetComponent<TextMeshProUGUI>().text =
+            $"{mpWin}W / {mpLoss}L";
+
+        int totalGames = spWin + spLoss + mpWin + mpLoss;
+
+        txtTotalGames.GetComponent<TextMeshProUGUI>().text =
+            totalGames + " game/s";
     }
 }

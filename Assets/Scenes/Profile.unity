@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 340301520}
   - component: {fileID: 340301519}
   m_Layer: 0
-  m_Name: Text (TMP) (6)
+  m_Name: Win/Loss - SP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -770,7 +770,7 @@ GameObject:
   - component: {fileID: 497489462}
   - component: {fileID: 497489461}
   m_Layer: 0
-  m_Name: Text (TMP) (7)
+  m_Name: Win/Loss - MP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1334,7 +1334,7 @@ GameObject:
   - component: {fileID: 634871801}
   - component: {fileID: 634871800}
   m_Layer: 0
-  m_Name: AA percentage
+  m_Name: Average Accuracy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1602,7 +1602,7 @@ GameObject:
   - component: {fileID: 819806416}
   - component: {fileID: 819806415}
   m_Layer: 0
-  m_Name: TGP percentage
+  m_Name: Total Games Played
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1736,7 +1736,7 @@ GameObject:
   - component: {fileID: 904924092}
   - component: {fileID: 904924091}
   m_Layer: 0
-  m_Name: Avg Accuracy
+  m_Name: AA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2138,7 +2138,7 @@ GameObject:
   - component: {fileID: 1037094695}
   - component: {fileID: 1037094694}
   m_Layer: 0
-  m_Name: Total Games Played
+  m_Name: TGP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3800,6 +3800,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
+        type: 3}
+      propertyPath: txtAccuracy
+      value: 
+      objectReference: {fileID: 634871798}
+    - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
+        type: 3}
+      propertyPath: txtTotalGames
+      value: 
+      objectReference: {fileID: 1037094692}
+    - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
+        type: 3}
+      propertyPath: txtMPWinOrLoss
+      value: 
+      objectReference: {fileID: 497489459}
+    - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
+        type: 3}
+      propertyPath: txtSPWinOrLoss
+      value: 
+      objectReference: {fileID: 340301517}
     - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
         type: 3}
       propertyPath: txtAssessment_Computer_Score.Array.size

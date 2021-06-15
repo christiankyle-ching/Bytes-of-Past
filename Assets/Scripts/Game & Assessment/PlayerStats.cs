@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    private decimal attemptCount;
-    private decimal correctAttempts;
+    private int attemptCount;
+    private int correctAttempts;
 
 
-    public decimal Accuracy
+    public float Accuracy
     {
         get => this.correctAttempts / this.attemptCount;
     }
@@ -18,7 +18,7 @@ public class PlayerStats : MonoBehaviour
     {
         get
         {
-            decimal percentageForm = System.Math.Round(this.Accuracy * 100, 2);
+            double percentageForm = System.Math.Round((this.Accuracy * 100), 2);
             return "Accuracy: " + percentageForm + "%";
         }
     }

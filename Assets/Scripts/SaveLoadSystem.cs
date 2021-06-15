@@ -24,6 +24,7 @@ public static class SaveLoadSystem
     public static ProfileStatisticsData LoadProfileStatisticsData()
     {
         string path = Application.persistentDataPath + statisticsDataPath;
+        Debug.Log (path);
 
         if (File.Exists(path))
         {
