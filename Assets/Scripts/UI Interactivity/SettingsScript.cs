@@ -31,7 +31,7 @@ public class SettingsScript : MonoBehaviour
 
         // Load last saved settings
         switchState = PlayerPrefs.GetInt("Settings_EnableSFX", 1);
-        if (switchState == 0) OnSwitchButtonClicked(); // FIXME: Not working
+        if (switchState == -1) OnSwitchButtonClicked();
 
         float existingVolume = PlayerPrefs.GetFloat("Settings_BGMVolume", 1.0f);
         bgmAudioSource.volume = existingVolume;

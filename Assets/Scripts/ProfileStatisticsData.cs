@@ -37,6 +37,7 @@ public class ProfileStatisticsData
         int topicIndex = (int) topic;
         int difficultyIndex = (int) difficulty;
 
+        // TODO: change logic to detect whether it's their first game
         /* 
         Update Accuracy in Array with their average
         unless it is 0, which MIGHT mean it's their first game,
