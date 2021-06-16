@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,8 +26,12 @@ public class AssessmentManager : MonoBehaviour
 
     public GameObject txtTestTopic;
 
+    public GameObject txtPreOrPostAssessment;
+
     // QUESTIONS DATA
-    private Stack<QuestionData> questions = new Stack<QuestionData>();
+    private List<QuestionData> questions = new List<QuestionData>();
+
+    private int currentQuestionIndex = 0;
 
     private QuestionData currentQuestion;
 
@@ -34,9 +39,7 @@ public class AssessmentManager : MonoBehaviour
 
     private int currentScore = 0;
 
-    private int totalQuestionCount;
-
-    // INIT DATA
+    // STATIC DATA
     private TOPIC selectedTopic;
 
     private bool isPostAssessment;
@@ -115,30 +118,38 @@ public class AssessmentManager : MonoBehaviour
                 break;
         }
 
-        foreach (QuestionData question in resourcesQuestions)
-        {
-            questions.Push (question);
-        }
+        txtPreOrPostAssessment.GetComponent<TextMeshProUGUI>().text =
+            isPostAssessment ? "Post-Assessment" : "Pre-Assessment";
 
-        totalQuestionCount = resourcesQuestions.Length;
+        if (!isPostAssessment)
+        {
+            // If Pre-Assessment, load first 5 questions only
+            questions = resourcesQuestions.Take(5).ToList();
+        }
+        else
+        {
+            // Else, shuffle the questions
+            questions =
+                resourcesQuestions.OrderBy(x => Random.Range(0f, 1f)).ToList();
+        }
     }
 
     void ShowNextQuestion()
     {
-        Debug.Log($"SCORE: {currentScore}/{totalQuestionCount}");
+        Debug.Log($"SCORE: {currentScore}/{questions.Count}");
 
-        if (questions.Count <= 0)
+        if (currentQuestionIndex >= questions.Count)
         {
             EndTest();
             return;
         }
 
-        currentQuestion = questions.Pop();
+        currentQuestion = questions.ElementAt(currentQuestionIndex);
         currentChoices = currentQuestion.Choices;
 
         string _questionText =
-            $"Question: {totalQuestionCount - questions.Count}/" +
-            totalQuestionCount +
+            $"Question: {questions.Count - questions.Count}/" +
+            questions.Count +
             "\n\n" +
             currentQuestion.Question;
 
@@ -156,12 +167,14 @@ public class AssessmentManager : MonoBehaviour
         {
             choicesTexts[i].text = currentChoices[i] ?? "NO DATA";
         }
+
+        currentQuestionIndex++;
     }
 
     void EndTest()
     {
         txtScore.GetComponent<TextMeshProUGUI>().text =
-            $"Score: {currentScore}/{totalQuestionCount}";
+            $"Score: {currentScore}/{questions.Count}";
 
         txtTopic.GetComponent<TextMeshProUGUI>().text =
             TopicUtils.GetName((TOPIC) selectedTopic);
@@ -182,6 +195,21 @@ public class AssessmentManager : MonoBehaviour
         catch (System.Exception ex)
         {
             Debug.LogError("Failed to save data: " + ex);
+        }
+
+        if (!isPostAssessment)
+        {
+            PlayerPrefs
+                .SetInt(TopicUtils
+                    .GetPrefKey_IsPreAssessmentDone(selectedTopic),
+                1);
+        }
+        else
+        {
+            PlayerPrefs
+                .SetInt(TopicUtils
+                    .GetPrefKey_IsPostAssessmentDone(selectedTopic),
+                1);
         }
     }
 

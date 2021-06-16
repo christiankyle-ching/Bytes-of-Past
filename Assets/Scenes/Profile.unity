@@ -358,8 +358,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 211.82007, y: -261.57004}
-  m_SizeDelta: {x: 251.35706, y: 70.58942}
+  m_AnchoredPosition: {x: 211.82007, y: -259.2}
+  m_SizeDelta: {x: 251.35706, y: 65.792206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &340301519
 MonoBehaviour:
@@ -380,7 +380,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5W / 2L
+  m_text: XW / YL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e272a0fbb9c971840a60495beeac97c1, type: 2}
   m_sharedMaterial: {fileID: -4042960776285581738, guid: e272a0fbb9c971840a60495beeac97c1,
@@ -819,7 +819,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5W / 2L
+  m_text: XW / YL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e272a0fbb9c971840a60495beeac97c1, type: 2}
   m_sharedMaterial: {fileID: -4042960776285581738, guid: e272a0fbb9c971840a60495beeac97c1,
@@ -1781,7 +1781,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Percentage here
+  m_text: N game/s
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e272a0fbb9c971840a60495beeac97c1, type: 2}
   m_sharedMaterial: {fileID: -4042960776285581738, guid: e272a0fbb9c971840a60495beeac97c1,
@@ -3944,7 +3944,7 @@ PrefabInstance:
         type: 3}
       propertyPath: txtTotalGames
       value: 
-      objectReference: {fileID: 1037094692}
+      objectReference: {fileID: 819806413}
     - target: {fileID: 244739456720403264, guid: 1fe19e34fe4f101419b290b53053718a,
         type: 3}
       propertyPath: txtMPWinOrLoss

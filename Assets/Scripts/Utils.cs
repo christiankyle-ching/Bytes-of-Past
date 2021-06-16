@@ -14,6 +14,21 @@
                 return "NO TOPIC";
         }
     }
+
+    public static string GetPrefKey_IsPlayed(TOPIC topic)
+    {
+        return $"TopicPlayed_{(int)topic}";
+    }
+
+    public static string GetPrefKey_IsPreAssessmentDone(TOPIC topic)
+    {
+        return $"TopicPreAssessmentDone_{(int)topic}";
+    }
+
+    public static string GetPrefKey_IsPostAssessmentDone(TOPIC topic)
+    {
+        return $"TopicPostAssessmentDone_{(int)topic}";
+    }
 }
 
 public static class DifficultyUtils

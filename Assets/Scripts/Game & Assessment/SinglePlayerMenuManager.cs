@@ -73,6 +73,11 @@ public class SinglePlayerMenuManager : MonoBehaviour
             staticData.SelectedDifficulty,
             playerStats.Accuracy,
             isGameWon);
+
+        // Set the topic as already played
+        PlayerPrefs
+            .SetInt(TopicUtils.GetPrefKey_IsPlayed(staticData.SelectedTopic),
+            1);
     }
 
     public void SetTopicTexts(string text)
