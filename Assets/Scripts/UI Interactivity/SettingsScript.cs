@@ -70,4 +70,5 @@ public class SettingsScript : MonoBehaviour
 
         PlayerPrefs.SetInt("Settings_Quality", qualityIndex);
     }
+    //TODO 
 }
