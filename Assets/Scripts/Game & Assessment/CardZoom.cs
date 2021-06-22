@@ -11,16 +11,20 @@ public class CardZoom : MonoBehaviour
 
     bool isHolding = false;
 
-    Vector3 originalPos;
+    bool isZoomed = false;
+
+    Transform canvas;
+
+    GameObject previewCard;
 
     void Start()
     {
-        originalPos = gameObject.transform.position;
+        canvas = GameObject.Find("GameCanvas").transform;
     }
 
     void Update()
     {
-        if (isHolding)
+        if (isHolding && !isZoomed)
         {
             lastHoldTime += Time.deltaTime;
 
@@ -33,7 +37,6 @@ public class CardZoom : MonoBehaviour
 
     public void OnPointerDown(BaseEventData eventData)
     {
-        originalPos = gameObject.transform.position;
         isHolding = true;
     }
 
@@ -55,13 +58,15 @@ public class CardZoom : MonoBehaviour
 
     void ZoomCard()
     {
-        gameObject.transform.localScale = new Vector3(1.5f, 1.5f);
-        gameObject.transform.position = new Vector3(0f, 0f);
+        isZoomed = true;
+        previewCard = Instantiate(this.gameObject, canvas);
+        previewCard.transform.localScale = new Vector3(1.5f, 1.5f);
+        previewCard.transform.position = new Vector3(0f, 0f);
     }
 
     void UnzoomCard()
     {
-        gameObject.transform.localScale = new Vector3(1f, 1f);
-        gameObject.transform.position = originalPos;
+        isZoomed = false;
+        if (previewCard != null) Destroy(previewCard.gameObject);
     }
 }
