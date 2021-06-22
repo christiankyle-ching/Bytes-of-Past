@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,19 +64,40 @@ public class TopicSelect : MonoBehaviour
             PlayerPrefs
                 .GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(topic), 0) ==
             1;
+        TextMeshProUGUI buttonText =
+            button
+                .gameObject
+                .transform
+                .Find("Button")
+                .GetComponentInChildren<TextMeshProUGUI>();
 
         if (staticData.SelectedGameMode == GAMEMODE.PostAssessment)
         {
-            /*
-            TODO: Uncomment last condition on release. Student shouldn't be able to
-            take POST-Assessment without playing the game first!
-            */
-            button.interactable = isPreAssessmentDone && !isPostAssessmentDone; /* && isPlayed */
+            if (isPreAssessmentDone && !isPostAssessmentDone)
+            {
+                /*
+                TODO: Uncomment last condition on release. Student shouldn't be able to
+                take POST-Assessment without playing the game first!
+                */
+                button.interactable =
+                    !(isPreAssessmentDone && !isPostAssessmentDone); /* && isPlayed */
+
+                buttonText.text = "Locked";
+            }
+        }
+        else if (staticData.SelectedGameMode == GAMEMODE.SinglePlayer)
+        {
+            if (!isPreAssessmentDone)
+            {
+                buttonText.text = "Take Pre-Test";
+            }
         }
 
-        Debug.Log($"{topic} is Pre-Assessment Done: {isPreAssessmentDone}");
-        Debug.Log($"{topic} is Played: {isPlayed}");
-        Debug.Log($"{topic} is Post-Assessment Done: {isPostAssessmentDone}");
+        Debug
+            .Log(topic +
+            $"\nPRE-Assessment Done? {isPreAssessmentDone}" +
+            $"\nPLAYED? {isPlayed}" +
+            $"\nPOST-Assessment Done? {isPostAssessmentDone}");
     }
 
     void OnTopicSelect(TOPIC topic)
