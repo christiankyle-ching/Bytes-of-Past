@@ -70,17 +70,12 @@ public class TopicSelect : MonoBehaviour
             TODO: Uncomment last condition on release. Student shouldn't be able to
             take POST-Assessment without playing the game first!
             */
-            if (
-                isPreAssessmentDone && !isPostAssessmentDone /* && isPlayed */
-            )
-            {
-                button.interactable = true;
-            }
-            else
-            {
-                button.interactable = false;
-            }
+            button.interactable = isPreAssessmentDone && !isPostAssessmentDone; /* && isPlayed */
         }
+
+        Debug.Log($"{topic} is Pre-Assessment Done: {isPreAssessmentDone}");
+        Debug.Log($"{topic} is Played: {isPlayed}");
+        Debug.Log($"{topic} is Post-Assessment Done: {isPostAssessmentDone}");
     }
 
     void OnTopicSelect(TOPIC topic)
