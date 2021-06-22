@@ -26,7 +26,6 @@ public class CardZoom : MonoBehaviour
 
             if (lastHoldTime >= holdTime)
             {
-                Debug.Log("ZOOM");
                 ZoomCard();
             }
         }
@@ -34,6 +33,7 @@ public class CardZoom : MonoBehaviour
 
     public void OnPointerDown(BaseEventData eventData)
     {
+        originalPos = gameObject.transform.position;
         isHolding = true;
     }
 
