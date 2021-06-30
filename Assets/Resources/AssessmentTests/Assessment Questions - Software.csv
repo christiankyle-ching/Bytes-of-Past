@@ -1,0 +1,11 @@
+ID	Question	Wrong Answers			Correct Answer
+SQ01	Who is the author of " The Mathematical Theory of Communication"?	John Backus	Grace Hopper	Kenneth Iverson	Claude Shannon
+SQ02	It is a program that allows a computer user to use a English-like words instead of numbers to give the computer instructions	FORTRAN	COBOL	BASIC	A-0
+SQ03	What language demands significant amount of scarce memory but greatly reduced the time requried to write a program?	FORTRAN	BASIC	COBOL	Speedcode
+SQ04	COBOL stands for?	Compatible Business-Oriented Language	Compatible Beginners-Oriented Language	Common Beginners-Oriented Language	Common Business-Oriented Language
+SQ05	What powerful scientific computing language did the team led by John Backus developed?	Speedcode	COBOL	Javascript	FORTRAN
+SQ06	Who developed Linux kernel?	Rob Barnaby	Mitch Kapor	Seymour Papert	Linus Torvalds
+SQ07	This model allowed Adobe to begin releasing continuous updates to their products, shortening the development cycle and the time need to incorporate new features.	FORTRAN	Speedcode	BASIC	Adobe Creative Cloud
+SQ08	It allows users to record music from CDs, bring it into iTunes, mix it with other songs and then burn a custom C	HyperCard	Javascript	Visual Studio	iTunes
+SQ09	A peer-to-peer file sharing service that enabled users to upload and download files, typically music and movies.	iTunes	FreeBSD	Verilog	BitTorrent
+SQ10	It was originally called Multi-Tool Word.	HTML 5	Notepad	WordStar	Word
