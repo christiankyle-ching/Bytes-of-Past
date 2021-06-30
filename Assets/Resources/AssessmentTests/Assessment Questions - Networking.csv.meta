@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Resources/AssessmentTests/Computer/CQ02.asset.meta
+guid: 3be956d7b91b773459a82044e768a6b9
+NativeFormatImporter:
+=======
+guid: 7293fb8aabda0d4499f6221aaa59ec95
+TextScriptImporter:
+>>>>>>> 9756089... Changed: Assessment Questions now loaded with .tsv:Assets/Resources/AssessmentTests/Assessment Questions - Networking.csv.meta
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
