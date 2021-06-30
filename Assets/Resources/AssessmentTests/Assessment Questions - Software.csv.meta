@@ -1,11 +1,6 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Resources/AssessmentTests/Computer/CQ05.asset.meta
-guid: 05ab98f16e27c604b832c5e577aacd76
-NativeFormatImporter:
-=======
 guid: cb7a7e730667a2942a3b82637f054615
 TextScriptImporter:
->>>>>>> 9756089... Changed: Assessment Questions now loaded with .tsv:Assets/Resources/AssessmentTests/Assessment Questions - Software.csv.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
