@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faac82a699ef59443b4cf013887af7ab, type: 3}
   m_Name: CQ03
   m_EditorClassIdentifier: 
-  question: What invention is being sold complete with main logic board, a switching
-    power supply, a keyboard, a case, manual, a game paddle and a cassette tape that
-    contains the game Breakout?
+  question: COMPUTER Sample Question
   wrongAnswers:
-  - The Alto
-  - HP-35
-  - Macintosh
-  correctAnswer: Apple II
+  - Wrong
+  - Wrong
+  - Wrong
+  - Wrong
+  correctAnswer: CORRECT
