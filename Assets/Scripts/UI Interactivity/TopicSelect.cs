@@ -64,6 +64,7 @@ public class TopicSelect : MonoBehaviour
             PlayerPrefs
                 .GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(topic), 0) ==
             1;
+
         TextMeshProUGUI buttonText =
             button
                 .gameObject
@@ -106,17 +107,15 @@ public class TopicSelect : MonoBehaviour
 
         GAMEMODE gameMode = staticData.SelectedGameMode;
 
+        bool isPreAssessmentDone =
+            PlayerPrefs
+                .GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(topic), 0) ==
+            1;
+
         switch (gameMode)
         {
             case GAMEMODE.SinglePlayer:
-                if (
-                    PlayerPrefs
-                        .GetInt(TopicUtils
-                            .GetPrefKey_IsPreAssessmentDone(staticData
-                                .SelectedTopic),
-                        0) ==
-                    1
-                )
+                if (isPreAssessmentDone)
                 {
                     sceneLoader
                         .GetComponent<SceneLoader>()
@@ -131,8 +130,6 @@ public class TopicSelect : MonoBehaviour
             case GAMEMODE.Multiplayer:
                 sceneLoader.GetComponent<SceneLoader>().GoToDifficultySelect();
                 break;
-            case GAMEMODE.PreAssessment:
-                break;
             case GAMEMODE.PostAssessment:
                 staticData.IsPostAssessment = true;
                 sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();
@@ -146,6 +143,8 @@ public class TopicSelect : MonoBehaviour
 
     void LoadPreAssessment()
     {
+        Debug.Log("LoadPreAssessment");
+
         staticData.SelectedGameMode = GAMEMODE.PreAssessment;
         staticData.IsPostAssessment = false;
         sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();

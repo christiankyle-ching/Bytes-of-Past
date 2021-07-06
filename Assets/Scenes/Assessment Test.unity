@@ -791,8 +791,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -205.41}
-  m_SizeDelta: {x: 0, y: 136.93683}
+  m_AnchoredPosition: {x: 0, y: -214}
+  m_SizeDelta: {x: 0, y: 93.697205}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &884030963
 MonoBehaviour:
@@ -815,8 +815,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Topic: [TOPIC]'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e272a0fbb9c971840a60495beeac97c1, type: 2}
-  m_sharedMaterial: {fileID: -4042960776285581738, guid: e272a0fbb9c971840a60495beeac97c1,
+  m_fontAsset: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3, type: 2}
+  m_sharedMaterial: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1851,8 +1851,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -64.479}
-  m_SizeDelta: {x: 0, y: 144.91534}
+  m_AnchoredPosition: {x: 0, y: -116.451965}
+  m_SizeDelta: {x: 0, y: 101.39926}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1575437419
 MonoBehaviour:
@@ -2633,14 +2633,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.34509805, g: 0.7176471, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 685e9cae3ecc64d4ab4ef117ca9befed, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2871,7 +2871,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 36.938}
-  m_SizeDelta: {x: -239.08777, y: 458.36737}
+  m_SizeDelta: {x: -239.08777, y: 345.9444}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2023976891
 MonoBehaviour:
@@ -2894,8 +2894,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: What is a sample question that I can put here?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e272a0fbb9c971840a60495beeac97c1, type: 2}
-  m_sharedMaterial: {fileID: -4042960776285581738, guid: e272a0fbb9c971840a60495beeac97c1,
+  m_fontAsset: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3, type: 2}
+  m_sharedMaterial: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2923,9 +2923,9 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 24
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 36
+  m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

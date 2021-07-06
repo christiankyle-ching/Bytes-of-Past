@@ -94,7 +94,7 @@ public class AssessmentManager : MonoBehaviour
         isPostAssessment = staticData.IsPostAssessment;
 
         txtTestTopic.GetComponent<TextMeshProUGUI>().text =
-            TopicUtils.GetName(selectedTopic);
+            "Topic: " + TopicUtils.GetName(selectedTopic);
 
         QuestionData[] resourcesQuestions = ParseCSVToQuestions(TOPIC.Computer);
 
@@ -217,7 +217,7 @@ public class AssessmentManager : MonoBehaviour
             $"Score: {currentScore}/{questions.Count}";
 
         txtTopic.GetComponent<TextMeshProUGUI>().text =
-            TopicUtils.GetName((TOPIC) selectedTopic);
+            "Topic: " + TopicUtils.GetName((TOPIC) selectedTopic);
 
         endGameMenu.SetActive(true);
 
@@ -235,6 +235,7 @@ public class AssessmentManager : MonoBehaviour
         catch (System.Exception ex)
         {
             Debug.LogError("Failed to save data: " + ex);
+            Debug.LogError("Try starting debug on the main menu.");
         }
 
         if (!isPostAssessment)
