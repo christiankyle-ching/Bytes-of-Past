@@ -2,24 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Card", menuName = "Card")]
-public class CardData : ScriptableObject
+public enum CARDCOLOR
+{
+    Blue, Green, Orange, Red, Violet
+}
+
+// [CreateAssetMenu(fileName = "New Card", menuName = "Card")]
+public class CardData 
 {
     // public -> private to prevent access, used getter methods instead
 
     [SerializeField]
     private string title;
+     [SerializeField]
+    private string inventor;
     [SerializeField]
     private string description;
     [SerializeField]
     private int year;
     [SerializeField]
     private Sprite artwork;
+    [SerializeField]
+    private CARDCOLOR color;
+
+
+private string id;
+
+    public string ID
+    {
+        get => this.id;
+    }
 
     public string Title
     {
         get => this.title;
     }
+
+    public string Inventor
+    {
+        get => this.Inventor;
+    }
+    
 
     public string Description
     {
@@ -37,5 +60,23 @@ public class CardData : ScriptableObject
     {
         get => this.artwork;
     }
+
+    public CARDCOLOR Color
+    {
+        get => this.color;
+    }
+
+    public CardData(string id, int year, string title, string inventor, string description) {
+        this.id = id;
+        this.year = year;
+        this.title = title;
+        this.inventor = inventor;
+        this.description = description;
+        this.artwork = Resources.Load<Sprite>($"Cards/Icons/{id}");
+        
+        this.color = (CARDCOLOR) Random.Range(0, 5); // random color scheme
+    }
+
+    
 
 }

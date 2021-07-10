@@ -13,33 +13,22 @@ public class SettingsScript : MonoBehaviour
 
     public GameObject switchBtn;
 
-    public GameObject slider;
+    public Slider volumeSlider;
 
-    public GameObject dropdown;
+    public TMP_Dropdown qualityDropdown;
 
-    //Audios
-    AudioSource bgmAudioSource;
-
-    void Awake()
+    void Start()
     {
-        // Audio Source for BGM, now a prefab and has a SingleInstance component
-        // that maintains a single instance of BGMAudioSource throughout different scenes
-        bgmAudioSource =
-            GameObject
-                .FindGameObjectWithTag("BGMAudioSource")
-                .GetComponent<AudioSource>();
-
         // Load last saved settings
         switchState = PlayerPrefs.GetInt("Settings_EnableSFX", 1);
         if (switchState == -1) OnSwitchButtonClicked();
 
-        float existingVolume = PlayerPrefs.GetFloat("Settings_BGMVolume", 1.0f);
-        bgmAudioSource.volume = existingVolume;
-        slider.GetComponent<Slider>().value = existingVolume;
+        float existingVolume = PlayerPrefs.GetFloat("Settings_BGMVolume", 0.5f);
+        volumeSlider.value = existingVolume;
 
         int existingQualityLevel = PlayerPrefs.GetInt("Settings_Quality", 1);
         QualitySettings.SetQualityLevel (existingQualityLevel);
-        dropdown.GetComponent<TMP_Dropdown>().value = existingQualityLevel;
+        qualityDropdown.value = existingQualityLevel;
     }
 
     public void OnSwitchButtonClicked()
@@ -57,18 +46,10 @@ public class SettingsScript : MonoBehaviour
         PlayerPrefs.SetInt("Settings_EnableSFX", switchState);
     }
 
-    public void setVolume(float volume)
-    {
-        bgmAudioSource.volume = volume;
-
-        PlayerPrefs.SetFloat("Settings_BGMVolume", volume);
-    }
-
     public void setQuality(int qualityIndex)
     {
         QualitySettings.SetQualityLevel (qualityIndex);
 
         PlayerPrefs.SetInt("Settings_Quality", qualityIndex);
     }
-    //TODO 
 }

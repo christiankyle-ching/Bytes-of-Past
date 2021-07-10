@@ -74,17 +74,18 @@ public class TopicSelect : MonoBehaviour
 
         if (staticData.SelectedGameMode == GAMEMODE.PostAssessment)
         {
-            if (isPreAssessmentDone && !isPostAssessmentDone)
-            {
-                /*
+            /*
                 TODO: Uncomment last condition on release. Student shouldn't be able to
                 take POST-Assessment without playing the game first!
-                */
-                button.interactable =
-                    !(isPreAssessmentDone && !isPostAssessmentDone); /* && isPlayed */
+            */
+            bool postAssessmentAllowed =
+                isPreAssessmentDone && !isPostAssessmentDone; /* && isPlayed */
 
-                buttonText.text = "Locked";
-            }
+            button.interactable = postAssessmentAllowed;
+
+            if (!postAssessmentAllowed)
+                buttonText.text =
+                    isPostAssessmentDone ? "Already Taken" : "Locked";
         }
         else if (staticData.SelectedGameMode == GAMEMODE.SinglePlayer)
         {

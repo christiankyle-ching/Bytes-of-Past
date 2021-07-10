@@ -18,11 +18,12 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
 
     // UI Child Elements
-    private TextMeshProUGUI title;
-    private TextMeshProUGUI description;
-    private Image image;
+    public TextMeshProUGUI title;
+    public TextMeshProUGUI description;
+    public Image image;
+    public Image cardBGImage;
 
-    private TextMeshProUGUI yearObj;
+    public TextMeshProUGUI yearObj;
 
     // Container
     public Transform initialContainer;
@@ -39,18 +40,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         canDrag = true;
         initialContainer = transform.parent;
         placeholderContainer = initialContainer;
-
-        this.title = transform.Find("Title").GetComponent<TextMeshProUGUI>();
-        this.description = transform.Find("Description").GetComponent<TextMeshProUGUI>();
-        this.image = transform.Find("Image").GetComponent<Image>();
-
-        // DEBUG
-        this.yearObj = transform.Find("Year").GetComponent<TextMeshProUGUI>();
     }
 
     private void Start()
     {
-        this.initCardData();
+        // this.initCardData();
     }
 
     public void initCardData()
@@ -58,11 +52,29 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         this.title.text = this.cardData.Title;
         this.description.text = this.cardData.Description;
         this.image.sprite = this.cardData.Artwork;
+        this.cardBGImage.sprite = GetColoredSprite(this.cardData.Color); 
 
-        this.yearObj.text = this.cardData.Year.ToString().Insert(2, "\n");
+        this.yearObj.text = this.cardData.Year.ToString();
 
         // Name in Scene
-        name = this.cardData.Year.ToString();
+        name = this.cardData.Year.ToString();        
+    }
+
+    public static Sprite GetColoredSprite(CARDCOLOR color) {
+        switch(color) {
+            case CARDCOLOR.Orange:
+                return Resources.Load<Sprite>("Cards/Templates/Orange");
+            case CARDCOLOR.Blue:
+                return Resources.Load<Sprite>("Cards/Templates/Blue");
+            case CARDCOLOR.Green:
+                return Resources.Load<Sprite>("Cards/Templates/Green");
+            case CARDCOLOR.Red:
+                return Resources.Load<Sprite>("Cards/Templates/Red");
+            case CARDCOLOR.Violet:
+                return Resources.Load<Sprite>("Cards/Templates/Violet");
+            default: 
+                return Resources.Load<Sprite>("Cards/Templates/Orange");
+        }
     }
 
     void CreatePlaceholder()

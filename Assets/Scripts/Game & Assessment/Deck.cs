@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
@@ -18,25 +19,30 @@ public class Deck : MonoBehaviour
     private Stack<CardData> cards;
     public int CardsCount { get => this.cards.Count; }
 
-    // UI Child Elements
-    public TextMeshProUGUI title;
-    public TextMeshProUGUI description;
-    public TextMeshProUGUI count;
-    public Image image;
+    // Game
+    public StaticData staticData;
 
     void Awake()
     {
+        try
+        {
+            staticData =
+                GameObject
+                    .FindWithTag("Static Data")
+                    .GetComponent<StaticData>();
+        }
+        catch (System.NullReferenceException)
+        {
+            Debug.LogError("Static Data Not Found: Play from the Main Menu");
+            staticData = new StaticData();
+        }
+
         this.cards = new Stack<CardData>();
 
         this.gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<SinglePlayerGameController>();
 
-        this.title = transform.GetChild(0).Find("Title").GetComponent<TextMeshProUGUI>();
-        this.description = transform.GetChild(0).Find("Description").GetComponent<TextMeshProUGUI>();
-        this.count = transform.GetChild(0).Find("Count").GetComponent<TextMeshProUGUI>();
-        this.image = transform.GetChild(0).Find("Image").GetComponent<Image>();
-
-        LoadCards();
-        SetTopCardPreview();
+        LoadCards(TOPIC.Computer);
+        // SetTopCardPreview();
     }
 
 
@@ -45,12 +51,8 @@ public class Deck : MonoBehaviour
         try
         {
             CardData topCard = cards.Peek();
-
-            this.title.text = topCard.Title;
-            this.description.text = topCard.Description;
-            this.image.sprite = topCard.Artwork;
-            this.count.text = cards.Count.ToString();
-
+            transform.GetChild(0).GetComponent<Card>().CardData = topCard;
+            transform.GetChild(0).GetComponent<Card>().initCardData();
             SetVisible(true);
         }
         catch (InvalidOperationException)
@@ -76,15 +78,83 @@ public class Deck : MonoBehaviour
         }
     }
 
-    void LoadCards()
+    void LoadCards(TOPIC topic)
     {
-        CardData[] cardAssets = Resources.LoadAll<CardData>("Cards/Data");
+        CardData[] cardAssets = ParseCSVToCards(topic);
 
         foreach(CardData cardData in cardAssets)
         {
-            cards.Push(cardData);
+            this.cards.Push(cardData);
         }
 
+    }
+
+    CardData[] ParseCSVToCards(TOPIC topic)
+    {
+        /* 
+        IMPORTANT: Download from Google Sheets in .tsv. Then RENAME format to .csv.
+        Then drag it to Unity (to be recognized as a TextAsset with tabs as delimiters).
+        */
+        List<CardData> cards = new List<CardData>();
+
+        // Parse a CSV file containing the questions and answers
+        TextAsset rawData = null;
+
+        switch (topic)
+        {
+            case TOPIC.Computer:
+                rawData =
+                    Resources
+                        .Load
+                        <TextAsset
+                        >("Cards/Cards - Computer");
+                break;
+            case TOPIC.Networking:
+                rawData =
+                    Resources
+                        .Load
+                        <TextAsset
+                        >("Cards/Cards - Networking");
+                break;
+            case TOPIC.Software:
+                rawData =
+                    Resources
+                        .Load
+                        <TextAsset
+                        >("Cards/Cards - Networking");
+                break;
+        }
+
+        if (rawData != null)
+        {
+            List<String> lines = rawData.text.Split('\n').ToList(); // split into lines
+
+            // ignore header
+            lines = lines.Skip(3).ToList();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string[] cells = lines[i].Split('\t');
+
+                /*
+                Source: https://docs.google.com/spreadsheets/d/17vhpg6dLhe91SQQIARxOhVp6K-YyyFKwv4303HgV5dk/
+                Cell 0 : ID
+                Cell 1 : Status
+                Cell 2 : Date
+                Cell 3 : Name
+                Cell 4 : Inventor
+                Cell 5 : Description
+                Cell 6 : Image Link
+                */
+
+                Debug.Log(cells);
+
+                cards
+                    .Add(new CardData(cells[0], Int32.Parse(cells[2]), cells[3], cells[4], cells[5]));
+            }
+        }
+
+        return cards.ToArray();
     }
 
     void ShuffleCards()
@@ -120,7 +190,7 @@ public class Deck : MonoBehaviour
             throw ex;
         }
 
-        SetTopCardPreview();
+        // SetTopCardPreview();
     }
 
     public void AddCard(CardData cardData)

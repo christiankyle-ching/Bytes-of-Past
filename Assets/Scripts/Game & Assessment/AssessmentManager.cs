@@ -178,6 +178,9 @@ public class AssessmentManager : MonoBehaviour
     {
         Debug.Log($"SCORE: {currentScore}/{questions.Count}");
 
+        Debug.Log (currentQuestionIndex);
+        Debug.Log(questions.Count);
+
         if (currentQuestionIndex >= questions.Count)
         {
             EndTest();

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Question", menuName = "Question")]
-public class QuestionData : ScriptableObject
+// [CreateAssetMenu(fileName = "New Question", menuName = "Question")]
+public class QuestionData 
 {
     [SerializeField]
     private string question;
