@@ -147,8 +147,6 @@ public class Deck : MonoBehaviour
                 Cell 6 : Image Link
                 */
 
-                Debug.Log(cells);
-
                 cards
                     .Add(new CardData(cells[0], Int32.Parse(cells[2]), cells[3], cells[4], cells[5]));
             }

@@ -47,7 +47,7 @@ public class StaticData : MonoBehaviour
         LoadProfileData();
     }
 
-    void LoadProfileData()
+    public void LoadProfileData()
     {
         profileStatisticsData = SaveLoadSystem.LoadProfileStatisticsData();
     }

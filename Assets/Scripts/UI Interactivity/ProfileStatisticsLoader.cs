@@ -123,7 +123,6 @@ public class ProfileStatisticsLoader : MonoBehaviour
     void LoadGameWinLoss()
     {
         // FIXME: Possibly not working / accurate
-
         int[,,,] gameWinLossCount =
             staticData.profileStatisticsData.gameWinLossCount;
 

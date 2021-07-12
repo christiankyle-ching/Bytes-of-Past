@@ -7,18 +7,28 @@ using UnityEngine.SceneManagement;
 public class Button_anim : MonoBehaviour
 {
     public Animator anim;
-    
+
     public void ButtonTouch()
     {
-        GetComponent<Animation>().Play("btn_touch");
-        
+        try
+        {
+            GetComponent<Animation>().Play("btn_touch");
+        }
+        catch (MissingComponentException)
+        {
+            Debug.LogError("Animation 'btn_touch' is missing");
+        }
     }
+
     public void ButtonDrag()
     {
-        GetComponent<Animation>().Play("btn_touch_end");
+        try
+        {
+            GetComponent<Animation>().Play("btn_touch_end");
+        }
+        catch (MissingComponentException)
+        {
+            Debug.LogError("Animation 'btn_touch_end' is missing");
+        }
     }
-
-    
-
-
 }

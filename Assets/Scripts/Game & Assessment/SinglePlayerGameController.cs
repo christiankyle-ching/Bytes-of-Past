@@ -3,31 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class SinglePlayerGameController : MonoBehaviour
 {
-    private int startingCardsCount = 8;
-    private int playerLives = 5;
+    int playerLives = 0;
+
+    int startingCardsCount = 8;
 
     // Scene References
     private Transform player;
+
     private PlayerStats playerStats;
 
     private DropZone timeline;
+
     private Transform timelineCardContainer;
 
     private Deck deck;
+
     private Graveyard graveyard;
 
     private Transform livesContainer;
+
     [SerializeField]
     private GameObject lifePrefab;
 
     private SinglePlayerMenuManager menuManager;
 
+    StaticData staticData;
+
+    DIFFICULTY _difficulty = DIFFICULTY.Easy;
+
+    TOPIC _topic = TOPIC.Computer;
+
     // GAME: Start
     private void Awake()
     {
+        try
+        {
+            staticData =
+                GameObject
+                    .FindWithTag("Static Data")
+                    .GetComponent<StaticData>();
+
+            _difficulty = staticData.SelectedDifficulty;
+            _topic = staticData.SelectedTopic;
+        }
+        catch (System.NullReferenceException)
+        {
+            Debug.LogError("Static Data Not Found: Play from the Main Menu");
+            staticData = new StaticData();
+        }
+
         this.player = GameObject.FindGameObjectWithTag("Player").transform;
         this.playerStats = player.gameObject.GetComponent<PlayerStats>();
 
@@ -35,16 +61,40 @@ public class SinglePlayerGameController : MonoBehaviour
         this.timeline = _timelineObj.GetComponent<DropZone>();
         this.timelineCardContainer = _timelineObj.transform.GetChild(0);
 
-        this.deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<Deck>();
-        this.graveyard = GameObject.FindGameObjectWithTag("Graveyard").GetComponent<Graveyard>();
+        this.deck =
+            GameObject.FindGameObjectWithTag("Deck").GetComponent<Deck>();
+        this.graveyard =
+            GameObject
+                .FindGameObjectWithTag("Graveyard")
+                .GetComponent<Graveyard>();
 
-        this.livesContainer = GameObject.FindGameObjectWithTag("PlayerLives").transform;
+        this.livesContainer =
+            GameObject.FindGameObjectWithTag("PlayerLives").transform;
 
-        this.menuManager = GameObject.FindGameObjectWithTag("Menu").GetComponent<SinglePlayerMenuManager>();
+        this.menuManager =
+            GameObject
+                .FindGameObjectWithTag("Menu")
+                .GetComponent<SinglePlayerMenuManager>();
     }
 
     void Start()
     {
+        switch (_difficulty)
+        {
+            case DIFFICULTY.Easy:
+                playerLives = 0;
+                startingCardsCount = 8;
+                break;
+            case DIFFICULTY.Medium:
+                playerLives = 5;
+                startingCardsCount = 8;
+                break;
+            case DIFFICULTY.Hard:
+                playerLives = 3;
+                startingCardsCount = 8;
+                break;
+        }
+
         InitLives();
         DrawCards();
     }
@@ -53,18 +103,21 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         for (int i = 0; i < playerLives; i++)
         {
-            Instantiate(lifePrefab, livesContainer);
+            Instantiate (lifePrefab, livesContainer);
         }
     }
 
     void DrawCards()
     {
-        deck.GiveCard(player, startingCardsCount);
+        deck.GiveCard (player, startingCardsCount);
     }
 
     // Game Actions
     public void DecreaseLife()
     {
+        // If Easy Mode, do not check for decreasing life.
+        if (_difficulty == DIFFICULTY.Easy) return;
+
         playerLives--;
 
         int lastIndex = livesContainer.transform.childCount - 1;
@@ -84,7 +137,7 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         if (IsDropValid(droppedCard, dropPos))
         {
-            timeline.AcceptDrop(droppedCard);
+            timeline.AcceptDrop (droppedCard);
 
             playerStats.CorrectDrop();
 
@@ -92,7 +145,7 @@ public class SinglePlayerGameController : MonoBehaviour
         }
         else
         {
-            HandleInvalidDrop(droppedCard);
+            HandleInvalidDrop (droppedCard);
 
             playerStats.IncorrectDrop();
         }
@@ -125,15 +178,18 @@ public class SinglePlayerGameController : MonoBehaviour
             graveyard.PushAllToDeck();
             deck.GiveCard(player, 1);
         }
-
     }
 
     private bool IsDropValid(Card droppedCard, int dropPos)
     {
-        Card[] timelineCards = timelineCardContainer.GetComponentsInChildren<Card>();
+        Card[] timelineCards =
+            timelineCardContainer.GetComponentsInChildren<Card>();
 
         // Shorten code
-        int yearBefore, cardYear, yearAfter;
+        int
+            yearBefore,
+            cardYear,
+            yearAfter;
 
         cardYear = droppedCard.CardData.Year;
         try
@@ -157,5 +213,4 @@ public class SinglePlayerGameController : MonoBehaviour
         Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
         return (yearBefore <= cardYear && cardYear <= yearAfter);
     }
-
 }

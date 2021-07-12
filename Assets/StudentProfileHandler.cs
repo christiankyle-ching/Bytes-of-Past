@@ -23,10 +23,10 @@ public class StudentProfileHandler : MonoBehaviour
     void Awake()
     {
         // TODO
-        // txtStudentName.GetComponent<TMP_InputField>().text =
-        //     PlayerPrefs.GetString("Profile_Name", "");
+        txtStudentName.GetComponent<TMP_InputField>().text =
+            PlayerPrefs.GetString("Profile_Name", "");
 
-        // dropdownStudentSection.GetComponent<TMP_Dropdown>().value =
-        //     PlayerPrefs.GetInt("Profile_Section", 0);
+        dropdownStudentSection.GetComponent<TMP_Dropdown>().value =
+            PlayerPrefs.GetInt("Profile_Section", 0);
     }
 }

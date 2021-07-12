@@ -103,8 +103,8 @@ public class AssessmentManager : MonoBehaviour
 
         if (!isPostAssessment)
         {
-            // If Pre-Assessment, load first 5 questions only
-            questions = resourcesQuestions.Take(5).ToList();
+            // If Pre-Assessment, load first 15 questions only
+            questions = resourcesQuestions.Take(15).ToList();
         }
         else
         {

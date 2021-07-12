@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 public class SceneLoader : MonoBehaviour
 {
     public Animator transition;
@@ -12,19 +11,20 @@ public class SceneLoader : MonoBehaviour
     private float transitionTime = 0.5f;
 
     private StaticData staticData;
-    
 
     void Awake()
     {
         try
         {
             staticData =
-                GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
+                GameObject
+                    .FindWithTag("Static Data")
+                    .GetComponent<StaticData>();
         }
         catch (System.Exception)
         {
-            
-            Debug.Log("No Static Data Found: 'Main Menu' scene not loaded once");
+            Debug
+                .Log("No Static Data Found: 'Main Menu' scene not loaded once");
         }
     }
 
@@ -82,6 +82,7 @@ public class SceneLoader : MonoBehaviour
     {
         StartCoroutine(LoadScene("Achievements"));
     }
+
     IEnumerator LoadScene(string sceneName, bool isGoingBack = false)
     {
         transition.SetTrigger("Start");
@@ -108,6 +109,12 @@ public class SceneLoader : MonoBehaviour
                 .Push(SceneManager.GetActiveScene().buildIndex);
 
         SceneManager.LoadScene(buildIndex, LoadSceneMode.Single);
+    }
+
+    public void ResetProfile()
+    {
+        Debug.Log("DEBUG_RESET");
+        SaveLoadSystem.ResetProfileData();
     }
 
     public void QuitApp()

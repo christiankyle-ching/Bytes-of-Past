@@ -49,4 +49,15 @@ public static class SaveLoadSystem
             return newProfileStatisticsData;
         }
     }
+
+    public static void ResetProfileData()
+    {
+        // Clear all Player Prefs
+        PlayerPrefs.DeleteAll();
+
+        // Create an empty one
+        ProfileStatisticsData newProfileStatisticsData =
+            new ProfileStatisticsData();
+        SaveLoadSystem.SaveProfileStatisticsData (newProfileStatisticsData);
+    }
 }
