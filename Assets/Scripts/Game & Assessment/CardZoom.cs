@@ -62,6 +62,18 @@ public class CardZoom : MonoBehaviour
         previewCard = Instantiate(this.gameObject, canvas);
         previewCard.transform.localScale = new Vector3(1.5f, 1.5f);
         previewCard.transform.position = new Vector3(0f, 0f);
+        previewCard
+            .transform
+            .GetChild(0)
+            .Find("Description")
+            .gameObject
+            .SetActive(true);
+        previewCard
+            .transform
+            .GetChild(0)
+            .Find("Image")
+            .gameObject
+            .SetActive(false);
     }
 
     void UnzoomCard()

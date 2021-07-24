@@ -11,6 +11,10 @@ public class Deck : MonoBehaviour
     // Game Controller
     private SinglePlayerGameController gameController;
 
+    
+    [SerializeField]
+    private TextMeshProUGUI txtRemainingCount;
+
     // Prefabs
     [SerializeField]
     private Card cardPrefab;
@@ -42,25 +46,16 @@ public class Deck : MonoBehaviour
         this.gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<SinglePlayerGameController>();
 
         LoadCards(TOPIC.Computer);
-        // SetTopCardPreview();
+        SetRemainingCards();
     }
 
 
-    void SetTopCardPreview()
+    void SetRemainingCards()
     {
-        try
-        {
-            CardData topCard = cards.Peek();
-            transform.GetChild(0).GetComponent<Card>().CardData = topCard;
-            transform.GetChild(0).GetComponent<Card>().initCardData();
-            SetVisible(true);
-        }
-        catch (InvalidOperationException)
-        {
-            // TODO: if no cards in deck, make invisible
-            SetVisible(false);
-        }
-
+        txtRemainingCount.text =
+        $@"{CardsCount}
+        CARDS
+        LEFT";
     }
 
     void SetVisible(bool isVisible)
