@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public bool canDrag;
-    public AudioSource audiosource;
+    public AudioSource audioSource;
 
     [SerializeField]
     private CardData cardData;
@@ -46,6 +46,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private void Start()
     {
         // this.initCardData();
+
+        this.audioSource = GetComponent<AudioSource>();
     }
 
     public void initCardData()
@@ -113,12 +115,15 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         AdjustPlaceholderPos();
     }
 
-    void playAudioClip()
+    void PlayDropSound()
     {
-        audiosource.Play();
+        audioSource.Play();
     }
+
     public void OnEndDrag(PointerEventData eventData)
     {
+        PlayDropSound();
+
         // on drag end, set the card's parent
         // to wherever the placeholder is currently at, with its index
         // NOTE: placeholderContainer's value is manipulated by
@@ -126,9 +131,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         transform.SetParent(placeholderContainer);
         transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
         Destroy(placeholder);
-
-        //on drag end, play the audio clip.
-        playAudioClip();
     }
 
     void AdjustPlaceholderPos()

@@ -175,8 +175,9 @@ public class SinglePlayerGameController : MonoBehaviour
         catch (InvalidOperationException)
         {
             // if deck is empty
-            graveyard.PushAllToDeck();
-            deck.GiveCard(player, 1);
+            // graveyard.PushAllToDeck();
+            // deck.GiveCard(player, 1);
+            menuManager.EndGame(false, playerStats);
         }
     }
 

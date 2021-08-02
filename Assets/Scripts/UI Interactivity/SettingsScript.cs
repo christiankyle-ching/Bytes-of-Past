@@ -17,11 +17,13 @@ public class SettingsScript : MonoBehaviour
 
     public TMP_Dropdown qualityDropdown;
 
+    public AudioMixer sfxAudioMixer;
+
     void Start()
     {
         // Load last saved settings
         switchState = PlayerPrefs.GetInt("Settings_EnableSFX", 1);
-        if (switchState == -1) OnSwitchButtonClicked();
+        if (switchState < 0) OnSFXSwitchButtonClicked();
 
         float existingVolume = PlayerPrefs.GetFloat("Settings_BGMVolume", 0.5f);
         volumeSlider.value = existingVolume;
@@ -31,7 +33,7 @@ public class SettingsScript : MonoBehaviour
         qualityDropdown.value = existingQualityLevel;
     }
 
-    public void OnSwitchButtonClicked()
+    public void OnSFXSwitchButtonClicked()
     {
         switchBtn
             .transform
@@ -44,6 +46,8 @@ public class SettingsScript : MonoBehaviour
                 : Color.HSVToRGB(0f, 0f, 1f);
 
         PlayerPrefs.SetInt("Settings_EnableSFX", switchState);
+
+        sfxAudioMixer.SetFloat("SFXVolume", (switchState < 0) ? -80.0f : 0.0f);
     }
 
     public void setQuality(int qualityIndex)

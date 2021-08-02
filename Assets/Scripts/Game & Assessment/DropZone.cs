@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public AudioSource audiosource;
     // Game Handler
     private SinglePlayerGameController gameController;
 
@@ -76,16 +75,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         {
             gameController.HandleDropInTimeline(card, card.PlaceholderPos);
         }
-
-        
-
     }
 
     public void AcceptDrop(Card card)
     {
         card.initialContainer = this.cardContainer;
         card.Disable();
-
-        audiosource.Play();
     }
 }

@@ -183,11 +183,12 @@ public class Deck : MonoBehaviour
             throw ex;
         }
 
-        // SetTopCardPreview();
+        SetRemainingCards();
     }
 
     public void AddCard(CardData cardData)
     {
         cards.Push(cardData);
     }
+
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Graveyard : MonoBehaviour
 {
+    public AudioSource audioSource;
+
     private Stack<CardData> cards;
 
     private Deck deck;
@@ -11,12 +13,14 @@ public class Graveyard : MonoBehaviour
     private void Awake()
     {
         this.cards = new Stack<CardData>();
-        this.deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<Deck>();
+        this.deck =
+            GameObject.FindGameObjectWithTag("Deck").GetComponent<Deck>();
     }
 
     public void AddCard(CardData cardData)
     {
-        cards.Push(cardData);
+        cards.Push (cardData);
+        PlayTrashSound();
 
         Debug.Log("Graveyard: " + cards.Count);
     }
@@ -26,7 +30,12 @@ public class Graveyard : MonoBehaviour
         Debug.Log("Graveyard to Deck: " + cards.Count);
         foreach (CardData cardData in cards)
         {
-            deck.AddCard(cardData);
+            deck.AddCard (cardData);
         }
+    }
+
+    public void PlayTrashSound()
+    {
+        audioSource.Play();
     }
 }

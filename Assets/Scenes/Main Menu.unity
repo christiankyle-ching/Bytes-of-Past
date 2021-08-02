@@ -4566,7 +4566,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1108693376}
-        m_MethodName: OnSwitchButtonClicked
+        m_MethodName: OnSFXSwitchButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5297,6 +5297,7 @@ MonoBehaviour:
   switchBtn: {fileID: 1003878419}
   volumeSlider: {fileID: 1328286987}
   qualityDropdown: {fileID: 496420922}
+  sfxAudioMixer: {fileID: 24100000, guid: 978a9f57d786f124181e2521bdb384a1, type: 2}
 --- !u!1 &1111866648
 GameObject:
   m_ObjectHideFlags: 0
@@ -10186,6 +10187,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: BGMAudioSource
+      objectReference: {fileID: 0}
+    - target: {fileID: 5738370449724456027, guid: 4dfda5713932edb4882e1c8ff3a58561,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5738370449724456027, guid: 4dfda5713932edb4882e1c8ff3a58561,
         type: 3}
