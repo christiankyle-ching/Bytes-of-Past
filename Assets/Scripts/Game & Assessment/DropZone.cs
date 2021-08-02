@@ -5,12 +5,14 @@ using UnityEngine.EventSystems;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public AudioSource audiosource;
     // Game Handler
     private SinglePlayerGameController gameController;
 
     // Reference to the dropzone's card container
     private Transform cardContainer;
 
+    
     private bool IsTimeline
     {
         get => tag == "Timeline";
@@ -59,6 +61,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         // card will snap back to it's original place [see Card.OnEndDrag]
         if (card.canDrag && card.placeholderContainer == this.transform)
             card.placeholderContainer = card.initialContainer;
+
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -73,11 +76,16 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         {
             gameController.HandleDropInTimeline(card, card.PlaceholderPos);
         }
+
+        
+
     }
 
     public void AcceptDrop(Card card)
     {
         card.initialContainer = this.cardContainer;
         card.Disable();
+
+        audiosource.Play();
     }
 }

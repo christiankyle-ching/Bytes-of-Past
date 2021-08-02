@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canDrag: 0
+  audiosource: {fileID: 0}
   title: {fileID: 825109126113060996}
   description: {fileID: 825109125678865977}
   image: {fileID: 825109124685908191}
