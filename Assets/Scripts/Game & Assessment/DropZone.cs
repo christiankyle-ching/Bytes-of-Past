@@ -81,5 +81,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     {
         card.initialContainer = this.cardContainer;
         card.Disable();
+
+        card.OnAcceptDrop();
     }
 }

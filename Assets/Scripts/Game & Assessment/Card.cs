@@ -173,4 +173,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         canDrag = false;
     }
 
+    public void OnAcceptDrop() {
+        // Show the year (answer)
+        this.yearObj.color = Color.black;
+    }
+
 }
