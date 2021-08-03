@@ -18,6 +18,9 @@ public class PlayerStats : MonoBehaviour
     {
         get
         {
+            // TODO: FIX this
+            Debug.Log(this.correctAttempts + "/" + this.attemptCount);
+
             double percentageForm = System.Math.Round((this.Accuracy * 100), 2);
             return "Accuracy: " + percentageForm + "%";
         }

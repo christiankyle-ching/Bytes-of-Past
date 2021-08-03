@@ -128,6 +128,7 @@ public class SinglePlayerGameController : MonoBehaviour
         }
         else
         {
+            Destroy(livesContainer.transform.GetChild(lastIndex).gameObject); // destroy last life
             menuManager.EndGame(false, playerStats);
         }
     }

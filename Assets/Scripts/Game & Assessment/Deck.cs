@@ -82,6 +82,7 @@ public class Deck : MonoBehaviour
             this.cards.Push(cardData);
         }
 
+        ShuffleCards();
     }
 
     CardData[] ParseCSVToCards(TOPIC topic)
@@ -152,7 +153,16 @@ public class Deck : MonoBehaviour
 
     void ShuffleCards()
     {
-        throw new System.NotImplementedException();
+        Stack<CardData> shuffledCards = new Stack<CardData>();
+
+        foreach (CardData cardData in this.cards.OrderBy(x => UnityEngine.Random.Range(0f, 1f)))
+        {
+            shuffledCards.Push(cardData);
+        }
+
+        this.cards = shuffledCards;
+
+        // throw new System.NotImplementedException();
     }
 
     public void GiveCard(Transform playerDropZone, int count)

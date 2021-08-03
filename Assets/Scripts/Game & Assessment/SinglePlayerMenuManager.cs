@@ -56,6 +56,9 @@ public class SinglePlayerMenuManager : MonoBehaviour
 
     public void EndGame(bool isGameWon, PlayerStats playerStats)
     {
+        Debug.Log(playerStats.AccuracyText);
+        Debug.Log(playerStats.Accuracy);
+
         // Set Texts
         winOrLossText.GetComponent<TextMeshProUGUI>().text =
             isGameWon ? "You Won!" : "You Lost";
