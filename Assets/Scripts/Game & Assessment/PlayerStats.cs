@@ -11,7 +11,7 @@ public class PlayerStats : MonoBehaviour
 
     public float Accuracy
     {
-        get => this.correctAttempts / this.attemptCount;
+        get => (float) this.correctAttempts / (float) this.attemptCount;
     }
 
     public string AccuracyText
