@@ -103,13 +103,13 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         for (int i = 0; i < playerLives; i++)
         {
-            Instantiate (lifePrefab, livesContainer);
+            Instantiate(lifePrefab, livesContainer);
         }
     }
 
     void DrawCards()
     {
-        deck.GiveCard (player, startingCardsCount);
+        deck.GiveCard(player, startingCardsCount);
     }
 
     // Game Actions
@@ -122,13 +122,11 @@ public class SinglePlayerGameController : MonoBehaviour
 
         int lastIndex = livesContainer.transform.childCount - 1;
 
-        if (lastIndex > 0)
+        //Destroy(livesContainer.transform.GetChild(lastIndex).gameObject); // destroy last life
+        livesContainer.transform.GetChild(lastIndex).GetComponent<Life>().Discard(); // destroy last life
+
+        if (lastIndex <= 0)
         {
-            Destroy(livesContainer.transform.GetChild(lastIndex).gameObject);
-        }
-        else
-        {
-            Destroy(livesContainer.transform.GetChild(lastIndex).gameObject); // destroy last life
             menuManager.EndGame(false, playerStats);
         }
     }
@@ -138,7 +136,7 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         if (IsDropValid(droppedCard, dropPos))
         {
-            timeline.AcceptDrop (droppedCard);
+            timeline.AcceptDrop(droppedCard);
 
             playerStats.CorrectDrop();
 
@@ -146,7 +144,7 @@ public class SinglePlayerGameController : MonoBehaviour
         }
         else
         {
-            HandleInvalidDrop (droppedCard);
+            HandleInvalidDrop(droppedCard);
 
             playerStats.IncorrectDrop();
         }
@@ -167,7 +165,7 @@ public class SinglePlayerGameController : MonoBehaviour
         // can be pulled by the deck
         // then give it back again
         graveyard.AddCard(droppedCard.CardData);
-        Destroy(droppedCard.gameObject);
+        droppedCard.Discard();
 
         try
         {

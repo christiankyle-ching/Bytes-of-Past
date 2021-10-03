@@ -9,6 +9,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 {
     public bool canDrag;
     public AudioSource audioSource;
+    public Animator animator;
 
     [SerializeField]
     private CardData cardData;
@@ -48,6 +49,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         // this.initCardData();
 
         this.audioSource = GetComponent<AudioSource>();
+        this.animator = GetComponent<Animator>();
     }
 
     public void initCardData()
@@ -55,16 +57,18 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         this.title.text = this.cardData.Title;
         this.description.text = this.cardData.Description;
         this.image.sprite = this.cardData.Artwork;
-        this.cardBGImage.sprite = GetColoredSprite(this.cardData.Color); 
+        this.cardBGImage.sprite = GetColoredSprite(this.cardData.Color);
 
         this.yearObj.text = this.cardData.Year.ToString();
 
         // Name in Scene
-        name = this.cardData.Year.ToString();        
+        name = this.cardData.Year.ToString();
     }
 
-    public static Sprite GetColoredSprite(CARDCOLOR color) {
-        switch(color) {
+    public static Sprite GetColoredSprite(CARDCOLOR color)
+    {
+        switch (color)
+        {
             case CARDCOLOR.Orange:
                 return Resources.Load<Sprite>("Cards/Templates/Orange");
             case CARDCOLOR.Blue:
@@ -75,7 +79,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
                 return Resources.Load<Sprite>("Cards/Templates/Red");
             case CARDCOLOR.Violet:
                 return Resources.Load<Sprite>("Cards/Templates/Violet");
-            default: 
+            default:
                 return Resources.Load<Sprite>("Cards/Templates/Orange");
         }
     }
@@ -161,11 +165,24 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         placeholder.transform.SetSiblingIndex(newIndex);
     }
 
-    void OnDestroy()
+    public void Discard()
     {
+        // Play Animation
+        animator.SetTrigger("Wrong");
+
+        StartCoroutine(DestroyGameObject());
+    }
+
+    private IEnumerator DestroyGameObject()
+    {
+        // Delay to play animation
+        yield return new WaitForSeconds(1);
+
         // makes sure to destroy the placeholder whenever this object
         // is destroyed
         Destroy(placeholder);
+
+        Destroy(this.gameObject);
     }
 
     public void Disable()
@@ -173,9 +190,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         canDrag = false;
     }
 
-    public void OnAcceptDrop() {
+    public void OnAcceptDrop()
+    {
         // Show the year (answer)
         this.yearObj.color = Color.black;
+
+        // Trigger animation
+        animator.SetTrigger("Correct");
     }
 
 }

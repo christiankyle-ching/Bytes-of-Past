@@ -10,6 +10,7 @@ public class FirstRunSceneLoader : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("IsFirstRun", 1) == 0)
         {
+            // TODO: Uncomment on production to show tutorial
             // sceneLoader.GoToMainMenu(true);
         }
         else
