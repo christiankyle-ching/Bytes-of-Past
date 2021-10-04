@@ -56,6 +56,7 @@ public class SinglePlayerGameController : MonoBehaviour
 
         this.player = GameObject.FindGameObjectWithTag("Player").transform;
         this.playerStats = player.gameObject.GetComponent<PlayerStats>();
+        this.playerStats.initialLife = playerLives;
 
         GameObject _timelineObj = GameObject.FindGameObjectWithTag("Timeline");
         this.timeline = _timelineObj.GetComponent<DropZone>();
@@ -118,13 +119,13 @@ public class SinglePlayerGameController : MonoBehaviour
         // If Easy Mode, do not check for decreasing life.
         if (_difficulty == DIFFICULTY.Easy) return;
 
-        playerLives--;
-
         int lastIndex = livesContainer.transform.childCount - 1;
-
-        //Destroy(livesContainer.transform.GetChild(lastIndex).gameObject); // destroy last life
         livesContainer.transform.GetChild(lastIndex).GetComponent<Life>().Discard(); // destroy last life
 
+        playerStats.remainingLife = lastIndex;
+
+        // If the index is 0 (which means that the destroyed life is the last one)
+        // End the Game
         if (lastIndex <= 0)
         {
             menuManager.EndGame(false, playerStats);

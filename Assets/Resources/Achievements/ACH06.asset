@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12f920d7609114942a6cd92b5be1a040, type: 3}
-  m_Name: SP0
+  m_Name: ACH06
   m_EditorClassIdentifier: 
-  title: Solo Perfect!
-  description: Get a 100% accuracy in Single Player mode.
+  id: 6
+  title: Easy Peasy
+  description: Finish Solo Play (Easy Level)
+  isDone: 0

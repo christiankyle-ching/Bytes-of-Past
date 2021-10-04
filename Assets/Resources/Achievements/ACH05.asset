@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12f920d7609114942a6cd92b5be1a040, type: 3}
-  m_Name: MP0
+  m_Name: ACH05
   m_EditorClassIdentifier: 
-  title: MP0
-  description: Sample MP Achievement
+  id: 5
+  title: Explorer
+  description: Play all the 3 topics.
   isDone: 0

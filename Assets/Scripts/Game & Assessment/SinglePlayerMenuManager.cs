@@ -81,6 +81,23 @@ public class SinglePlayerMenuManager : MonoBehaviour
         PlayerPrefs
             .SetInt(TopicUtils.GetPrefKey_IsPlayed(staticData.SelectedTopic),
             1);
+
+        // Check Achievements
+        AchievementData[] acquiredAchievements = AchievementChecker.CheckAchievements(new GameData(
+            staticData.SelectedGameMode,
+            staticData.SelectedDifficulty,
+            isGameWon,
+            playerStats.Accuracy,
+            playerStats.remainingLife,
+            playerStats.initialLife)
+        );
+
+        // DEBUG
+        Debug.Log($"Acquired Achievements: {acquiredAchievements.Length}");
+        foreach (AchievementData ach in acquiredAchievements)
+        {
+            Debug.Log($"{ach.title}: {ach.description}");
+        }
     }
 
     public void SetTopicTexts(string text)

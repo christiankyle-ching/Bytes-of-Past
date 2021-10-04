@@ -37,17 +37,16 @@ public class ProfileStatisticsData
         int topicIndex = (int) topic;
         int difficultyIndex = (int) difficulty;
 
-        // TODO: change logic to detect whether it's their first game
         /* 
         Update Accuracy in Array with their average
         unless it is 0, which MIGHT mean it's their first game,
-        and the accuracy should be set without averaging
+        then the accuracy should be set without averaging
          */
         float existingAccuracy =
             gameAccuracy[gameModeIndex, topicIndex, difficultyIndex];
 
         gameAccuracy[gameModeIndex, topicIndex, difficultyIndex] =
-            (existingAccuracy == 0f)
+            (existingAccuracy == 0f) // TODO: change logic to detect whether it's their first game
                 ? newAccuracy
                 : ((newAccuracy + existingAccuracy) / 2);
 

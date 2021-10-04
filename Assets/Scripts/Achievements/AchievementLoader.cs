@@ -14,23 +14,12 @@ public class AchievementLoader : MonoBehaviour
         LoadAchievements();
     }
 
-    void Update()
-    {
-
-    }
 
     void LoadAchievements()
     {
-        // Single Player
-        AchievementData[] spData = Resources.LoadAll<AchievementData>("Achievements/SP");
-        foreach (AchievementData data in spData)
-        {
-            AddItem(data);
-        }
+        AchievementData[] achievements = AchievementChecker.GetAchievements();
 
-        // Multiplayer
-        AchievementData[] mpData = Resources.LoadAll<AchievementData>("Achievements/MP");
-        foreach (AchievementData data in mpData)
+        foreach (AchievementData data in achievements)
         {
             AddItem(data);
         }
@@ -38,6 +27,8 @@ public class AchievementLoader : MonoBehaviour
 
     void AddItem(AchievementData data)
     {
+
+
         GameObject item = Instantiate(achievementItemPrefab, achievementsContainer.transform);
         item.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = data.title;
         item.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = data.description;
