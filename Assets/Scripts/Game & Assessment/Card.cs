@@ -46,8 +46,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     private void Start()
     {
-        // this.initCardData();
-
         this.audioSource = GetComponent<AudioSource>();
         this.animator = GetComponent<Animator>();
     }

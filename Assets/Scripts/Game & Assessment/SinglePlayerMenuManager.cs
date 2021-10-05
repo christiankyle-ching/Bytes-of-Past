@@ -4,6 +4,7 @@ using UnityEngine;
 public class SinglePlayerMenuManager : MonoBehaviour
 {
     public SceneLoader sceneLoader;
+    public EndGameAchievementChecker achievementSystem;
 
     StaticData staticData;
 
@@ -83,21 +84,15 @@ public class SinglePlayerMenuManager : MonoBehaviour
             1);
 
         // Check Achievements
-        AchievementData[] acquiredAchievements = AchievementChecker.CheckAchievements(new GameData(
+        GameData gameData = new GameData(
             staticData.SelectedGameMode,
             staticData.SelectedDifficulty,
             isGameWon,
             playerStats.Accuracy,
             playerStats.remainingLife,
-            playerStats.initialLife)
-        );
+            playerStats.initialLife);
 
-        // DEBUG
-        Debug.Log($"Acquired Achievements: {acquiredAchievements.Length}");
-        foreach (AchievementData ach in acquiredAchievements)
-        {
-            Debug.Log($"{ach.title}: {ach.description}");
-        }
+        achievementSystem.ViewAcquiredAchievements(gameData);
     }
 
     public void SetTopicTexts(string text)

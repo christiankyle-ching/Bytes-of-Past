@@ -82,6 +82,7 @@ public static class AchievementChecker
         }
 
         if (acquired) SetAchievementDone(achievementID);
+
         return acquired;
     }
 

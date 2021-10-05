@@ -21,21 +21,21 @@ public class AchievementLoader : MonoBehaviour
 
         foreach (AchievementData data in achievements)
         {
-            AddItem(data);
+            AddItem(data, achievementsContainer.transform, achievementItemPrefab);
         }
     }
 
-    void AddItem(AchievementData data)
+    public static void AddItem(AchievementData data, Transform parent, GameObject prefab)
     {
+        GameObject item = Instantiate(prefab, parent);
 
-
-        GameObject item = Instantiate(achievementItemPrefab, achievementsContainer.transform);
-        item.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = data.title;
-        item.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = data.description;
+        Transform content = item.transform.GetChild(0);
+        content.Find("TextCol").Find("Title").GetComponent<TextMeshProUGUI>().text = data.title;
+        content.Find("TextCol").Find("Description").GetComponent<TextMeshProUGUI>().text = data.description;
 
         if (!data.isDone)
         {
-            item.transform.Find("Image").GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            content.Find("ImageCol").Find("Image").GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
         }
     }
 }

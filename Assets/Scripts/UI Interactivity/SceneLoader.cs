@@ -30,7 +30,15 @@ public class SceneLoader : MonoBehaviour
 
     public void GoBack()
     {
-        StartCoroutine(LoadScene(staticData.SceneIndexHistory.Pop(), true));
+        try
+        {
+            StartCoroutine(LoadScene(staticData.SceneIndexHistory.Pop(), true));
+        }
+        catch (InvalidOperationException)
+        {
+            StartCoroutine(LoadScene(1, true)); // Load Main Menu
+        }
+
     }
 
     public void GoToMainMenu(bool loadImmediately = false)

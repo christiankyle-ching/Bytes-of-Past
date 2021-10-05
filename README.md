@@ -13,13 +13,15 @@
 
 ## Notes
 ### Canvas Scaler
-- Set to **Scale with Screen Size**
-- **Reference Resolution** should be **2340x1080** (based on this [latest poll](https://www.antutu.com/en/doc/124145.htm))
-- Add and set the **Game Window resolution** to also **2340x1080**.
-- Rect Transform: Set **Anchor Points** of objects to where it should hook. Set **Stretch** mode to how you want to stretch the object based on different screen sizes (horizontal stretch only, vertical stretch only, or both).
+- Set to `Scale with Screen Size`
+- `Reference Resolution` should be `2340x1080` (based on this [latest poll](https://www.antutu.com/en/doc/124145.htm))
+- Add and set the `Game Window resolution` to also `2340x1080`.
+- Rect Transform: Set `Anchor Points` of objects to where it should hook. Set `Stretch` mode to how you want to stretch the object based on different screen sizes (horizontal stretch only, vertical stretch only, or both).
 
 ### Background
 Background has a BG prefab that includes cloud animations.
 
 ### Scene Loader & Back Button
-Add a **Scene Loader** prefab to each scene, and **BtnBack** for back button. Then, set the **Click** event on the button to the **SceneLoader.GoBack()** method.
+- Add a `Scene Loader` prefab to each scene. Then hide it in the editor to be able to see the actual scene. `Scene Loader` should be placed as the bottom-most layer to make the scene transitions visible.
+- `BtnBack` for back button. Then, set the `Click` event on the button to the `SceneLoader.GoBack()` method.
+
