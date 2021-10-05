@@ -15,4 +15,5 @@ public class SingleInstance : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
     }
+
 }

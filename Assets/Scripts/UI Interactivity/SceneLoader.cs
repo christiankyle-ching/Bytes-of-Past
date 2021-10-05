@@ -121,4 +121,9 @@ public class SceneLoader : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void gofirstscene()
+    {
+        SceneManager.LoadScene("First Run Screen");
+    }
 }
