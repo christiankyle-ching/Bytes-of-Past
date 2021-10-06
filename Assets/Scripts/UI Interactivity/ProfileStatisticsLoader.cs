@@ -24,7 +24,7 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
     StaticData staticData;
 
-    int preAssessmentTotalQuestions = 5;
+    int preAssessmentTotalQuestions = 15;
 
     int postAssessmentTotalQuestions = 20;
 
@@ -75,7 +75,7 @@ public class ProfileStatisticsLoader : MonoBehaviour
                 .GetComponent<TextMeshProUGUI>()
                 .text =
                 label +
-                assessmentScores[i, (int) TOPIC.Computer].ToString() +
+                assessmentScores[i, (int)TOPIC.Computer].ToString() +
                 "/" +
                 totalQuestions;
 
@@ -83,7 +83,7 @@ public class ProfileStatisticsLoader : MonoBehaviour
                 .GetComponent<TextMeshProUGUI>()
                 .text =
                 label +
-                assessmentScores[i, (int) TOPIC.Networking].ToString() +
+                assessmentScores[i, (int)TOPIC.Networking].ToString() +
                 "/" +
                 totalQuestions;
 
@@ -91,7 +91,7 @@ public class ProfileStatisticsLoader : MonoBehaviour
                 .GetComponent<TextMeshProUGUI>()
                 .text =
                 label +
-                assessmentScores[i, (int) TOPIC.Software].ToString() +
+                assessmentScores[i, (int)TOPIC.Software].ToString() +
                 "/" +
                 totalQuestions;
         }
@@ -116,8 +116,8 @@ public class ProfileStatisticsLoader : MonoBehaviour
         float avgAccuracy =
             (totalAccuracyCount > 0) ? totalAccuracy / totalAccuracyCount : 0f;
 
-        txtAccuracy.GetComponent<TextMeshProUGUI>().text =
-            (avgAccuracy * 100) + "%";
+        double avgAccuracyText = System.Math.Round((avgAccuracy * 100), 2);
+        txtAccuracy.GetComponent<TextMeshProUGUI>().text = $"{avgAccuracyText}%";
     }
 
     void LoadGameWinLoss()

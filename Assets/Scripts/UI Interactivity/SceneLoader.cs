@@ -130,7 +130,7 @@ public class SceneLoader : MonoBehaviour
         Application.Quit();
     }
 
-    public void gofirstscene()
+    public void GoToTutorial()
     {
         SceneManager.LoadScene("First Run Screen");
     }

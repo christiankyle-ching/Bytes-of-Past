@@ -207,6 +207,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AchievementItem Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3163967924410890660, guid: 3e69d15403636cc4283c1629cb1b742e,
+        type: 3}
+      propertyPath: m_PreferredWidth
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3163967924410890661, guid: 3e69d15403636cc4283c1629cb1b742e,
         type: 3}
       propertyPath: m_AnchorMax.y

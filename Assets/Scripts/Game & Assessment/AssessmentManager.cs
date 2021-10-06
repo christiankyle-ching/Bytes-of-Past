@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class AssessmentManager : MonoBehaviour
 {
     // GAMEOBJECT REFERENCES
+    public GameObject questionNumberText;
+
     public GameObject questionText;
 
     public GameObject btnAnswer1;
@@ -178,7 +180,7 @@ public class AssessmentManager : MonoBehaviour
     {
         Debug.Log($"SCORE: {currentScore}/{questions.Count}");
 
-        Debug.Log (currentQuestionIndex);
+        Debug.Log(currentQuestionIndex);
         Debug.Log(questions.Count);
 
         if (currentQuestionIndex >= questions.Count)
@@ -190,13 +192,8 @@ public class AssessmentManager : MonoBehaviour
         currentQuestion = questions.ElementAt(currentQuestionIndex);
         currentChoices = currentQuestion.Choices;
 
-        string _questionText =
-            $"Question: {currentQuestionIndex + 1}/" +
-            questions.Count +
-            "\n\n" +
-            currentQuestion.Question;
-
-        questionText.GetComponent<TextMeshProUGUI>().text = _questionText;
+        questionNumberText.GetComponent<TextMeshProUGUI>().text = $"Question: {currentQuestionIndex + 1}/{questions.Count}";
+        questionText.GetComponent<TextMeshProUGUI>().text = currentQuestion.Question;
 
         TextMeshProUGUI[] choicesTexts =
         {
@@ -220,7 +217,7 @@ public class AssessmentManager : MonoBehaviour
             $"Score: {currentScore}/{questions.Count}";
 
         txtTopic.GetComponent<TextMeshProUGUI>().text =
-            "Topic: " + TopicUtils.GetName((TOPIC) selectedTopic);
+            "Topic: " + TopicUtils.GetName((TOPIC)selectedTopic);
 
         endGameMenu.SetActive(true);
 
