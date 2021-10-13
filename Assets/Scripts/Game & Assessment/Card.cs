@@ -42,10 +42,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         canDrag = true;
         initialContainer = transform.parent;
         placeholderContainer = initialContainer;
-    }
 
-    private void Start()
-    {
         this.audioSource = GetComponent<AudioSource>();
         this.animator = GetComponent<Animator>();
     }
@@ -190,11 +187,16 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     public void OnAcceptDrop()
     {
-        // Show the year (answer)
-        this.yearObj.color = Color.black;
+        try
+        {
+            Disable();
 
-        // Trigger animation
-        animator.SetTrigger("Correct");
+            // Show the year (answer)
+            this.yearObj.color = Color.black;
+
+            // Trigger animation
+            animator.SetTrigger("Correct");
+        }
+        catch { }
     }
-
 }

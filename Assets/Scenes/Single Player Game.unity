@@ -495,7 +495,7 @@ GameObject:
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -512,6 +512,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifePrefab: {fileID: 659571673558610053, guid: 3e1e3e21c629e534eb46c53bf1e795a3,
+    type: 3}
+  cardPrefab: {fileID: 825109125205122357, guid: 05f8ee8d281ade54a9ea6db00a8e77f8,
     type: 3}
 --- !u!4 &912352679
 Transform:

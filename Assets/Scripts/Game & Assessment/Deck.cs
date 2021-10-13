@@ -11,7 +11,7 @@ public class Deck : MonoBehaviour
     // Game Controller
     private SinglePlayerGameController gameController;
 
-    
+
     [SerializeField]
     private TextMeshProUGUI txtRemainingCount;
 
@@ -77,7 +77,7 @@ public class Deck : MonoBehaviour
     {
         CardData[] cardAssets = ParseCSVToCards(topic);
 
-        foreach(CardData cardData in cardAssets)
+        foreach (CardData cardData in cardAssets)
         {
             this.cards.Push(cardData);
         }
@@ -165,10 +165,37 @@ public class Deck : MonoBehaviour
         // throw new System.NotImplementedException();
     }
 
+    public CardData[] PopCards(int count)
+    {
+        List<CardData> _cards = new List<CardData>();
+        try
+        {
+            for (int i = 0; i < count; i++)
+            {
+                // Pop first in Stack before anything else, to catch errors immediately
+                // Prevents instantiation of blank cards
+                CardData cardData = cards.Pop();
+                _cards.Add(cardData);
+
+                // if cards is empty after giving a card,
+                // only break the loop, deck should still be in game
+                if (cards.Count <= 0) break;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+
+        SetRemainingCards();
+
+        return _cards.OrderBy(card => card.Year).ToArray();
+    }
+
     public void GiveCard(Transform playerDropZone, int count)
     {
         if (cards.Count <= 0) return;
-        
+
         Transform receivingCardContainer = playerDropZone.GetChild(0);
 
         try

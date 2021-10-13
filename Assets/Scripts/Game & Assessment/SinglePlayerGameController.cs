@@ -27,6 +27,9 @@ public class SinglePlayerGameController : MonoBehaviour
     [SerializeField]
     private GameObject lifePrefab;
 
+    [SerializeField]
+    private GameObject cardPrefab;
+
     private SinglePlayerMenuManager menuManager;
 
     StaticData staticData;
@@ -97,6 +100,7 @@ public class SinglePlayerGameController : MonoBehaviour
         }
 
         InitLives();
+        PlaceCardsInTimeline();
         DrawCards();
     }
 
@@ -111,6 +115,36 @@ public class SinglePlayerGameController : MonoBehaviour
     void DrawCards()
     {
         deck.GiveCard(player, startingCardsCount);
+    }
+
+    void PlaceCardsInTimeline()
+    {
+        CardData[] cards = null;
+
+        switch (_difficulty)
+        {
+            case DIFFICULTY.Easy:
+                cards = deck.PopCards(1);
+                break;
+            case DIFFICULTY.Medium:
+                cards = deck.PopCards(1);
+                break;
+            case DIFFICULTY.Hard:
+                cards = deck.PopCards(3);
+                break;
+        }
+
+        if (cards != null && cards?.Length > 0)
+        {
+            foreach (CardData data in cards)
+            {
+                GameObject cardGO = Instantiate(cardPrefab, timelineCardContainer);
+                Card card = cardGO.GetComponent<Card>();
+                card.CardData = data;
+                card.initCardData();
+                card.OnAcceptDrop();
+            }
+        }
     }
 
     // Game Actions
