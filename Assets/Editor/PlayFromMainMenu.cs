@@ -12,8 +12,8 @@ public class PlayFromMainMenu
     */
     static PlayFromMainMenu()
     {
-        EditorSceneManager.playModeStartScene =
-            AssetDatabase
-                .LoadAssetAtPath<SceneAsset>("Assets/Scenes/Main Menu.unity");
+        // Comment out to debug a specific scene easily
+        //string path = "Assets/Scenes/Main Menu.unity";
+        // EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
     }
 }
