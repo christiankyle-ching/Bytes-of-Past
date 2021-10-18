@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3620441628204440881}
   - component: {fileID: 817766003954103487}
   - component: {fileID: 2558615093684010668}
+  - component: {fileID: 2719833852452825619}
   m_Layer: 5
   m_Name: Enemy0
   m_TagString: Untagged
@@ -122,6 +123,30 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2719833852452825619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620441628204440911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 2
+  m_StartAxis: 1
+  m_CellSize: {x: 185, y: 300}
+  m_Spacing: {x: -150, y: 0}
+  m_Constraint: 2
+  m_ConstraintCount: 1
 --- !u!1 &3620441628547320914
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,6 +160,7 @@ GameObject:
   - component: {fileID: 3620441628547320916}
   - component: {fileID: 1009651332401081494}
   - component: {fileID: 510277242799234543}
+  - component: {fileID: 7776543841208604348}
   m_Layer: 5
   m_Name: Enemy2
   m_TagString: Untagged
@@ -244,6 +270,30 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7776543841208604348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620441628547320914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 2
+  m_StartAxis: 1
+  m_CellSize: {x: 185, y: 300}
+  m_Spacing: {x: -150, y: 0}
+  m_Constraint: 2
+  m_ConstraintCount: 1
 --- !u!1 &3620441628895291480
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,6 +304,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3620441628895291481}
   - component: {fileID: 3620441628895291482}
+  - component: {fileID: -3273449836801753110}
+  - component: {fileID: -4750290155113451825}
   m_Layer: 5
   m_Name: EnemyAreas
   m_TagString: Untagged
@@ -308,6 +360,52 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!114 &-3273449836801753110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620441628895291480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: aebd153f1ccc09146aa9d496328852c5
+  hasSpawned: 0
+--- !u!114 &-4750290155113451825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620441628895291480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  bufferTimeMultiplier: 3
+  bufferSizeLimit: 64
+  catchupThreshold: 6
+  catchupMultiplier: 0.1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!1 &3620441629209509143
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,6 +419,7 @@ GameObject:
   - component: {fileID: 3620441629209509145}
   - component: {fileID: 6821382283959343789}
   - component: {fileID: 8866824180087964110}
+  - component: {fileID: 6811952218815892459}
   m_Layer: 5
   m_Name: Enemy1
   m_TagString: Untagged
@@ -430,3 +529,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6811952218815892459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620441629209509143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 2
+  m_StartAxis: 1
+  m_CellSize: {x: 185, y: 300}
+  m_Spacing: {x: -150, y: 0}
+  m_Constraint: 2
+  m_ConstraintCount: 1

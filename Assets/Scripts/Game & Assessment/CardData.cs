@@ -8,13 +8,13 @@ public enum CARDCOLOR
 }
 
 // [CreateAssetMenu(fileName = "New Card", menuName = "Card")]
-public class CardData 
+public class CardData
 {
     // public -> private to prevent access, used getter methods instead
 
     [SerializeField]
     private string title;
-     [SerializeField]
+    [SerializeField]
     private string inventor;
     [SerializeField]
     private string description;
@@ -25,8 +25,7 @@ public class CardData
     [SerializeField]
     private CARDCOLOR color;
 
-
-private string id;
+    private string id;
 
     public string ID
     {
@@ -42,7 +41,7 @@ private string id;
     {
         get => this.Inventor;
     }
-    
+
 
     public string Description
     {
@@ -51,7 +50,8 @@ private string id;
 
     public int Year
     {
-        get {
+        get
+        {
             return this.year;
         }
     }
@@ -66,17 +66,15 @@ private string id;
         get => this.color;
     }
 
-    public CardData(string id, int year, string title, string inventor, string description) {
+    public CardData(string id, int year, string title, string inventor, string description)
+    {
         this.id = id;
         this.year = year;
         this.title = title;
         this.inventor = inventor;
         this.description = description;
         this.artwork = Resources.Load<Sprite>($"Cards/Icons/{id}");
-        
-        this.color = (CARDCOLOR) Random.Range(0, 5); // random color scheme
+
+        this.color = (CARDCOLOR)Random.Range(0, 5); // random color scheme
     }
-
-    
-
 }
