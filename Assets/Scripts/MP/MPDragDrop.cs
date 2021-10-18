@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Mirror;
 
-public class MPDragDrop : MonoBehaviour
+public class MPDragDrop : NetworkBehaviour
 {
     private GameObject canvas; // GameCanvas
-    private GameObject dropzone; // last dropzone the card entered
-
+    public PlayerManager playerManager;
+    
     private bool isDragging = false;
     private bool isOverDropZone = false;
+    private bool isDraggable = false;
+    private GameObject dropzone; // last dropzone the card entered
     private Transform startParent;
     private Vector2 startPos;
 
     private void Start()
     {
         canvas = GameObject.Find("GameCanvas");
-        dropzone = transform.parent.gameObject;
+        isDraggable = hasAuthority;
     }
 
     private void Update()
@@ -42,6 +45,8 @@ public class MPDragDrop : MonoBehaviour
 
     public void OnBeginDrag()
     {
+        if (!isDraggable) return;
+
         isDragging = true;
 
         startParent = transform.parent;
@@ -50,11 +55,18 @@ public class MPDragDrop : MonoBehaviour
 
     public void OnEndDrag()
     {
+        if (!isDraggable) return;
+
         isDragging = false;
 
         if (isOverDropZone)
         {
             transform.SetParent(dropzone.transform, false);
+            isDraggable = false;
+
+            NetworkIdentity ni = NetworkClient.connection.identity;
+            playerManager = ni.GetComponent<PlayerManager>();
+            playerManager.PlayCard(gameObject);
         } else
         {
             transform.SetParent(startParent, false);
