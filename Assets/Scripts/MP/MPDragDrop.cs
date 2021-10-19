@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Mirror;
+using System;
 
 public class MPDragDrop : NetworkBehaviour
 {
     private GameObject canvas; // GameCanvas
     public PlayerManager playerManager;
-    
+
     private bool isDragging = false;
-    private bool isOverDropZone = false;
     private bool isDraggable = false;
-    private GameObject dropzone; // last dropzone the card entered
     private Transform startParent;
     private Vector2 startPos;
+
+    private GameObject placeholder;
 
     private void Start()
     {
@@ -27,20 +28,35 @@ public class MPDragDrop : NetworkBehaviour
         if (isDragging)
         {
             transform.position = Input.mousePosition;
-            transform.SetParent(canvas.transform, true);
         }
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        isOverDropZone = true;
-        dropzone = collision.gameObject;
-    }
+        Collider2D collider = collision.collider;
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        isOverDropZone = false;
-        dropzone = null;
+        if (collider != null)
+        {
+            try
+            {
+                if (collider.gameObject.layer == LayerMask.NameToLayer("DropZones"))
+                {
+                    placeholder.transform.SetParent(collider.transform);
+                }
+                else if (collider.tag == "Card")
+                {
+                    placeholder.transform.SetSiblingIndex(collider.transform.GetSiblingIndex());
+                }
+            }
+            catch (MissingReferenceException)
+            {
+                // FIXME: dont know what the heck this is all about but it works
+            }
+            catch (NullReferenceException)
+            {
+                // FIXME: dont know what the heck this is all about but it works
+            }
+        }
     }
 
     public void OnBeginDrag()
@@ -51,6 +67,10 @@ public class MPDragDrop : NetworkBehaviour
 
         startParent = transform.parent;
         startPos = transform.position;
+
+        CreatePlaceholder();
+
+        transform.SetParent(canvas.transform, true);
     }
 
     public void OnEndDrag()
@@ -59,18 +79,50 @@ public class MPDragDrop : NetworkBehaviour
 
         isDragging = false;
 
-        if (isOverDropZone)
+        if (placeholder.transform.parent.tag == "Timeline")
         {
-            transform.SetParent(dropzone.transform, false);
-            isDraggable = false;
-
             NetworkIdentity ni = NetworkClient.connection.identity;
             playerManager = ni.GetComponent<PlayerManager>();
-            playerManager.PlayCard(gameObject);
-        } else
+            playerManager.PlayCard(gameObject, GetComponent<MPCardInfo>().infoIndex, placeholder.transform.GetSiblingIndex());
+
+            isDraggable = false;
+
+            RemovePlaceholder();
+        }
+        else
         {
             transform.SetParent(startParent, false);
             transform.position = startPos;
+
+            ReplacePlaceholder();
         }
+
+    }
+
+    private void CreatePlaceholder()
+    {
+        placeholder = new GameObject();
+        placeholder.name = "PLACEHOLDER";
+
+        RectTransform rect = placeholder.AddComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(185, 300);
+
+        placeholder.transform.SetParent(transform.parent);
+        placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
+    }
+
+    private void ReplacePlaceholder()
+    {
+        int placeholderIndex = placeholder.transform.GetSiblingIndex();
+
+        transform.SetParent(placeholder.transform.parent);
+        transform.SetSiblingIndex(placeholderIndex);
+
+        Destroy(placeholder);
+    }
+
+    private void RemovePlaceholder()
+    {
+        Destroy(placeholder);
     }
 }

@@ -20,7 +20,7 @@ public class PlayerManager : NetworkBehaviour
     private GameObject enemy0, enemy1, enemy2;
     private GameObject dropzone;
 
-    private Stack<CardData> cards = new Stack<CardData>();
+    private List<MPCardData> cardInfos = new List<MPCardData>();
 
     public override void OnStartClient()
     {
@@ -33,78 +33,24 @@ public class PlayerManager : NetworkBehaviour
         enemy0 = enemyAreas.GetChild(0).gameObject;
         enemy1 = enemyAreas.GetChild(1).gameObject;
         enemy2 = enemyAreas.GetChild(2).gameObject;
-    }
-
-    [Server]
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
 
         LoadCards();
     }
 
-    [Server]
     private void LoadCards()
     {
-        List<CardData> loadedCards = ParseCSVToCards(TOPIC.Computer);
-        foreach (CardData data in loadedCards)
+        List<MPCardData> loadedCards = ParseCSVToCards(TOPIC.Computer);
+        foreach (MPCardData data in loadedCards)
         {
-            this.cards.Push(data);
+            this.cardInfos.Add(data);
         }
 
-        ShuffleCards();
-
-        Debug.Log($"Deck: {this.cards.Count}");
+        Debug.Log($"CARDS: {this.cardInfos.Count}");
     }
 
-    [Command]
-    public void CmdDealCards()
+    private List<MPCardData> ParseCSVToCards(TOPIC topic)
     {
-        for (int i = 0; i < startingCardsCount; i++)
-        {
-            CardData data = cards.Pop(); // TODO: Use this card data
-            GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
-
-            NetworkServer.Spawn(card, connectionToClient);
-            RpcShowCard(card, CARDACTION.Dealt);
-        }
-    }
-
-    public void PlayCard(GameObject card)
-    {
-        CmdPlayCard(card);
-    }
-
-    [Command]
-    private void CmdPlayCard(GameObject card)
-    {
-        RpcShowCard(card, CARDACTION.Played);
-    }
-
-    [ClientRpc]
-    public void RpcShowCard(GameObject card, CARDACTION type)
-    {
-        if (type == CARDACTION.Dealt)
-        {
-            if (hasAuthority)
-            {
-                card.transform.SetParent(playerArea.transform, false);
-            }
-            else
-            {
-                card.transform.SetParent(enemy0.transform, false);
-            }
-        }
-        else if (type == CARDACTION.Played)
-        {
-            card.transform.SetParent(dropzone.transform, false);
-        }
-    }
-
-    [Server]
-    private List<CardData> ParseCSVToCards(TOPIC topic)
-    {
-        List<CardData> cards = new List<CardData>();
+        List<MPCardData> cards = new List<MPCardData>();
 
         TextAsset rawData = null;
 
@@ -145,23 +91,72 @@ public class PlayerManager : NetworkBehaviour
                 string[] cells = lines[i].Split('\t');
 
                 cards
-                    .Add(new CardData(cells[0], Int32.Parse(cells[2]), cells[3], cells[4], cells[5]));
+                    .Add(new MPCardData(cells[0], Int32.Parse(cells[2]), cells[3], cells[4], cells[5]));
             }
         }
 
         return cards;
     }
 
-    [Server]
-    private void ShuffleCards()
+    [Command]
+    public void CmdDealCards()
     {
-        Stack<CardData> shuffledCards = new Stack<CardData>();
-
-        foreach (CardData cardData in this.cards.OrderBy(x => UnityEngine.Random.Range(0f, 1f)))
+        for (int i = 0; i < startingCardsCount; i++)
         {
-            shuffledCards.Push(cardData);
-        }
+            int infoIndex = MPGameManager.Instance.PopCard();
 
-        this.cards = shuffledCards;
+            if (infoIndex < 0) break; // if deck has no cards
+
+            GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
+            NetworkServer.Spawn(card, connectionToClient);
+            RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
+        }
     }
+
+    public void PlayCard(GameObject card, int infoIndex, int pos)
+    {
+        CmdPlayCard(card, infoIndex, pos);
+    }
+
+    [Command]
+    private void CmdPlayCard(GameObject card, int infoIndex, int pos)
+    {
+        // TODO: Handle Game Logic
+        bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos);
+
+        if (isDropValid)
+        {
+            // Show card only if card drop is right
+            RpcShowCard(card, infoIndex, pos, CARDACTION.Played);
+        }
+        else
+        {
+            NetworkServer.Destroy(card);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcShowCard(GameObject card, int infoIndex, int pos, CARDACTION type)
+    {
+        card.GetComponent<MPCardInfo>().InitCardData(cardInfos[infoIndex]);
+        card.GetComponent<MPCardInfo>().infoIndex = infoIndex;
+
+        if (type == CARDACTION.Dealt)
+        {
+            if (hasAuthority)
+            {
+                card.transform.SetParent(playerArea.transform, false);
+            }
+            else
+            {
+                card.transform.SetParent(enemy0.transform, false);
+            }
+        }
+        else if (type == CARDACTION.Played)
+        {
+            card.transform.SetParent(dropzone.transform, false);
+            card.transform.SetSiblingIndex(pos);
+        }
+    }
+
 }

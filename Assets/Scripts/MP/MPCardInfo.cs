@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class MPCardInfo : MonoBehaviour
 {
-    public CardData cardData;
+    public MPCardData cardData;
+    public int infoIndex;
 
     private TextMeshProUGUI Year;
     private TextMeshProUGUI Title;
@@ -14,24 +15,24 @@ public class MPCardInfo : MonoBehaviour
     private Image Image;
     private Image CardBGImage;
 
-    public void InitCardData(CardData data)
+    public void InitCardData(MPCardData data)
     {
         cardData = data;
 
         Year = transform.Find("Year").GetComponent<TextMeshProUGUI>();
         Title = transform.Find("Title").GetComponent<TextMeshProUGUI>();
-        Description = transform.Find("Description").GetComponent<TextMeshProUGUI>();
-        Image = transform.Find("Image").GetComponent<Image>();
+        Description = transform.Find("Container").Find("Description").GetComponent<TextMeshProUGUI>();
+        Image = transform.Find("Container").Find("Image").GetComponent<Image>();
         CardBGImage = GetComponent<Image>();
 
-        Year.text = cardData.Year.ToString();
-        Title.text = cardData.Title.ToString();
-        Description.text = cardData.Description.ToString();
-        Image.sprite = cardData.Artwork;
-        CardBGImage.sprite = GetColoredSprite(cardData.Color);
+        Year.text = cardData.year.ToString();
+        Title.text = cardData.title.ToString();
+        Description.text = cardData.description.ToString();
+        Image.sprite = Resources.Load<Sprite>($"Cards/Icons/{cardData.id}");
+        CardBGImage.sprite = GetColoredSprite(cardData.color);
 
         // Name in Scene
-        name = cardData.Year.ToString();
+        name = cardData.year.ToString();
     }
 
     private static Sprite GetColoredSprite(CARDCOLOR color)

@@ -312,7 +312,7 @@ GameObject:
   - component: {fileID: -2597054400066524345}
   m_Layer: 8
   m_Name: Card
-  m_TagString: Untagged
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc9c36e8985760144b43b39a38e7a7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardIndex: 0
 --- !u!114 &7644221710632808191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,7 +433,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: -2597054400066524345}
-          m_MethodName: OnPointerExit
+          m_MethodName: OnBeginDrag
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -457,12 +458,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - eventID: 0
+  - eventID: 3
     callback:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: -2597054400066524345}
-          m_MethodName: OnPointerEnter
+          m_MethodName: OnPointerUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -472,12 +473,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - eventID: 1
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: -2597054400066524345}
-          m_MethodName: OnPointerExit
+          m_MethodName: OnPointerDown
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -511,7 +512,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 185, y: 35}
+  m_Size: {x: 185, y: 54.31111}
   m_EdgeRadius: 0
 --- !u!50 &8013930649680930952
 Rigidbody2D:
@@ -619,6 +620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  holdTime: 0.5
   zoomCardPrefab: {fileID: 3546060735738498305, guid: da5bc468a9ee25b4daf73d607a96e586,
     type: 3}
   zoomCard: {fileID: 0}

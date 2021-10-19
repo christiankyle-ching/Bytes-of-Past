@@ -12,6 +12,7 @@ TagManager:
   - Menu
   - Static Data
   - BGMAudioSource
+  - DropZone
   layers:
   - Default
   - TransparentFX

@@ -172,10 +172,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2742246380915928513, guid: e75ece27b5e7f824aa4fbcce38992a3a,
+        type: 3}
+      propertyPath: m_Maskable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2742246380915928513, guid: e75ece27b5e7f824aa4fbcce38992a3a,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2742246380915928527, guid: e75ece27b5e7f824aa4fbcce38992a3a,
         type: 3}
       propertyPath: m_Name
-      value: ZoomCard
+      value: ZoomCard Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4514154329294069208, guid: e75ece27b5e7f824aa4fbcce38992a3a,
         type: 3}
