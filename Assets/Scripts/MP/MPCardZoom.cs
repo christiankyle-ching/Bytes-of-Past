@@ -64,7 +64,7 @@ public class MPCardZoom : NetworkBehaviour
 
         zoomCard.GetComponent<MPCardInfo>().InitCardData(GetComponent<MPCardInfo>().cardData);
 
-        //zoomCard.GetComponent<Animator>().SetTrigger("OnPreview");
+        zoomCard.GetComponent<Animator>().SetTrigger("Zoom");
     }
 
     void UnzoomCard()

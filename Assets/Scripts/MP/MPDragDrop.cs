@@ -97,6 +97,7 @@ public class MPDragDrop : NetworkBehaviour
             ReplacePlaceholder();
         }
 
+        GetComponent<AudioSource>().Play();
     }
 
     private void CreatePlaceholder()
@@ -124,5 +125,20 @@ public class MPDragDrop : NetworkBehaviour
     private void RemovePlaceholder()
     {
         Destroy(placeholder);
+    }
+
+    public void OnDiscard()
+    {
+        GetComponent<Animator>().SetTrigger("Wrong");
+    }
+
+    public void DisableDrag()
+    {
+        isDraggable = false;
+    }
+
+    public void EnableDrag()
+    {
+        isDraggable = true;
     }
 }

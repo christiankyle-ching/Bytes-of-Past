@@ -39,13 +39,11 @@ public class PlayerManager : NetworkBehaviour
 
     private void LoadCards()
     {
-        List<MPCardData> loadedCards = ParseCSVToCards(TOPIC.Computer);
+        List<MPCardData> loadedCards = ParseCSVToCards(MPGameManager.Instance._topic);
         foreach (MPCardData data in loadedCards)
         {
             this.cardInfos.Add(data);
         }
-
-        Debug.Log($"CARDS: {this.cardInfos.Count}");
     }
 
     private List<MPCardData> ParseCSVToCards(TOPIC topic)
@@ -101,6 +99,8 @@ public class PlayerManager : NetworkBehaviour
     [Command]
     public void CmdDealCards()
     {
+        MPGameManager.Instance.AddReadyPlayerCount();
+
         for (int i = 0; i < startingCardsCount; i++)
         {
             int infoIndex = MPGameManager.Instance.PopCard();
@@ -111,6 +111,8 @@ public class PlayerManager : NetworkBehaviour
             NetworkServer.Spawn(card, connectionToClient);
             RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
         }
+
+        RpcUpdateTurn();
     }
 
     public void PlayCard(GameObject card, int infoIndex, int pos)
@@ -121,7 +123,6 @@ public class PlayerManager : NetworkBehaviour
     [Command]
     private void CmdPlayCard(GameObject card, int infoIndex, int pos)
     {
-        // TODO: Handle Game Logic
         bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos);
 
         if (isDropValid)
@@ -131,7 +132,36 @@ public class PlayerManager : NetworkBehaviour
         }
         else
         {
-            NetworkServer.Destroy(card);
+            card.GetComponent<MPDragDrop>().OnDiscard();
+            StartCoroutine(DestroyObjectWithDelay(card));
+        }
+
+        RpcUpdateTurn();
+    }
+
+    [ClientRpc]
+    public void RpcUpdateTurn()
+    {
+        if (!MPGameManager.Instance.gameStarted) return;
+
+        bool yourTurn = MPGameManager.Instance.currentPlayer == netIdentity;
+
+        // Enable or disable cards only working on host
+        if (yourTurn)
+        {
+            Debug.Log("YOUR TURN!");
+            foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+            {
+                dragDrop.EnableDrag();
+            }
+        }
+        else
+        {
+            Debug.Log("NOT YOUR TURN!");
+            foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+            {
+                dragDrop.DisableDrag();
+            }
         }
     }
 
@@ -140,6 +170,7 @@ public class PlayerManager : NetworkBehaviour
     {
         card.GetComponent<MPCardInfo>().InitCardData(cardInfos[infoIndex]);
         card.GetComponent<MPCardInfo>().infoIndex = infoIndex;
+        card.GetComponent<MPDragDrop>().DisableDrag();
 
         if (type == CARDACTION.Dealt)
         {
@@ -156,7 +187,14 @@ public class PlayerManager : NetworkBehaviour
         {
             card.transform.SetParent(dropzone.transform, false);
             card.transform.SetSiblingIndex(pos);
+            card.GetComponent<Animator>().SetTrigger("Correct");
         }
+    }
+
+    IEnumerator DestroyObjectWithDelay(GameObject obj)
+    {
+        yield return new WaitForSeconds(1f);
+        NetworkServer.Destroy(obj);
     }
 
 }

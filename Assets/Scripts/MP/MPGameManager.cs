@@ -10,6 +10,17 @@ public class MPGameManager : NetworkBehaviour
     private static MPGameManager _instance;
     public static MPGameManager Instance { get { return _instance; } }
 
+    [SyncVar] public bool gameStarted = false;
+    private int readyPlayersCount = 0;
+    [SyncVar] public NetworkIdentity currentPlayer;
+    public SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
+
+    private List<MPCardData> cardInfos = new List<MPCardData>();
+    public SyncList<int> deck = new SyncList<int>(); // indices of card info
+    public SyncList<int> timeline = new SyncList<int>(); // indices of card info
+
+    [SyncVar] public TOPIC _topic = TOPIC.Computer;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -22,15 +33,11 @@ public class MPGameManager : NetworkBehaviour
         }
     }
 
-    private List<MPCardData> cardInfos = new List<MPCardData>();
-    public SyncList<int> deck = new SyncList<int>(); // indices of card info
-    public SyncList<int> timeline = new SyncList<int>(); // indices of card info
-
     public override void OnStartServer()
     {
         base.OnStartServer();
 
-        LoadCards(TOPIC.Computer);
+        LoadCards(_topic);
     }
 
     public int PopCard()
@@ -111,8 +118,6 @@ public class MPGameManager : NetworkBehaviour
         {
             deck.Add(id);
         }
-
-        Debug.Log("Deck: " + cards.Count + " " + deck.Count);
     }
 
     public bool OnPlayCard(int infoIndex, int pos)
@@ -123,10 +128,12 @@ public class MPGameManager : NetworkBehaviour
 
         if (isDropValid)
         {
-            Debug.Log($"pos: {pos}");
-            Debug.Log($"infoIndex: {infoIndex}");
+            //Debug.Log($"pos: {pos}");
+            //Debug.Log($"infoIndex: {infoIndex}");
             timeline.Insert(pos, infoIndex);
         }
+
+        NextPlayerTurn();
 
         return isDropValid;
     }
@@ -158,7 +165,52 @@ public class MPGameManager : NetworkBehaviour
             yearAfter = int.MaxValue;
         }
 
-        Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
+        //Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
         return (yearBefore <= cardYear && cardYear <= yearAfter);
+    }
+
+    public void CmdAddPlayer(NetworkIdentity i)
+    {
+        players.Add(i);
+
+        Debug.Log($"Players: {players.Count}. NetID #{i.netId} joined!");
+    }
+
+    public void CmdRemovePlayer(NetworkIdentity i)
+    {
+        players.Remove(i);
+    }
+
+    public void AddReadyPlayerCount()
+    {
+        readyPlayersCount++;
+
+        if (readyPlayersCount >= players.Count && readyPlayersCount >= 2)
+        {
+            StartGame();
+        }
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+        currentPlayer = players[0];
+
+        Debug.Log("Start Game!");
+    }
+
+    public void NextPlayerTurn()
+    {
+        int curPlayerIndex = players.FindIndex(identity => identity.netId == currentPlayer.netId);
+        int nextPlayerIndex = curPlayerIndex + 1;
+
+        if (nextPlayerIndex < players.Count)
+        {
+            currentPlayer = players[nextPlayerIndex];
+        }
+        else
+        {
+            currentPlayer = players[0];
+        }
     }
 }
