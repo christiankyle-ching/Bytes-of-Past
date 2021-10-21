@@ -158,9 +158,9 @@ public class MPNetworkManager : NetworkManager
     /// <param name="conn">Connection from client.</param>
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        base.OnServerDisconnect(conn);
-
         MPGameManager.Instance.CmdRemovePlayer(conn.identity);
+
+        base.OnServerDisconnect(conn);
     }
 
     /// <summary>

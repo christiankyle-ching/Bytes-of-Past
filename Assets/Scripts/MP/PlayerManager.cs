@@ -4,6 +4,7 @@ using UnityEngine;
 using Mirror;
 using System;
 using System.Linq;
+using TMPro;
 
 public enum CARDACTION
 {
@@ -12,12 +13,14 @@ public enum CARDACTION
 
 public class PlayerManager : NetworkBehaviour
 {
+    private bool isMyTurn = false;
+
     private int startingCardsCount = 5;
 
     public GameObject cardPrefab;
 
     private GameObject playerArea;
-    private GameObject enemy0, enemy1, enemy2;
+    private GameObject enemyAreas;
     private GameObject dropzone;
 
     private List<MPCardData> cardInfos = new List<MPCardData>();
@@ -27,15 +30,13 @@ public class PlayerManager : NetworkBehaviour
         base.OnStartClient();
 
         playerArea = GameObject.Find("PlayerArea");
+        enemyAreas = GameObject.Find("EnemyAreas");
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
-
-        Transform enemyAreas = GameObject.Find("EnemyAreas").transform;
-        enemy0 = enemyAreas.GetChild(0).gameObject;
-        enemy1 = enemyAreas.GetChild(1).gameObject;
-        enemy2 = enemyAreas.GetChild(2).gameObject;
 
         LoadCards();
     }
+
+    #region ------------------------------ LOCAL LOAD CARDS ------------------------------
 
     private void LoadCards()
     {
@@ -96,6 +97,8 @@ public class PlayerManager : NetworkBehaviour
         return cards;
     }
 
+    #endregion
+
     [Command]
     public void CmdDealCards()
     {
@@ -103,7 +106,7 @@ public class PlayerManager : NetworkBehaviour
 
         for (int i = 0; i < startingCardsCount; i++)
         {
-            int infoIndex = MPGameManager.Instance.PopCard();
+            int infoIndex = MPGameManager.Instance.PopCard(netIdentity);
 
             if (infoIndex < 0) break; // if deck has no cards
 
@@ -112,7 +115,11 @@ public class PlayerManager : NetworkBehaviour
             RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
         }
 
-        RpcUpdateTurn();
+        StartCoroutine(nameof(UpdateGUI));
+
+        //RpcUpdateTurn();
+        //RpcUpdateOpponentCards();
+        //RpcUpdateDeckCount();
     }
 
     public void PlayCard(GameObject card, int infoIndex, int pos)
@@ -123,7 +130,7 @@ public class PlayerManager : NetworkBehaviour
     [Command]
     private void CmdPlayCard(GameObject card, int infoIndex, int pos)
     {
-        bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos);
+        bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos, netIdentity);
 
         if (isDropValid)
         {
@@ -134,22 +141,46 @@ public class PlayerManager : NetworkBehaviour
         {
             card.GetComponent<MPDragDrop>().OnDiscard();
             StartCoroutine(DestroyObjectWithDelay(card));
+            MPGameManager.Instance.PopCard(netIdentity); // Get another card
         }
 
-        RpcUpdateTurn();
+        //StartCoroutine(nameof(UpdateGUI));
+
+        //RpcUpdateTurn();
+        //RpcUpdateOpponentCards();
+        //RpcUpdateDeckCount();
+    }
+
+    #region ------------------------------ UPDATE GUI FUNCTIONS ------------------------------
+
+    public IEnumerable UpdateGUI()
+    {
+        yield return new WaitForSeconds(1f);
+
+        //RpcUpdateTurn();
+        //RpcUpdateOpponentCards();
+        //RpcUpdateDeckCount();
     }
 
     [ClientRpc]
-    public void RpcUpdateTurn()
+    public void RpcUpdateUI(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, int deckCount)
     {
-        if (!MPGameManager.Instance.gameStarted) return;
+        RpcUpdateTurn(currentPlayer);
+        RpcUpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands);
+        RpcUpdateDeckCount(deckCount);
+    }
 
-        bool yourTurn = MPGameManager.Instance.currentPlayer == netIdentity;
+    public void RpcUpdateTurn(NetworkIdentity identity)
+    {
 
-        // Enable or disable cards only working on host
-        if (yourTurn)
+        isMyTurn = identity.isLocalPlayer;
+
+        Debug.Log($"ILP: {isMyTurn}");
+
+        // Enable or disable cards
+        if (isMyTurn)
         {
-            Debug.Log("YOUR TURN!");
+            //Debug.Log("YOUR TURN!");
             foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
             {
                 dragDrop.EnableDrag();
@@ -157,12 +188,45 @@ public class PlayerManager : NetworkBehaviour
         }
         else
         {
-            Debug.Log("NOT YOUR TURN!");
+            //Debug.Log("NOT YOUR TURN!");
             foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
             {
                 dragDrop.DisableDrag();
             }
         }
+    }
+
+    public void RpcUpdateOpponentCards(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands)
+    {
+        List<int> tmpOpponentHands = new List<int>();
+
+        int opponentCurrentIndex = -1;
+
+        Debug.Log("ILP Cards: " + currentPlayer.isLocalPlayer);
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i].isLocalPlayer) continue;
+            if (currentPlayerIndex == i) opponentCurrentIndex = tmpOpponentHands.Count;
+            tmpOpponentHands.Add(playerHands[i]);
+        }
+
+        for (int i = 0; i < tmpOpponentHands.Count; i++)
+        {
+            Transform cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining");
+            string message = tmpOpponentHands[i].ToString() + " Cards Remaining";
+            if (opponentCurrentIndex == i) message += " (Playing)";
+
+            cardCount.GetComponent<TextMeshProUGUI>().text = message;
+        }
+
+        Debug.Log("Player Hands: " + String.Join(",", playerHands));
+        Debug.Log("Opponent Hands: " + String.Join(",", tmpOpponentHands));
+    }
+
+    public void RpcUpdateDeckCount(int deckCount)
+    {
+        // TODO: Deck Count
     }
 
     [ClientRpc]
@@ -178,10 +242,10 @@ public class PlayerManager : NetworkBehaviour
             {
                 card.transform.SetParent(playerArea.transform, false);
             }
-            else
-            {
-                card.transform.SetParent(enemy0.transform, false);
-            }
+            //else
+            //{
+            //    card.transform.SetParent(enemy0.transform, false);
+            //}
         }
         else if (type == CARDACTION.Played)
         {
@@ -191,10 +255,15 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
+    #endregion
+
+    #region ------------------------------ UTILS ------------------------------
+
     IEnumerator DestroyObjectWithDelay(GameObject obj)
     {
         yield return new WaitForSeconds(1f);
         NetworkServer.Destroy(obj);
     }
 
+    #endregion
 }

@@ -11,13 +11,14 @@ public class MPGameManager : NetworkBehaviour
     public static MPGameManager Instance { get { return _instance; } }
 
     [SyncVar] public bool gameStarted = false;
+    [SyncVar] public int currentPlayerIndex = 0;
+    private SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
     private int readyPlayersCount = 0;
-    [SyncVar] public NetworkIdentity currentPlayer;
-    public SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
 
     private List<MPCardData> cardInfos = new List<MPCardData>();
     public SyncList<int> deck = new SyncList<int>(); // indices of card info
     public SyncList<int> timeline = new SyncList<int>(); // indices of card info
+    public SyncList<int> playerHands = new SyncList<int>(); // count of hands
 
     [SyncVar] public TOPIC _topic = TOPIC.Computer;
 
@@ -40,12 +41,14 @@ public class MPGameManager : NetworkBehaviour
         LoadCards(_topic);
     }
 
-    public int PopCard()
+    public int PopCard(NetworkIdentity i)
     {
         if (deck.Count > 0)
         {
             int id = deck[0];
             deck.RemoveAt(0);
+
+            playerHands[FindPlayerIndex(i)]++;
             return id;
         }
 
@@ -120,17 +123,22 @@ public class MPGameManager : NetworkBehaviour
         }
     }
 
-    public bool OnPlayCard(int infoIndex, int pos)
+    public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity)
     {
+        playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
+
         MPCardData data = cardInfos[infoIndex];
 
         bool isDropValid = IsDropValid(data.year, pos);
 
         if (isDropValid)
         {
-            //Debug.Log($"pos: {pos}");
-            //Debug.Log($"infoIndex: {infoIndex}");
             timeline.Insert(pos, infoIndex);
+            Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. CORRECT.");
+        }
+        else
+        {
+            deck.Add(infoIndex); // Add back the card wrongly placed
         }
 
         NextPlayerTurn();
@@ -169,23 +177,28 @@ public class MPGameManager : NetworkBehaviour
         return (yearBefore <= cardYear && cardYear <= yearAfter);
     }
 
-    public void CmdAddPlayer(NetworkIdentity i)
+    public void CmdAddPlayer(NetworkIdentity nid)
     {
-        players.Add(i);
+        players.Add(nid);
+        playerHands.Add(0);
 
-        Debug.Log($"Players: {players.Count}. NetID #{i.netId} joined!");
+        Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid} joined!");
     }
 
-    public void CmdRemovePlayer(NetworkIdentity i)
+    public void CmdRemovePlayer(NetworkIdentity nid)
     {
-        players.Remove(i);
+        int index = players.FindIndex(identity => identity == nid);
+        players.Remove(nid);
+        playerHands.RemoveAt(index);
+
+        Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid} left!");
     }
 
     public void AddReadyPlayerCount()
     {
         readyPlayersCount++;
 
-        if (readyPlayersCount >= players.Count && readyPlayersCount >= 2)
+        if (readyPlayersCount >= players.Count && players.Count >= 2)
         {
             StartGame();
         }
@@ -193,24 +206,43 @@ public class MPGameManager : NetworkBehaviour
 
     public void StartGame()
     {
+        currentPlayerIndex = 0;
         gameStarted = true;
-        currentPlayer = players[0];
+        ClientsUpdateUI();
 
         Debug.Log("Start Game!");
     }
 
     public void NextPlayerTurn()
     {
-        int curPlayerIndex = players.FindIndex(identity => identity.netId == currentPlayer.netId);
-        int nextPlayerIndex = curPlayerIndex + 1;
+        Debug.Log("--- NEXT TURN ---");
+
+        int nextPlayerIndex = currentPlayerIndex + 1;
 
         if (nextPlayerIndex < players.Count)
         {
-            currentPlayer = players[nextPlayerIndex];
+            currentPlayerIndex = nextPlayerIndex;
         }
         else
         {
-            currentPlayer = players[0];
+            currentPlayerIndex = 0;
         }
+
+        Debug.Log($"Next Player [{currentPlayerIndex}]: #{players[currentPlayerIndex]}");
+
+        ClientsUpdateUI();
+    }
+
+    public void ClientsUpdateUI()
+    {
+        PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        NetworkIdentity currentPlayer = players[currentPlayerIndex];
+
+        player.RpcUpdateUI(currentPlayer, currentPlayerIndex, players.ToArray(), playerHands.ToArray(), deck.Count);
+    }
+
+    public int FindPlayerIndex(NetworkIdentity i)
+    {
+        return players.FindIndex(iden => iden == i);
     }
 }

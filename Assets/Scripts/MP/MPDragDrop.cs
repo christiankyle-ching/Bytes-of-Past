@@ -20,7 +20,6 @@ public class MPDragDrop : NetworkBehaviour
     private void Start()
     {
         canvas = GameObject.Find("GameCanvas");
-        isDraggable = hasAuthority;
     }
 
     private void Update()
