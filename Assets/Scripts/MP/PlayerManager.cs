@@ -15,12 +15,15 @@ public class PlayerManager : NetworkBehaviour
 {
     private bool isMyTurn = false;
 
-    private int startingCardsCount = 5;
+    private int startingCardsCount = 2;
 
     public GameObject cardPrefab;
 
     private GameObject playerArea;
     private GameObject enemyAreas;
+    private GameObject menuCanvas;
+    private GameObject gameStateText;
+    private GameObject deck;
     private GameObject dropzone;
 
     private List<MPCardData> cardInfos = new List<MPCardData>();
@@ -31,6 +34,9 @@ public class PlayerManager : NetworkBehaviour
 
         playerArea = GameObject.Find("PlayerArea");
         enemyAreas = GameObject.Find("EnemyAreas");
+        gameStateText = GameObject.Find("RoundText");
+        menuCanvas = GameObject.Find("MenuCanvas");
+        deck = GameObject.Find("Deck");
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
 
         LoadCards();
@@ -100,7 +106,7 @@ public class PlayerManager : NetworkBehaviour
     #endregion
 
     [Command]
-    public void CmdDealCards()
+    public void CmdReady()
     {
         MPGameManager.Instance.AddReadyPlayerCount();
 
@@ -115,11 +121,21 @@ public class PlayerManager : NetworkBehaviour
             RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
         }
 
-        StartCoroutine(nameof(UpdateGUI));
+        // Shouldn't this be getting hold of identity of Player?
+        // Result is always the same.
+        NetworkIdentity ni = connectionToClient.identity;
+        MPGameManager.Instance.SetPlayerName(ni, PlayerPrefs.GetString("Profile_Name", ""));
+    }
 
-        //RpcUpdateTurn();
-        //RpcUpdateOpponentCards();
-        //RpcUpdateDeckCount();
+    public void GetAnotherCard(NetworkIdentity netIdentity)
+    {
+        int infoIndex = MPGameManager.Instance.PopCard(netIdentity);
+
+        if (infoIndex < 0) return; // if deck has no cards
+
+        GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
+        NetworkServer.Spawn(card, connectionToClient);
+        RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
     }
 
     public void PlayCard(GameObject card, int infoIndex, int pos)
@@ -139,48 +155,38 @@ public class PlayerManager : NetworkBehaviour
         }
         else
         {
-            card.GetComponent<MPDragDrop>().OnDiscard();
+            // FIXME: Not working in client
+            card.GetComponent<MPDragDrop>().OnDiscard(); // Animator.SetTrigger()
             StartCoroutine(DestroyObjectWithDelay(card));
-            MPGameManager.Instance.PopCard(netIdentity); // Get another card
+
+            GetAnotherCard(netIdentity); // Get Another Card
         }
-
-        //StartCoroutine(nameof(UpdateGUI));
-
-        //RpcUpdateTurn();
-        //RpcUpdateOpponentCards();
-        //RpcUpdateDeckCount();
     }
 
     #region ------------------------------ UPDATE GUI FUNCTIONS ------------------------------
 
-    public IEnumerable UpdateGUI()
-    {
-        yield return new WaitForSeconds(1f);
-
-        //RpcUpdateTurn();
-        //RpcUpdateOpponentCards();
-        //RpcUpdateDeckCount();
-    }
-
     [ClientRpc]
-    public void RpcUpdateUI(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, int deckCount)
+    public void RpcUpdateUI(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, string[] playerNames, int deckCount, bool gameFinished, string gameMsg, string[] winnerNames)
     {
-        RpcUpdateTurn(currentPlayer);
-        RpcUpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands);
-        RpcUpdateDeckCount(deckCount);
+        if (gameFinished)
+        {
+            ShowEndGameMenu(winnerNames);
+        }
+
+        UpdateTurn(currentPlayer, gameFinished, gameMsg);
+        UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands, playerNames);
+        UpdateDeckCount(deckCount);
     }
 
-    public void RpcUpdateTurn(NetworkIdentity identity)
+    public void UpdateTurn(NetworkIdentity identity, bool gameFinished, string gameMsg)
     {
-
         isMyTurn = identity.isLocalPlayer;
 
         Debug.Log($"ILP: {isMyTurn}");
 
         // Enable or disable cards
-        if (isMyTurn)
+        if (isMyTurn && !gameFinished)
         {
-            //Debug.Log("YOUR TURN!");
             foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
             {
                 dragDrop.EnableDrag();
@@ -188,16 +194,18 @@ public class PlayerManager : NetworkBehaviour
         }
         else
         {
-            //Debug.Log("NOT YOUR TURN!");
             foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
             {
                 dragDrop.DisableDrag();
             }
         }
+
+        gameStateText.GetComponent<TextMeshProUGUI>().text = gameMsg;
     }
 
-    public void RpcUpdateOpponentCards(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands)
+    public void UpdateOpponentCards(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, string[] playerNames)
     {
+        List<string> tmpOpponentNames = new List<string>();
         List<int> tmpOpponentHands = new List<int>();
 
         int opponentCurrentIndex = -1;
@@ -207,26 +215,36 @@ public class PlayerManager : NetworkBehaviour
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i].isLocalPlayer) continue;
+
+            // .Count because the next index would be the current count before adding the elements
             if (currentPlayerIndex == i) opponentCurrentIndex = tmpOpponentHands.Count;
+
+            tmpOpponentNames.Add(playerNames[i]);
             tmpOpponentHands.Add(playerHands[i]);
         }
 
         for (int i = 0; i < tmpOpponentHands.Count; i++)
         {
             Transform cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining");
-            string message = tmpOpponentHands[i].ToString() + " Cards Remaining";
-            if (opponentCurrentIndex == i) message += " (Playing)";
+            Transform playerName = enemyAreas.transform.GetChild(i).Find("PlayerName");
 
-            cardCount.GetComponent<TextMeshProUGUI>().text = message;
+            string cardMsg = tmpOpponentHands[i].ToString() + " Cards Remaining";
+            if (opponentCurrentIndex == i) cardMsg += " (Playing)";
+
+            cardCount.GetComponent<TextMeshProUGUI>().text = cardMsg;
+            playerName.GetComponent<TextMeshProUGUI>().text = tmpOpponentNames[i];
         }
 
-        Debug.Log("Player Hands: " + String.Join(",", playerHands));
-        Debug.Log("Opponent Hands: " + String.Join(",", tmpOpponentHands));
+        //Debug.Log($"Current Player [{currentPlayerIndex}]");
+        //Debug.Log($"My Player? {currentPlayer.isLocalPlayer}");
+        //Debug.Log("Player Names: " + String.Join(",", playerNames));
+        //Debug.Log("Player Hands: " + String.Join(",", playerHands));
+        //Debug.Log("Opponent Hands: " + String.Join(",", tmpOpponentHands));
     }
 
-    public void RpcUpdateDeckCount(int deckCount)
+    public void UpdateDeckCount(int deckCount)
     {
-        // TODO: Deck Count
+        deck.GetComponentInChildren<TextMeshProUGUI>().text = $"{deckCount} Cards Remaining";
     }
 
     [ClientRpc]
@@ -242,10 +260,6 @@ public class PlayerManager : NetworkBehaviour
             {
                 card.transform.SetParent(playerArea.transform, false);
             }
-            //else
-            //{
-            //    card.transform.SetParent(enemy0.transform, false);
-            //}
         }
         else if (type == CARDACTION.Played)
         {
@@ -253,6 +267,17 @@ public class PlayerManager : NetworkBehaviour
             card.transform.SetSiblingIndex(pos);
             card.GetComponent<Animator>().SetTrigger("Correct");
         }
+    }
+
+    public void ShowEndGameMenu(string[] winnerNames)
+    {
+        Transform bg = menuCanvas.transform.GetChild(0);
+        Transform endGame = menuCanvas.transform.GetChild(1);
+
+        bg.gameObject.SetActive(true);
+        endGame.gameObject.SetActive(true);
+
+        endGame.Find("WinnerList").GetComponent<TextMeshProUGUI>().text = String.Join("\n", winnerNames);
     }
 
     #endregion

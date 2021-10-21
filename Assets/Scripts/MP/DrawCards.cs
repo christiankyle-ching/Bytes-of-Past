@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.UI;
 
 public class DrawCards : NetworkBehaviour
 {
@@ -11,6 +12,8 @@ public class DrawCards : NetworkBehaviour
     {
         NetworkIdentity ni = NetworkClient.connection.identity;
         playerManager = ni.GetComponent<PlayerManager>();
-        playerManager.CmdDealCards();
+        playerManager.CmdReady();
+
+        GetComponent<Button>().interactable = false; // TODO: Might be able to do via Rpc to prevent something breaking
     }
 }

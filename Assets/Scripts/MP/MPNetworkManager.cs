@@ -148,7 +148,7 @@ public class MPNetworkManager : NetworkManager
     {
         base.OnServerAddPlayer(conn);
 
-        MPGameManager.Instance.CmdAddPlayer(conn.identity);
+        MPGameManager.Instance.AddPlayer(conn.identity);
     }
 
     /// <summary>
@@ -158,7 +158,7 @@ public class MPNetworkManager : NetworkManager
     /// <param name="conn">Connection from client.</param>
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        MPGameManager.Instance.CmdRemovePlayer(conn.identity);
+        MPGameManager.Instance.RemovePlayer(conn.identity);
 
         base.OnServerDisconnect(conn);
     }

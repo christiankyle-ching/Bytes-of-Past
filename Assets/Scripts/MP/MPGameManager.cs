@@ -10,8 +10,12 @@ public class MPGameManager : NetworkBehaviour
     private static MPGameManager _instance;
     public static MPGameManager Instance { get { return _instance; } }
 
+    [SyncVar] public int turns = 0;
     [SyncVar] public bool gameStarted = false;
     [SyncVar] public int currentPlayerIndex = 0;
+    [SyncVar] public bool gameFinished = false;
+    private SyncList<int> winnersPlayerIndex = new SyncList<int>();
+    private SyncList<string> winnerPlayerNames = new SyncList<string>();
     private SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
     private int readyPlayersCount = 0;
 
@@ -19,6 +23,7 @@ public class MPGameManager : NetworkBehaviour
     public SyncList<int> deck = new SyncList<int>(); // indices of card info
     public SyncList<int> timeline = new SyncList<int>(); // indices of card info
     public SyncList<int> playerHands = new SyncList<int>(); // count of hands
+    public SyncList<string> playerNames = new SyncList<string>(); // count of hands
 
     [SyncVar] public TOPIC _topic = TOPIC.Computer;
 
@@ -125,6 +130,7 @@ public class MPGameManager : NetworkBehaviour
 
     public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity)
     {
+        turns++; // Add Turn
         playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
 
         MPCardData data = cardInfos[infoIndex];
@@ -177,19 +183,21 @@ public class MPGameManager : NetworkBehaviour
         return (yearBefore <= cardYear && cardYear <= yearAfter);
     }
 
-    public void CmdAddPlayer(NetworkIdentity nid)
+    public void AddPlayer(NetworkIdentity nid)
     {
         players.Add(nid);
         playerHands.Add(0);
+        playerNames.Add($"Unnamed Player #{nid.netId}");
 
-        Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid} joined!");
+        Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid.netId} joined!");
     }
 
-    public void CmdRemovePlayer(NetworkIdentity nid)
+    public void RemovePlayer(NetworkIdentity nid)
     {
         int index = players.FindIndex(identity => identity == nid);
         players.Remove(nid);
         playerHands.RemoveAt(index);
+        playerNames.RemoveAt(index);
 
         Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid} left!");
     }
@@ -225,12 +233,65 @@ public class MPGameManager : NetworkBehaviour
         }
         else
         {
+            // Start of another round
             currentPlayerIndex = 0;
+            CheckWinners();
         }
 
-        Debug.Log($"Next Player [{currentPlayerIndex}]: #{players[currentPlayerIndex]}");
+        ClientsUpdateUI();
+    }
+
+    public void CheckWinners()
+    {
+        // Get Winners Indices
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (playerHands[i] <= 0)
+            {
+                winnersPlayerIndex.Add(i);
+            }
+        }
+
+        // Get their Names
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (winnersPlayerIndex.Contains(i))
+            {
+                winnerPlayerNames.Add(playerNames[i]);
+            }
+        }
+
+        Debug.Log(GetGameStateMessage());
+        Debug.Log("Checking Winners: " + winnersPlayerIndex.Count);
+
+        if (winnersPlayerIndex.Count > 0)
+        {
+            EndGame();
+        }
 
         ClientsUpdateUI();
+    }
+
+    public void EndGame()
+    {
+        gameFinished = true;
+        Debug.Log("End Game!");
+    }
+
+    public string GetGameStateMessage()
+    {
+        if (!gameStarted)
+        {
+            return $"Waiting for Players to Ready ({readyPlayersCount}/{players.Count})...";
+        }
+        else if (gameStarted)
+        {
+            return "ROUND " + ((turns / playerHands.Count) + 1);
+        }
+        else
+        {
+            return "";
+        }
     }
 
     public void ClientsUpdateUI()
@@ -238,11 +299,29 @@ public class MPGameManager : NetworkBehaviour
         PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
         NetworkIdentity currentPlayer = players[currentPlayerIndex];
 
-        player.RpcUpdateUI(currentPlayer, currentPlayerIndex, players.ToArray(), playerHands.ToArray(), deck.Count);
+        player.RpcUpdateUI(
+            currentPlayer,
+            currentPlayerIndex,
+            players.ToArray(),
+            playerHands.ToArray(),
+            playerNames.ToArray(),
+            deck.Count,
+            gameFinished,
+            GetGameStateMessage(),
+            winnerPlayerNames.ToArray());
     }
 
     public int FindPlayerIndex(NetworkIdentity i)
     {
         return players.FindIndex(iden => iden == i);
+    }
+
+    public void SetPlayerName(NetworkIdentity i, string name)
+    {
+        if (name != string.Empty)
+        {
+            int index = FindPlayerIndex(i);
+            playerNames[index] = name;
+        }
     }
 }

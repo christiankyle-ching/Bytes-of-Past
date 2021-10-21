@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Mirror;
 using System;
+using UnityEngine.UI;
 
 public class MPDragDrop : NetworkBehaviour
 {
+    public GameObject placeholderPrefab;
     private GameObject canvas; // GameCanvas
     public PlayerManager playerManager;
 
@@ -101,14 +103,24 @@ public class MPDragDrop : NetworkBehaviour
 
     private void CreatePlaceholder()
     {
-        placeholder = new GameObject();
+        placeholder = Instantiate(placeholderPrefab);
         placeholder.name = "PLACEHOLDER";
-
-        RectTransform rect = placeholder.AddComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(185, 300);
 
         placeholder.transform.SetParent(transform.parent);
         placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
+
+        //placeholder = new GameObject();
+        //placeholder.name = "PLACEHOLDER";
+
+        //RectTransform rect = placeholder.AddComponent<RectTransform>();
+        //rect.sizeDelta = new Vector2(185, 300);
+
+        //Outline outline = placeholder.AddComponent<Outline>();
+        //outline.effectColor = Color.green;
+        //outline.effectDistance = new Vector2(10f, 10f);
+
+        //placeholder.transform.SetParent(transform.parent);
+        //placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
     }
 
     private void ReplacePlaceholder()
