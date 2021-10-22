@@ -14,6 +14,7 @@ public class DrawCards : NetworkBehaviour
         playerManager = ni.GetComponent<PlayerManager>();
         playerManager.CmdReady();
 
-        GetComponent<Button>().interactable = false; // TODO: Might be able to do via Rpc to prevent something breaking
+        //GetComponent<Button>().interactable = false; // TODO: Might be able to do via Rpc to prevent something breaking
+        gameObject.SetActive(false);
     }
 }

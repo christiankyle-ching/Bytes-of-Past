@@ -8,7 +8,11 @@ public class RoundText : MonoBehaviour
 {
     public void SetText(string newText)
     {
-        GetComponent<TextMeshProUGUI>().text = newText;
-        GetComponent<Animator>().SetTrigger("OnChange");
+        string currentText = GetComponent<TextMeshProUGUI>().text;
+        if (newText != currentText)
+        {
+            GetComponent<TextMeshProUGUI>().text = newText;
+            GetComponent<Animator>().SetTrigger("Change");
+        }
     }
 }

@@ -93,5 +93,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  timePerTurn: 5
   cardPrefab: {fileID: 2742246380915928527, guid: e75ece27b5e7f824aa4fbcce38992a3a,
     type: 3}
+  normalTextColor: {r: 1, g: 1, b: 1, a: 1}
+  dangerTextColor: {r: 1, g: 0, b: 0, a: 1}

@@ -4,11 +4,16 @@ using UnityEngine;
 using Mirror;
 using System.Linq;
 using System;
+using TMPro;
 
 public class MPGameManager : NetworkBehaviour
 {
     private static MPGameManager _instance;
     public static MPGameManager Instance { get { return _instance; } }
+
+    [SyncVar] public float timeLeft = 0f;
+    private float timePerTurn = 5f;
+    private float minPlayers = 2;
 
     [SyncVar] public int turns = 0;
     [SyncVar] public bool gameStarted = false;
@@ -16,6 +21,7 @@ public class MPGameManager : NetworkBehaviour
     [SyncVar] public bool gameFinished = false;
     private SyncList<int> winnersPlayerIndex = new SyncList<int>();
     private SyncList<string> winnerPlayerNames = new SyncList<string>();
+    private SyncList<NetworkIdentity> winnerPlayerIdens = new SyncList<NetworkIdentity>();
     private SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
     private int readyPlayersCount = 0;
 
@@ -26,6 +32,7 @@ public class MPGameManager : NetworkBehaviour
     public SyncList<string> playerNames = new SyncList<string>(); // count of hands
 
     [SyncVar] public TOPIC _topic = TOPIC.Computer;
+    private GameObject timer;
 
     private void Awake()
     {
@@ -37,6 +44,43 @@ public class MPGameManager : NetworkBehaviour
         {
             _instance = this;
         }
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        timer = GameObject.Find("Timer");
+    }
+
+    private void Update()
+    {
+        // TODO: FIXME
+        //UpdateTimer();
+    }
+
+    public void UpdateTimer()
+    {
+        timeLeft -= Time.deltaTime;
+
+        if (timeLeft < 0 && gameStarted && !gameFinished)
+        {
+            // throws NullReferenceException
+            players[currentPlayerIndex].GetComponent<PlayerManager>().CmdGetAnotherCard();
+            SetTimerText(timeLeft);
+            ResetTimer();
+            NextPlayerTurn();
+        }
+    }
+
+    public void SetTimerText(float time)
+    {
+        timer.GetComponentInChildren<TextMeshProUGUI>().text = $"{Math.Ceiling(time)} S";
+    }
+
+    public void ResetTimer()
+    {
+        timeLeft = timePerTurn;
     }
 
     public override void OnStartServer()
@@ -132,34 +176,48 @@ public class MPGameManager : NetworkBehaviour
     public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity)
     {
         turns++; // Add Turn
-        playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
 
-        MPCardData data = cardInfos[infoIndex];
+        bool playerDropped = infoIndex > 0;
+        bool isDropValid;
 
-        bool isDropValid = IsDropValid(data.year, pos);
-
-        if (isDropValid)
+        if (playerDropped)
         {
-            timeline.Insert(pos, infoIndex);
-            Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. CORRECT.");
+            playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
+
+            MPCardData data = cardInfos[infoIndex];
+
+            isDropValid = IsDropValid(data.year, pos);
+
+            if (isDropValid)
+            {
+                timeline.Insert(pos, infoIndex);
+                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. CORRECT.");
+            }
+            else
+            {
+                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. WRONG.");
+
+                deck.Add(infoIndex); // Add back the card wrongly placed
+
+                // Add new card to player
+                identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+            }
         }
         else
         {
-            Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. WRONG.");
+            isDropValid = false;
 
-            // RUNNING ON SERVER
             // Add new card to player
             identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
-
-            deck.Add(infoIndex); // Add back the card wrongly placed
         }
 
+        // Calculate next turn then check if starting another round to check winners
         NextPlayerTurn();
-
         bool isStartRound = turns % playerHands.Count == 0;
         if (isStartRound) CheckWinners();
 
         ClientsUpdateUI();
+
         return isDropValid;
     }
 
@@ -201,6 +259,7 @@ public class MPGameManager : NetworkBehaviour
         playerNames.Add($"Unnamed Player #{nid.netId}");
 
         Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid.netId} joined!");
+        ClientsUpdateUI();
     }
 
     public void RemovePlayer(NetworkIdentity nid)
@@ -217,16 +276,23 @@ public class MPGameManager : NetworkBehaviour
     {
         readyPlayersCount++;
 
-        if (readyPlayersCount >= players.Count && players.Count >= 2)
+        if (readyPlayersCount >= players.Count && players.Count >= minPlayers)
         {
             StartGame();
         }
+        else
+        {
+            ClientsUpdateUI();
+        }
+
+        Debug.Log($"Ready Players: {readyPlayersCount}. Players: {String.Join(",", playerNames)}");
     }
 
     public void StartGame()
     {
         currentPlayerIndex = 0;
         gameStarted = true;
+        ResetTimer();
         ClientsUpdateUI();
 
         Debug.Log("Start Game!");
@@ -246,6 +312,8 @@ public class MPGameManager : NetworkBehaviour
         {
             currentPlayerIndex = 0;
         }
+
+        ResetTimer();
     }
 
     public void CheckWinners()
@@ -265,6 +333,7 @@ public class MPGameManager : NetworkBehaviour
             if (winnersPlayerIndex.Contains(i))
             {
                 winnerPlayerNames.Add(playerNames[i]);
+                winnerPlayerIdens.Add(players[i]);
             }
         }
 
@@ -313,7 +382,8 @@ public class MPGameManager : NetworkBehaviour
             deck.Count,
             gameFinished,
             GetGameStateMessage(),
-            winnerPlayerNames.ToArray());
+            winnerPlayerNames.ToArray(),
+            winnerPlayerIdens.ToArray());
     }
 
     public int FindPlayerIndex(NetworkIdentity i)
