@@ -108,19 +108,6 @@ public class MPDragDrop : NetworkBehaviour
 
         placeholder.transform.SetParent(transform.parent);
         placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
-
-        //placeholder = new GameObject();
-        //placeholder.name = "PLACEHOLDER";
-
-        //RectTransform rect = placeholder.AddComponent<RectTransform>();
-        //rect.sizeDelta = new Vector2(185, 300);
-
-        //Outline outline = placeholder.AddComponent<Outline>();
-        //outline.effectColor = Color.green;
-        //outline.effectDistance = new Vector2(10f, 10f);
-
-        //placeholder.transform.SetParent(transform.parent);
-        //placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
     }
 
     private void ReplacePlaceholder()

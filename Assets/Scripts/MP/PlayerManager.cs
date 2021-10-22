@@ -121,21 +121,8 @@ public class PlayerManager : NetworkBehaviour
             RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
         }
 
-        // Shouldn't this be getting hold of identity of Player?
-        // Result is always the same.
         NetworkIdentity ni = connectionToClient.identity;
         MPGameManager.Instance.SetPlayerName(ni, PlayerPrefs.GetString("Profile_Name", ""));
-    }
-
-    public void GetAnotherCard(NetworkIdentity netIdentity)
-    {
-        int infoIndex = MPGameManager.Instance.PopCard(netIdentity);
-
-        if (infoIndex < 0) return; // if deck has no cards
-
-        GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
-        NetworkServer.Spawn(card, connectionToClient);
-        RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
     }
 
     public void PlayCard(GameObject card, int infoIndex, int pos)
@@ -155,12 +142,28 @@ public class PlayerManager : NetworkBehaviour
         }
         else
         {
-            // FIXME: Not working in client
-            card.GetComponent<MPDragDrop>().OnDiscard(); // Animator.SetTrigger()
+            NetworkConnection conn = card.GetComponent<NetworkIdentity>().connectionToClient;
+            TargetDiscard(conn, card);
             StartCoroutine(DestroyObjectWithDelay(card));
-
-            GetAnotherCard(netIdentity); // Get Another Card
         }
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdGetAnotherCard()
+    {
+        int infoIndex = MPGameManager.Instance.PopCard(connectionToClient.identity);
+
+        if (infoIndex < 0) return; // if deck has no cards
+
+        GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
+        NetworkServer.Spawn(card, connectionToClient);
+        RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
+    }
+
+    [TargetRpc]
+    private void TargetDiscard(NetworkConnection conn, GameObject card)
+    {
+        card.GetComponent<MPDragDrop>().OnDiscard(); // Animator.SetTrigger()
     }
 
     #region ------------------------------ UPDATE GUI FUNCTIONS ------------------------------
@@ -200,13 +203,23 @@ public class PlayerManager : NetworkBehaviour
             }
         }
 
-        gameStateText.GetComponent<TextMeshProUGUI>().text = gameMsg;
+        gameStateText.GetComponent<RoundText>().SetText(gameMsg);
     }
 
     public void UpdateOpponentCards(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, string[] playerNames)
     {
         List<string> tmpOpponentNames = new List<string>();
         List<int> tmpOpponentHands = new List<int>();
+
+        // Clear Opponents List First
+        for (int i = 0; i < enemyAreas.transform.childCount; i++)
+        {
+            Transform cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining");
+            Transform playerName = enemyAreas.transform.GetChild(i).Find("PlayerName");
+
+            cardCount.GetComponent<TextMeshProUGUI>().text = "";
+            playerName.GetComponent<TextMeshProUGUI>().text = "";
+        }
 
         int opponentCurrentIndex = -1;
 

@@ -53,6 +53,7 @@ public class MPGameManager : NetworkBehaviour
             int id = deck[0];
             deck.RemoveAt(0);
 
+            Debug.Log($"Player #{i.netId} [{FindPlayerIndex(i)}] gets a CARD.");
             playerHands[FindPlayerIndex(i)]++;
             return id;
         }
@@ -144,11 +145,21 @@ public class MPGameManager : NetworkBehaviour
         }
         else
         {
+            Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. WRONG.");
+
+            // RUNNING ON SERVER
+            // Add new card to player
+            identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+
             deck.Add(infoIndex); // Add back the card wrongly placed
         }
 
         NextPlayerTurn();
 
+        bool isStartRound = turns % playerHands.Count == 0;
+        if (isStartRound) CheckWinners();
+
+        ClientsUpdateUI();
         return isDropValid;
     }
 
@@ -233,12 +244,8 @@ public class MPGameManager : NetworkBehaviour
         }
         else
         {
-            // Start of another round
             currentPlayerIndex = 0;
-            CheckWinners();
         }
-
-        ClientsUpdateUI();
     }
 
     public void CheckWinners()
@@ -268,8 +275,6 @@ public class MPGameManager : NetworkBehaviour
         {
             EndGame();
         }
-
-        ClientsUpdateUI();
     }
 
     public void EndGame()
