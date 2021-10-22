@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/MPGame.unity
-    guid: d6b776ba53b2e0048b7dcb83ca1a1dcf
   - enabled: 0
     path: Assets/Scenes/First Run Screen.unity
     guid: ae27ff756251e61418e46b550bf71c7f
@@ -35,4 +32,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Achievements.unity
     guid: 7bf157ebc5994794991276fd3ad57e8c
+  - enabled: 1
+    path: Assets/Scenes/MPOffline.unity
+    guid: eb3eea6c7be61f046b1be5ac14f1c771
+  - enabled: 1
+    path: Assets/Scenes/MPRoom.unity
+    guid: 8b2c77c4a0113c1448c39f5de10bc852
+  - enabled: 1
+    path: Assets/Scenes/MPGame.unity
+    guid: d6b776ba53b2e0048b7dcb83ca1a1dcf
   m_configObjects: {}
