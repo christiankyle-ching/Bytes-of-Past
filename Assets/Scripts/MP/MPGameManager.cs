@@ -32,6 +32,7 @@ public class MPGameManager : NetworkBehaviour
     public SyncList<string> playerNames = new SyncList<string>(); // count of hands
 
     [SyncVar] public TOPIC _topic = TOPIC.Computer;
+    private StaticData _staticData;
     private GameObject timer;
 
     private void Awake()
@@ -87,6 +88,11 @@ public class MPGameManager : NetworkBehaviour
     {
         base.OnStartServer();
 
+        _staticData =
+            GameObject
+                .FindWithTag("Static Data")
+                .GetComponent<StaticData>();
+        _topic = _staticData.SelectedTopic;
         LoadCards(_topic);
     }
 
@@ -262,17 +268,22 @@ public class MPGameManager : NetworkBehaviour
         ClientsUpdateUI();
     }
 
-    public void RemovePlayer(NetworkIdentity nid)
+    public string RemovePlayer(NetworkIdentity nid)
     {
         int index = players.FindIndex(identity => identity == nid);
+        string playerName = playerNames[index];
+
         players.Remove(nid);
         playerHands.RemoveAt(index);
         playerNames.RemoveAt(index);
 
         Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid} left!");
+        ClientsUpdateUI();
+
+        return playerName ?? "";
     }
 
-    public void AddReadyPlayerCount()
+    public void ReadyPlayer(NetworkIdentity ni)
     {
         readyPlayersCount++;
 
@@ -370,20 +381,28 @@ public class MPGameManager : NetworkBehaviour
 
     public void ClientsUpdateUI()
     {
-        PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
-        NetworkIdentity currentPlayer = players[currentPlayerIndex];
+        try
+        {
+            PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+            NetworkIdentity currentPlayer = players[currentPlayerIndex];
 
-        player.RpcUpdateUI(
-            currentPlayer,
-            currentPlayerIndex,
-            players.ToArray(),
-            playerHands.ToArray(),
-            playerNames.ToArray(),
-            deck.Count,
-            gameFinished,
-            GetGameStateMessage(),
-            winnerPlayerNames.ToArray(),
-            winnerPlayerIdens.ToArray());
+            player.RpcUpdateUI(
+                currentPlayer,
+                currentPlayerIndex,
+                players.ToArray(),
+                playerHands.ToArray(),
+                playerNames.ToArray(),
+                deck.Count,
+                gameFinished,
+                GetGameStateMessage(),
+                winnerPlayerNames.ToArray(),
+                winnerPlayerIdens.ToArray());
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            // A player has quit, so update UI throws error on array index
+        }
+
     }
 
     public int FindPlayerIndex(NetworkIdentity i)
@@ -398,5 +417,10 @@ public class MPGameManager : NetworkBehaviour
             int index = FindPlayerIndex(i);
             playerNames[index] = name;
         }
+    }
+
+    public void OnPlayerQuit(string playerName)
+    {
+        NetworkClient.connection.identity.GetComponent<PlayerManager>().RpcGameInterrupted(playerName);
     }
 }

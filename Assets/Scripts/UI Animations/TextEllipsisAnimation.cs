@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class TextEllipsisAnimation : MonoBehaviour
 {
-    public float interval = 1f;
-    private float timeLeft = 0;
+    public float updateInterval = 1f;
+    public string loadingText = "...";
+
     private string baseText = "";
     private TextMeshProUGUI textGO;
-    private string loadingText = "...";
+
+    private float timeLeft = 0;
     private int currentLength = 0;
 
     private void Start()
@@ -32,6 +34,6 @@ public class TextEllipsisAnimation : MonoBehaviour
     {
         currentLength = (currentLength + 1 <= loadingText.Length) ? currentLength + 1 : 0;
         textGO.text = baseText + loadingText.Substring(0, currentLength);
-        timeLeft = interval;
+        timeLeft = updateInterval;
     }
 }

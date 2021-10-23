@@ -66,14 +66,7 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToMultiplayerLobby()
     {
-        // StartCoroutine(LoadScene("Multiplayer Lobby"));
-        throw new NotImplementedException();
-    }
-
-    public void GoToMultiplayerGame()
-    {
-        // StartCoroutine(LoadScene("Multiplayer Game"));
-        throw new NotImplementedException();
+         StartCoroutine(LoadScene("MPOffline"));
     }
 
     public void GoToAssessmentTest()

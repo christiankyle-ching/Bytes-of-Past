@@ -8,9 +8,17 @@ public class DrawCards : NetworkBehaviour
 {
     private PlayerManager playerManager;
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        // 2. BUT only works for host!
+        //Draw();
+    }
+
     public void Draw()
     {
-        // This draws cards
+        // 1. This works fine when clicked via Button
         NetworkIdentity ni = NetworkClient.connection.identity;
         playerManager = ni.GetComponent<PlayerManager>();
         playerManager.CmdReady();

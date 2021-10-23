@@ -21,11 +21,12 @@ public class PlayerManager : NetworkBehaviour
 
     private GameObject playerArea;
     private GameObject enemyAreas;
-    private GameObject menuCanvas;
+
     private GameObject gameStateText;
     private GameObject deck;
     private GameObject dropzone;
     private GameObject timer;
+    private MPCanvasHUD menuCanvas;
 
     [Header("Colors")]
     public Color normalTextColor = Color.white;
@@ -40,10 +41,10 @@ public class PlayerManager : NetworkBehaviour
         playerArea = GameObject.Find("PlayerArea");
         enemyAreas = GameObject.Find("EnemyAreas");
         gameStateText = GameObject.Find("RoundText");
-        menuCanvas = GameObject.Find("MenuCanvas");
         deck = GameObject.Find("Deck");
         timer = GameObject.Find("Timer");
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
+        menuCanvas = GameObject.Find("MenuCanvas").GetComponent<MPCanvasHUD>();
 
         LoadCards();
     }
@@ -128,7 +129,7 @@ public class PlayerManager : NetworkBehaviour
         NetworkIdentity ni = connectionToClient.identity;
         MPGameManager.Instance.SetPlayerName(ni, PlayerPrefs.GetString("Profile_Name", ""));
 
-        MPGameManager.Instance.AddReadyPlayerCount();
+        MPGameManager.Instance.ReadyPlayer(ni);
     }
 
     public void PlayCard(GameObject card, int infoIndex, int pos)
@@ -189,7 +190,7 @@ public class PlayerManager : NetworkBehaviour
     {
         if (gameFinished)
         {
-            ShowEndGameMenu(winnerNames, winnerIdens);
+            menuCanvas.ShowEndGameMenu(winnerNames, winnerIdens);
         }
 
         UpdateTurn(currentPlayer, gameFinished, gameMsg);
@@ -230,19 +231,7 @@ public class PlayerManager : NetworkBehaviour
         List<int> tmpOpponentHands = new List<int>();
         int opponentCurrentIndex = -1;
 
-        if (MPGameManager.Instance.gameStarted)
-        {
-            // Clear Opponents List First if game started
-            for (int i = 0; i < enemyAreas.transform.childCount; i++)
-            {
-                Transform cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining");
-                Transform playerName = enemyAreas.transform.GetChild(i).Find("PlayerName");
-
-                cardCount.GetComponent<TextMeshProUGUI>().text = "";
-                playerName.GetComponent<TextMeshProUGUI>().text = "";
-            }
-        }
-
+        // Populate Names and HandCounts
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i].isLocalPlayer) continue;
@@ -254,34 +243,45 @@ public class PlayerManager : NetworkBehaviour
             tmpOpponentHands.Add(playerHands[i]);
         }
 
-        for (int i = 0; i < tmpOpponentHands.Count; i++)
+        // Update UI
+        for (int i = 0; i < enemyAreas.transform.childCount; i++)
         {
             TextMeshProUGUI cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI playerName = enemyAreas.transform.GetChild(i).Find("PlayerName").GetComponent<TextMeshProUGUI>();
 
-            int handCount = tmpOpponentHands[i];
-            string cardMsg = $"{handCount} Cards";
-
-            if (MPGameManager.Instance.gameStarted)
+            if (i < tmpOpponentHands.Count)
             {
-                // Highlight current player if game started
-                if (opponentCurrentIndex == i) cardMsg += " (Playing)";
+                int handCount = tmpOpponentHands[i];
+                string cardMsg = $"{handCount} Cards";
 
-                // Highlight player when no cards remaining
-                if (handCount <= 0)
+                if (MPGameManager.Instance.gameStarted)
                 {
-                    cardCount.fontStyle = FontStyles.Bold;
-                    cardCount.color = dangerTextColor;
+                    // Highlight current player if game started
+                    if (opponentCurrentIndex == i) cardMsg += " (Playing)";
+
+                    // Highlight player when no cards remaining
+                    if (handCount <= 0)
+                    {
+                        cardCount.fontStyle = FontStyles.Bold;
+                        cardCount.color = dangerTextColor;
+                    }
+                    else
+                    {
+                        cardCount.fontStyle = FontStyles.Normal;
+                        cardCount.color = normalTextColor;
+                    }
                 }
-                else
-                {
-                    cardCount.fontStyle = FontStyles.Normal;
-                    cardCount.color = normalTextColor;
-                }
+
+                playerName.text = tmpOpponentNames[i];
+                cardCount.text = cardMsg;
+            }
+            else
+            {
+                playerName.text = MPGameManager.Instance.gameStarted ? "" : "Waiting for Players...";
+                cardCount.text = "";
             }
 
-            playerName.text = tmpOpponentNames[i];
-            cardCount.text = cardMsg;
+
         }
 
         //Debug.Log($"Current Player [{currentPlayerIndex}]");
@@ -318,28 +318,11 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    public void ShowEndGameMenu(string[] winnerNames, NetworkIdentity[] winnerIdens)
+    [ClientRpc]
+    public void RpcGameInterrupted(string playerName)
     {
-        Transform bg = menuCanvas.transform.GetChild(0);
-        Transform endGame = menuCanvas.transform.GetChild(1);
-
-        bg.gameObject.SetActive(true);
-        endGame.gameObject.SetActive(true);
-
-        bool gameWon = false;
-        foreach (NetworkIdentity iden in winnerIdens)
-        {
-            if (iden.isLocalPlayer)
-            {
-                gameWon = true;
-                break;
-            }
-        }
-
-        endGame.Find("WINSTATUS").GetComponent<TextMeshProUGUI>().text = gameWon ? "You Win" : "You Lose";
-        endGame.Find("WinnerList").GetComponent<TextMeshProUGUI>().text = String.Join("\n", winnerNames);
+        menuCanvas.ShowInterruptedGame(playerName);
     }
-
     #endregion
 
     #region ------------------------------ UTILS ------------------------------

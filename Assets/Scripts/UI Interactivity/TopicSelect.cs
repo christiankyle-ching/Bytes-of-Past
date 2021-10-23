@@ -128,9 +128,6 @@ public class TopicSelect : MonoBehaviour
                     LoadPreAssessment();
                 }
                 break;
-            case GAMEMODE.Multiplayer:
-                sceneLoader.GetComponent<SceneLoader>().GoToDifficultySelect();
-                break;
             case GAMEMODE.PostAssessment:
                 staticData.IsPostAssessment = true;
                 sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();

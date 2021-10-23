@@ -25,7 +25,7 @@ public class MainMenuButtonHandler : MonoBehaviour
     public void OnSelectMultiplayer()
     {
         staticData.SelectedGameMode = GAMEMODE.Multiplayer;
-        sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
+        sceneLoader.GetComponent<SceneLoader>().GoToMultiplayerLobby();
     }
 
     public void OnSelectPreAssessment()
