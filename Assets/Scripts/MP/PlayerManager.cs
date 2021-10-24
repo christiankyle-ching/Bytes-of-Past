@@ -25,7 +25,7 @@ public class PlayerManager : NetworkBehaviour
     private GameObject gameStateText;
     private GameObject deck;
     private GameObject dropzone;
-    private GameObject timer;
+    private MPTimer timer;
     private MPCanvasHUD menuCanvas;
 
     [Header("Colors")]
@@ -42,7 +42,7 @@ public class PlayerManager : NetworkBehaviour
         enemyAreas = GameObject.Find("EnemyAreas");
         gameStateText = GameObject.Find("RoundText");
         deck = GameObject.Find("Deck");
-        timer = GameObject.Find("Timer");
+        timer = GameObject.Find("MPTimer").GetComponent<MPTimer>();
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
         menuCanvas = GameObject.Find("MenuCanvas").GetComponent<MPCanvasHUD>();
 
@@ -132,24 +132,21 @@ public class PlayerManager : NetworkBehaviour
         MPGameManager.Instance.ReadyPlayer(ni);
     }
 
-    public void PlayCard(GameObject card, int infoIndex, int pos)
+    public void PlayCard(GameObject card, int infoIndex, int pos, bool hasDrop = true)
     {
-        // TODO: Not Working
-        //SetTimerText(0f);
         if (hasAuthority)
         {
-            CmdPlayCard(card, infoIndex, pos);
+            CmdPlayCard(card, infoIndex, pos, hasDrop);
             isMyTurn = false;
         }
     }
 
     [Command]
-    private void CmdPlayCard(GameObject card, int infoIndex, int pos)
+    private void CmdPlayCard(GameObject card, int infoIndex, int pos, bool hasDrop)
     {
-        bool playerDropped = infoIndex > 0 && card != null;
-        bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos, netIdentity);
+        bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos, netIdentity, hasDrop);
 
-        if (playerDropped)
+        if (hasDrop)
         {
             if (isDropValid)
             {
@@ -158,6 +155,7 @@ public class PlayerManager : NetworkBehaviour
             }
             else
             {
+                // Discard the dropped card
                 NetworkConnection conn = card.GetComponent<NetworkIdentity>().connectionToClient;
                 TargetDiscard(conn, card);
                 StartCoroutine(DestroyObjectWithDelay(card));
@@ -200,12 +198,13 @@ public class PlayerManager : NetworkBehaviour
 
     public void UpdateTurn(NetworkIdentity identity, bool gameFinished, string gameMsg)
     {
-        isMyTurn = identity.isLocalPlayer;
+        isMyTurn = identity.isLocalPlayer && MPGameManager.Instance.gameStarted;
 
         Debug.Log($"ILP: {isMyTurn}");
 
         if (isMyTurn && !gameFinished)
         {
+            timer.StartTimer();
             foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
             {
                 dragDrop.EnableDrag();
@@ -254,6 +253,8 @@ public class PlayerManager : NetworkBehaviour
                 int handCount = tmpOpponentHands[i];
                 string cardMsg = $"{handCount} Cards";
 
+                playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
+
                 if (MPGameManager.Instance.gameStarted)
                 {
                     // Highlight current player if game started
@@ -277,8 +278,16 @@ public class PlayerManager : NetworkBehaviour
             }
             else
             {
-                playerName.text = MPGameManager.Instance.gameStarted ? "" : "Waiting for Players...";
-                cardCount.text = "";
+                if (MPGameManager.Instance.gameStarted)
+                {
+                    playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
+                    playerName.text = "";
+                    cardCount.text = "";
+                } else
+                {
+                    playerName.text = "Waiting For Players";
+                    playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = true;
+                }
             }
 
 

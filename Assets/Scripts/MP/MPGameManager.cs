@@ -179,14 +179,13 @@ public class MPGameManager : NetworkBehaviour
         }
     }
 
-    public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity)
+    public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity, bool hasDrop)
     {
         turns++; // Add Turn
 
-        bool playerDropped = infoIndex > 0;
         bool isDropValid;
 
-        if (playerDropped)
+        if (hasDrop)
         {
             playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
 

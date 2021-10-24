@@ -36,4 +36,9 @@ public class TextEllipsisAnimation : MonoBehaviour
         textGO.text = baseText + loadingText.Substring(0, currentLength);
         timeLeft = updateInterval;
     }
+
+    private void OnDisable()
+    {
+        //textGO.text = baseText;
+    }
 }
