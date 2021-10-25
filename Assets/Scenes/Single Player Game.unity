@@ -512,7 +512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b4fb165dfd2e4c4f8a42fb41398c54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSeconds: 5
+  turnSeconds: 30
   lifePrefab: {fileID: 659571673558610053, guid: 3e1e3e21c629e534eb46c53bf1e795a3,
     type: 3}
   cardPrefab: {fileID: 825109125205122357, guid: 05f8ee8d281ade54a9ea6db00a8e77f8,

@@ -31,7 +31,8 @@ public class MPIP : NetworkBehaviour
         }
         else
         {
-            _textObj.text = connectionToServer.address;
+            //_textObj.text = connectionToServer.address;
+            gameObject.SetActive(false);
         }
     }
 

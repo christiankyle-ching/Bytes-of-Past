@@ -158,12 +158,20 @@ public class MPNetworkManager : NetworkManager
     /// <param name="conn">Connection from client.</param>
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        string playerName = MPGameManager.Instance.RemovePlayer(conn.identity);
-
-        if (MPGameManager.Instance.gameStarted)
+        try
         {
-            MPGameManager.Instance.OnPlayerQuit(playerName);
+            string playerName = MPGameManager.Instance.RemovePlayer(conn.identity);
+
+            if (MPGameManager.Instance.gameStarted)
+            {
+                MPGameManager.Instance.OnPlayerQuit(playerName);
+            }
         }
+        catch
+        {
+            // TODO: Some error regarding Array index out of range
+        }
+
 
         base.OnServerDisconnect(conn);
     }

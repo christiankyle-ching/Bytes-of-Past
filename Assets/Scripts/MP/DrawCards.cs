@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.UI;
+using ParrelSync;
 
 public class DrawCards : NetworkBehaviour
 {
@@ -11,17 +12,17 @@ public class DrawCards : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-
-        // 2. BUT only works for host!
-        //Draw();
     }
 
     public void Draw()
     {
-        // 1. This works fine when clicked via Button
         NetworkIdentity ni = NetworkClient.connection.identity;
         playerManager = ni.GetComponent<PlayerManager>();
-        playerManager.CmdReady();
+
+        string playerName = ClonesManager.IsClone() ?
+            $"Clone {Random.Range(100, 999)}" :
+            PlayerPrefs.GetString("Profile_Name", "");
+        playerManager.CmdReady(playerName);
 
         gameObject.SetActive(false);
     }

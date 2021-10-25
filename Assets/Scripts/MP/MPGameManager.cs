@@ -11,8 +11,6 @@ public class MPGameManager : NetworkBehaviour
     private static MPGameManager _instance;
     public static MPGameManager Instance { get { return _instance; } }
 
-    [SyncVar] public float timeLeft = 0f;
-    private float timePerTurn = 15f;
     private float minPlayers = 2;
 
     [SyncVar] public int turns = 0;
@@ -45,13 +43,6 @@ public class MPGameManager : NetworkBehaviour
         {
             _instance = this;
         }
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-
-        timer = GameObject.Find("Timer");
     }
 
     public override void OnStartServer()
@@ -187,7 +178,8 @@ public class MPGameManager : NetworkBehaviour
     {
         players.Add(nid);
         playerHands.Add(0);
-        playerNames.Add($"Unnamed Player #{nid.netId}");
+        //playerNames.Add($"Unnamed Player #{nid.netId}");
+        playerNames.Add("Not Ready");
 
         Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid.netId} joined!");
         ClientsUpdateUI();

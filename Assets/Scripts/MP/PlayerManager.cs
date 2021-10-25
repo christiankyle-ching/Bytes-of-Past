@@ -62,7 +62,7 @@ public class PlayerManager : NetworkBehaviour
     #endregion
 
     [Command]
-    public void CmdReady()
+    public void CmdReady(string playerName)
     {
         for (int i = 0; i < startingCardsCount; i++)
         {
@@ -76,8 +76,7 @@ public class PlayerManager : NetworkBehaviour
         }
 
         NetworkIdentity ni = connectionToClient.identity;
-        MPGameManager.Instance.SetPlayerName(ni, PlayerPrefs.GetString("Profile_Name", ""));
-
+        MPGameManager.Instance.SetPlayerName(ni, playerName);
         MPGameManager.Instance.ReadyPlayer(ni);
     }
 
@@ -249,8 +248,6 @@ public class PlayerManager : NetworkBehaviour
                     playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = true;
                 }
             }
-
-
         }
 
         //Debug.Log($"Current Player [{currentPlayerIndex}]");
