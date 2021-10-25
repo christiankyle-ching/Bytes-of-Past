@@ -10,43 +10,33 @@ public class AssessmentManager : MonoBehaviour
 {
     // GAMEOBJECT REFERENCES
     public GameObject questionNumberText;
-
     public GameObject questionText;
 
     public GameObject btnAnswer1;
-
     public GameObject btnAnswer2;
-
     public GameObject btnAnswer3;
-
     public GameObject btnAnswer4;
 
     public GameObject endGameMenu;
-
     public GameObject txtScore;
-
     public GameObject txtTopic;
-
     public GameObject txtTestTopic;
-
     public GameObject txtPreOrPostAssessment;
+
+    public ResultIndicator resultIndicator;
 
     // QUESTIONS DATA
     private List<QuestionData> questions = new List<QuestionData>();
 
     private int currentQuestionIndex = 0;
-
     private QuestionData currentQuestion;
-
     private string[] currentChoices;
 
     private int currentScore = 0;
 
     // STATIC DATA
     private TOPIC selectedTopic;
-
     private bool isPostAssessment;
-
     StaticData staticData;
 
     void Awake()
@@ -55,24 +45,24 @@ public class AssessmentManager : MonoBehaviour
 
         // Bind OnClick to functions
         btnAnswer1
-            .GetComponent<Button>()
-            .onClick
-            .AddListener(() => SelectAnswer1());
+         .GetComponent<Button>()
+         .onClick
+         .AddListener(() => SelectAnswer(0));
 
         btnAnswer2
-            .GetComponent<Button>()
-            .onClick
-            .AddListener(() => SelectAnswer2());
+         .GetComponent<Button>()
+         .onClick
+         .AddListener(() => SelectAnswer(1));
 
         btnAnswer3
-            .GetComponent<Button>()
-            .onClick
-            .AddListener(() => SelectAnswer3());
+         .GetComponent<Button>()
+         .onClick
+         .AddListener(() => SelectAnswer(2));
 
         btnAnswer4
-            .GetComponent<Button>()
-            .onClick
-            .AddListener(() => SelectAnswer4());
+         .GetComponent<Button>()
+         .onClick
+         .AddListener(() => SelectAnswer(3));
 
         LoadQuestions();
         ShowNextQuestion();
@@ -247,39 +237,19 @@ public class AssessmentManager : MonoBehaviour
     }
 
     // Answer Methods
-    void SelectAnswer1()
-    {
-        if (currentQuestion.isAnswerCorrect(currentChoices[0]))
-        {
-            currentScore++;
-        }
-        ShowNextQuestion();
-    }
 
-    void SelectAnswer2()
+    void SelectAnswer(int index)
     {
-        if (currentQuestion.isAnswerCorrect(currentChoices[1]))
+        if (currentQuestion.isAnswerCorrect(currentChoices[index]))
         {
             currentScore++;
+            resultIndicator.ShowCorrect();
         }
-        ShowNextQuestion();
-    }
+        else
+        {
+            resultIndicator.ShowWrong();
+        }
 
-    void SelectAnswer3()
-    {
-        if (currentQuestion.isAnswerCorrect(currentChoices[2]))
-        {
-            currentScore++;
-        }
-        ShowNextQuestion();
-    }
-
-    void SelectAnswer4()
-    {
-        if (currentQuestion.isAnswerCorrect(currentChoices[3]))
-        {
-            currentScore++;
-        }
         ShowNextQuestion();
     }
 }

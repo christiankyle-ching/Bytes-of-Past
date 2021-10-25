@@ -105,6 +105,7 @@ public class SceneLoader : MonoBehaviour
     {
         Debug.Log("DEBUG_RESET");
         SaveLoadSystem.ResetProfileData();
+        Application.Quit();
     }
 
     public void QuitApp()
