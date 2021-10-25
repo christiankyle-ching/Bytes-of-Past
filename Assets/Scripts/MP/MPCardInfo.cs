@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MPCardInfo : MonoBehaviour
 {
-    public MPCardData cardData;
+    public CardData cardData;
     public int infoIndex;
 
     private TextMeshProUGUI Year;
@@ -15,7 +15,7 @@ public class MPCardInfo : MonoBehaviour
     private Image Image;
     private Image CardBGImage;
 
-    public void InitCardData(MPCardData data)
+    public void InitCardData(CardData data)
     {
         cardData = data;
 
@@ -25,14 +25,14 @@ public class MPCardInfo : MonoBehaviour
         Image = transform.Find("Container").Find("Image").GetComponent<Image>();
         CardBGImage = GetComponent<Image>();
 
-        Year.text = cardData.year.ToString();
-        Title.text = cardData.title.ToString();
-        Description.text = cardData.description.ToString();
-        Image.sprite = Resources.Load<Sprite>($"Cards/Icons/{cardData.id}");
-        CardBGImage.sprite = GetColoredSprite(cardData.color);
+        Year.text = cardData.Year.ToString();
+        Title.text = cardData.Title.ToString();
+        Description.text = cardData.Description.ToString();
+        Image.sprite = Resources.Load<Sprite>($"Cards/Icons/{cardData.ID}");
+        CardBGImage.sprite = GetColoredSprite(cardData.Color);
 
         // Name in Scene
-        name = cardData.year.ToString();
+        name = cardData.Year.ToString();
     }
 
     private static Sprite GetColoredSprite(CARDCOLOR color)

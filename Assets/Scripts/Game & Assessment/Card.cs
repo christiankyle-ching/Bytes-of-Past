@@ -119,13 +119,20 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         PlayDropSound();
 
-        // on drag end, set the card's parent
-        // to wherever the placeholder is currently at, with its index
-        // NOTE: placeholderContainer's value is manipulated by
-        // DropZone class [see DropZone.OnPointer events]
-        transform.SetParent(placeholderContainer);
-        transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
-        Destroy(placeholder);
+        try
+        {
+            // on drag end, set the card's parent
+            // to wherever the placeholder is currently at, with its index
+            // NOTE: placeholderContainer's value is manipulated by
+            // DropZone class [see DropZone.OnPointer events]
+            transform.SetParent(placeholderContainer);
+            transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
+            Destroy(placeholder);
+        }
+        catch
+        {
+            // No Card component OnEndDrag or placeholder null
+        }
     }
 
     void AdjustPlaceholderPos()

@@ -43,45 +43,64 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
     void LoadAssessmentScores()
     {
+        string notDoneScore = "- / -";
+
         int[,] assessmentScores =
             staticData.profileStatisticsData.assessmentScores;
 
         // Assessment Scores
         for (int i = 0; i < 2; i++)
         {
+            // [0] for PRE scores, [1] for POST scores
+            bool loadingPreAssessment = i == 0;
+
             // Total Question Count based on gamemode index
-            int totalQuestions =
-                (
-                (i == 0)
-                    ? preAssessmentTotalQuestions
-                    : postAssessmentTotalQuestions
+            int totalQuestions = loadingPreAssessment ?
+                preAssessmentTotalQuestions : postAssessmentTotalQuestions;
+
+            // Assessment Done for each topic?
+            bool assessDone1, assessDone2, assessDone3;
+
+            if (loadingPreAssessment)
+            {
+                assessDone1 = PrefsConverter.IntToBoolean(
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(TOPIC.Computer), 0)
                 );
+                assessDone2 = PrefsConverter.IntToBoolean(
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(TOPIC.Networking), 0)
+                );
+                assessDone3 = PrefsConverter.IntToBoolean(
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(TOPIC.Software), 0)
+                );
+            }
+            else
+            {
+                assessDone1 = PrefsConverter.IntToBoolean(
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(TOPIC.Computer), 0)
+                );
+                assessDone2 = PrefsConverter.IntToBoolean(
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(TOPIC.Networking), 0)
+                );
+                assessDone3 = PrefsConverter.IntToBoolean(
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(TOPIC.Software), 0)
+                );
+            }
 
-            string label = (i == 0) ? "Pre-Assessment: " : "Post-Assessment: ";
+            TextMeshProUGUI txtComputer = txtAssessment_Computer_Score[i].GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI txtNetworking = txtAssessment_Networking_Score[i].GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI txtSoftware = txtAssessment_Software_Score[i].GetComponent<TextMeshProUGUI>();
 
-            txtAssessment_Computer_Score[i]
-                .GetComponent<TextMeshProUGUI>()
-                .text =
-                label +
-                assessmentScores[i, (int)TOPIC.Computer].ToString() +
-                "/" +
-                totalQuestions;
+            txtComputer.text = assessDone1 ?
+                $"{assessmentScores[i, (int)TOPIC.Computer]} / {totalQuestions}" :
+                notDoneScore;
 
-            txtAssessment_Networking_Score[i]
-                .GetComponent<TextMeshProUGUI>()
-                .text =
-                label +
-                assessmentScores[i, (int)TOPIC.Networking].ToString() +
-                "/" +
-                totalQuestions;
+            txtNetworking.text = assessDone2 ?
+                $"{assessmentScores[i, (int)TOPIC.Networking]} / {totalQuestions}" :
+                notDoneScore;
 
-            txtAssessment_Software_Score[i]
-                .GetComponent<TextMeshProUGUI>()
-                .text =
-                label +
-                assessmentScores[i, (int)TOPIC.Software].ToString() +
-                "/" +
-                totalQuestions;
+            txtSoftware.text = assessDone3 ?
+                $"{assessmentScores[i, (int)TOPIC.Software]} / {totalQuestions}" :
+                notDoneScore;
         }
     }
 

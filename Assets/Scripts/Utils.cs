@@ -48,3 +48,11 @@ public static class DifficultyUtils
         }
     }
 }
+
+public static class PrefsConverter
+{
+    public static bool IntToBoolean(int n)
+    {
+        return n == 1;
+    }
+}

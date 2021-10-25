@@ -6,7 +6,7 @@ using Mirror;
 
 public class MPTimer : MonoBehaviour
 {
-    public int seconds = 10;
+    public int seconds = 15;
     public Color runningColor = Color.yellow;
     public Color dangerColor = Color.red;
     private Color defaultColor;

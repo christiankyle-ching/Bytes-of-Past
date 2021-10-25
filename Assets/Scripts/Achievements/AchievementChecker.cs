@@ -49,9 +49,9 @@ public static class AchievementChecker
                 acquired = gameData.gameMode == GAMEMODE.Multiplayer && gameData.gameWon && !IsAchievementDone(4);
                 break;
             case 5:
-                bool t1 = PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Computer), 0) == 1;
-                bool t2 = PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Networking), 0) == 1;
-                bool t3 = PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Software), 0) == 1;
+                bool t1 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Computer), 0));
+                bool t2 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Networking), 0));
+                bool t3 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Software), 0));
 
                 acquired = t1 && t2 && t3;
                 break;

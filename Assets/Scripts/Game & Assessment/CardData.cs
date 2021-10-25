@@ -31,8 +31,6 @@ public class CardData
     [SerializeField]
     private CARDCOLOR color;
     [SerializeField]
-    private float specialActionRate = 0.3f; // 0.0 to 1.0 = Percentage of special action
-    [SerializeField]
     private SPECIALACTION specialAction;
 
     private string id;
@@ -76,7 +74,7 @@ public class CardData
         get => this.color;
     }
 
-    public CardData(string id, int year, string title, string inventor, string description, bool trySpecial = false)
+    public CardData(string id, int year, string title, string inventor, string description)
     {
         this.id = id;
         this.year = year;
@@ -86,29 +84,5 @@ public class CardData
         this.artwork = Resources.Load<Sprite>($"Cards/Icons/{id}");
 
         this.color = (CARDCOLOR)UnityEngine.Random.Range(0, 5); // random color scheme
-        if (trySpecial)
-        {
-            TryGenerateSpecial();
-        }
-        else
-        {
-            this.specialAction = SPECIALACTION.None;
-        }
-    }
-
-    public void TryGenerateSpecial()
-    {
-        float rand = UnityEngine.Random.Range(0f, 1f);
-
-        if (rand <= specialActionRate)
-        {
-            Array values = Enum.GetValues(typeof(SPECIALACTION));
-            System.Random random = new System.Random();
-            this.specialAction = (SPECIALACTION)values.GetValue(random.Next(values.Length));
-        }
-        else
-        {
-            this.specialAction = SPECIALACTION.None;
-        }
     }
 }

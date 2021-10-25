@@ -32,7 +32,7 @@ public class PlayerManager : NetworkBehaviour
     public Color normalTextColor = Color.white;
     public Color dangerTextColor = Color.red;
 
-    private List<MPCardData> cardInfos = new List<MPCardData>();
+    private List<CardData> cardInfos = new List<CardData>();
 
     public override void OnStartClient()
     {
@@ -53,63 +53,12 @@ public class PlayerManager : NetworkBehaviour
 
     private void LoadCards()
     {
-        List<MPCardData> loadedCards = ParseCSVToCards(MPGameManager.Instance._topic);
-        foreach (MPCardData data in loadedCards)
+        CardData[] loadedCards = ResourceParser.Instance.ParseCSVToCards(MPGameManager.Instance._topic);
+        foreach (CardData data in loadedCards)
         {
             this.cardInfos.Add(data);
         }
     }
-
-    private List<MPCardData> ParseCSVToCards(TOPIC topic)
-    {
-        List<MPCardData> cards = new List<MPCardData>();
-
-        TextAsset rawData = null;
-
-        switch (topic)
-        {
-            case TOPIC.Computer:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Computer");
-                break;
-            case TOPIC.Networking:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Networking");
-                break;
-            case TOPIC.Software:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Software");
-                break;
-        }
-
-        if (rawData != null)
-        {
-            List<String> lines = rawData.text.Split('\n').ToList(); // split into lines
-
-            // ignore header
-            lines = lines.Skip(3).ToList();
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                string[] cells = lines[i].Split('\t');
-
-                cards
-                    .Add(new MPCardData(cells[0], Int32.Parse(cells[2]), cells[3], cells[4], cells[5]));
-            }
-        }
-
-        return cards;
-    }
-
     #endregion
 
     [Command]

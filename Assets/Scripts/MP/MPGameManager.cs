@@ -12,7 +12,7 @@ public class MPGameManager : NetworkBehaviour
     public static MPGameManager Instance { get { return _instance; } }
 
     [SyncVar] public float timeLeft = 0f;
-    private float timePerTurn = 5f;
+    private float timePerTurn = 15f;
     private float minPlayers = 2;
 
     [SyncVar] public int turns = 0;
@@ -25,7 +25,7 @@ public class MPGameManager : NetworkBehaviour
     private SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
     private int readyPlayersCount = 0;
 
-    private List<MPCardData> cardInfos = new List<MPCardData>();
+    private List<CardData> cardInfos = new List<CardData>();
     public SyncList<int> deck = new SyncList<int>(); // indices of card info
     public SyncList<int> timeline = new SyncList<int>(); // indices of card info
     public SyncList<int> playerHands = new SyncList<int>(); // count of hands
@@ -52,36 +52,6 @@ public class MPGameManager : NetworkBehaviour
         base.OnStartClient();
 
         timer = GameObject.Find("Timer");
-    }
-
-    private void Update()
-    {
-        // TODO: FIXME
-        //UpdateTimer();
-    }
-
-    public void UpdateTimer()
-    {
-        timeLeft -= Time.deltaTime;
-
-        if (timeLeft < 0 && gameStarted && !gameFinished)
-        {
-            // throws NullReferenceException
-            players[currentPlayerIndex].GetComponent<PlayerManager>().CmdGetAnotherCard();
-            SetTimerText(timeLeft);
-            ResetTimer();
-            NextPlayerTurn();
-        }
-    }
-
-    public void SetTimerText(float time)
-    {
-        timer.GetComponentInChildren<TextMeshProUGUI>().text = $"{Math.Ceiling(time)} S";
-    }
-
-    public void ResetTimer()
-    {
-        timeLeft = timePerTurn;
     }
 
     public override void OnStartServer()
@@ -111,60 +81,18 @@ public class MPGameManager : NetworkBehaviour
 
     private void LoadCards(TOPIC topic)
     {
-        List<MPCardData> cards = new List<MPCardData>();
-
-        TextAsset rawData = null;
-
-        switch (topic)
-        {
-            case TOPIC.Computer:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Computer");
-                break;
-            case TOPIC.Networking:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Networking");
-                break;
-            case TOPIC.Software:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Software");
-                break;
-        }
-
-        if (rawData != null)
-        {
-            List<String> lines = rawData.text.Split('\n').ToList(); // split into lines
-
-            // ignore header
-            lines = lines.Skip(3).ToList();
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                string[] cells = lines[i].Split('\t');
-
-                cards
-                    .Add(new MPCardData(cells[0], Int32.Parse(cells[2]), cells[3], cells[4], cells[5]));
-            }
-        }
+        CardData[] cards = ResourceParser.Instance.ParseCSVToCards(topic);
 
         List<int> tmpDeck = new List<int>();
+
         // Load Card Infos
-        foreach (MPCardData data in cards)
+        foreach (CardData data in cards)
         {
             cardInfos.Add(data);
         }
 
         // Generate IDs
-        for (int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < cards.Length; i++)
         {
             tmpDeck.Add(i);
         }
@@ -187,9 +115,9 @@ public class MPGameManager : NetworkBehaviour
         {
             playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
 
-            MPCardData data = cardInfos[infoIndex];
+            CardData data = cardInfos[infoIndex];
 
-            isDropValid = IsDropValid(data.year, pos);
+            isDropValid = IsDropValid(data.Year, pos);
 
             if (isDropValid)
             {
@@ -235,7 +163,7 @@ public class MPGameManager : NetworkBehaviour
         cardYear = year;
         try
         {
-            yearBefore = cardInfos[timeline[dropPos - 1]].year;
+            yearBefore = cardInfos[timeline[dropPos - 1]].Year;
         }
         catch
         {
@@ -244,7 +172,7 @@ public class MPGameManager : NetworkBehaviour
 
         try
         {
-            yearAfter = cardInfos[timeline[dropPos]].year;
+            yearAfter = cardInfos[timeline[dropPos]].Year;
         }
         catch
         {
@@ -300,7 +228,6 @@ public class MPGameManager : NetworkBehaviour
     {
         currentPlayerIndex = 0;
         gameStarted = true;
-        ResetTimer();
         ClientsUpdateUI();
 
         Debug.Log("Start Game!");
@@ -320,8 +247,6 @@ public class MPGameManager : NetworkBehaviour
         {
             currentPlayerIndex = 0;
         }
-
-        ResetTimer();
     }
 
     public void CheckWinners()
@@ -419,5 +344,26 @@ public class MPGameManager : NetworkBehaviour
     public void OnPlayerQuit(string playerName)
     {
         NetworkClient.connection.identity.GetComponent<PlayerManager>().RpcGameInterrupted(playerName);
+    }
+
+    // ------------------------------ Special Actions ------------------------------
+
+    [Range(0f, 1f)]
+    public float specialActionRate = 0.3f; // 0.0 to 1.0 = Percentage of special action
+
+    public SPECIALACTION GetRandomSpecialAction()
+    {
+        float rand = UnityEngine.Random.Range(0f, 1f);
+
+        if (rand <= specialActionRate)
+        {
+            Array values = Enum.GetValues(typeof(SPECIALACTION));
+            System.Random random = new System.Random();
+            return (SPECIALACTION)values.GetValue(random.Next(values.Length - 1)); // -1 because last special action is None
+        }
+        else
+        {
+            return SPECIALACTION.None;
+        }
     }
 }

@@ -42,18 +42,15 @@ public class TopicSelect : MonoBehaviour
 
     void SetTopicDisabled(Button button, TOPIC topic)
     {
-        bool isPreAssessmentDone =
-            PlayerPrefs
-                .GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(topic), 0) ==
-            1;
+        bool isPreAssessmentDone = PrefsConverter.IntToBoolean(PlayerPrefs
+                .GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(topic), 0));
 
         bool isPlayed =
-            PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(topic), 0) == 1;
+            PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(topic), 0));
 
         bool isPostAssessmentDone =
-            PlayerPrefs
-                .GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(topic), 0) ==
-            1;
+            PrefsConverter.IntToBoolean(PlayerPrefs
+                .GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(topic), 0));
 
         TextMeshProUGUI buttonText =
             button
