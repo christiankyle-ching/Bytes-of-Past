@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Mirror;
 
-public class MPTimer : MonoBehaviour
+public class SPTimer : MonoBehaviour
 {
+    public SinglePlayerGameController gameController;
     private AudioSource audioSource;
     public AudioClip tickSFX;
 
@@ -42,10 +42,10 @@ public class MPTimer : MonoBehaviour
             if (secondsLeft > 0)
             {
                 secondsLeft--;
+                audioSource.Play();
             }
             else
             {
-                StopTimer();
                 DrawCard();
             }
 
@@ -71,7 +71,7 @@ public class MPTimer : MonoBehaviour
 
     private void DrawCard()
     {
-        NetworkClient.connection.identity.GetComponent<PlayerManager>().PlayCard(null, -1, -1, false);
+        gameController.HandleDropInTimeline(null, -1);
     }
 
     public void StartTimer()

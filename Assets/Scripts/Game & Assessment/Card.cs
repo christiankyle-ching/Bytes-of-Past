@@ -9,6 +9,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 {
     public bool canDrag;
     public AudioSource audioSource;
+    public AudioClip dropSFX;
     public Animator animator;
 
     [SerializeField]
@@ -112,6 +113,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void PlayDropSound()
     {
+        audioSource.clip = dropSFX;
         audioSource.Play();
     }
 

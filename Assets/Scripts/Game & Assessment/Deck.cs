@@ -11,6 +11,9 @@ public class Deck : MonoBehaviour
     // Game Controller
     private SinglePlayerGameController gameController;
 
+    private AudioSource audioSource;
+    public AudioClip singleDrawSFX, multipleDrawSFX;
+
 
     [SerializeField]
     private TextMeshProUGUI txtRemainingCount;
@@ -31,8 +34,8 @@ public class Deck : MonoBehaviour
         staticData = StaticData.Instance;
 
         this.cards = new Stack<CardData>();
-
         this.gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<SinglePlayerGameController>();
+        this.audioSource = GetComponent<AudioSource>();
 
         LoadCards(staticData.SelectedTopic);
         SetRemainingCards();
@@ -144,6 +147,30 @@ public class Deck : MonoBehaviour
         }
 
         SetRemainingCards();
+
+        if (count > 0)
+        {
+            if (count == 1)
+            {
+                PlaySingleDrawSFX();
+            }
+            else
+            {
+                PlayMultipleDrawSFX();
+            }
+        }
+    }
+
+    private void PlaySingleDrawSFX()
+    {
+        audioSource.clip = singleDrawSFX;
+        audioSource.Play();
+    }
+
+    private void PlayMultipleDrawSFX()
+    {
+        audioSource.clip = multipleDrawSFX;
+        audioSource.Play();
     }
 
     public void AddCard(CardData cardData)

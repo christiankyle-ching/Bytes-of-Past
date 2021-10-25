@@ -187,6 +187,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canDrag: 0
   audioSource: {fileID: 0}
+  drawSFX: {fileID: 8300000, guid: bc851881c9c0ea1489c524423eccac39, type: 3}
+  dropSFX: {fileID: 8300000, guid: 39db271c303895e4db4cace5e914f0a5, type: 3}
   animator: {fileID: 0}
   title: {fileID: 825109126113060996}
   description: {fileID: 825109125678865977}

@@ -6,36 +6,31 @@ using UnityEngine;
 public class SinglePlayerGameController : MonoBehaviour
 {
     int playerLives = 0;
-
     int startingCardsCount = 8;
+    public int turnSeconds = 30;
 
     // Scene References
     private Transform player;
-
     private PlayerStats playerStats;
 
     private DropZone timeline;
-
     private Transform timelineCardContainer;
 
     private Deck deck;
-
     private Graveyard graveyard;
 
     private Transform livesContainer;
-
     [SerializeField]
     private GameObject lifePrefab;
-
     [SerializeField]
     private GameObject cardPrefab;
 
-    private SinglePlayerMenuManager menuManager;
+    public SPTimer timer;
 
+    private SinglePlayerMenuManager menuManager;
     StaticData staticData;
 
     DIFFICULTY _difficulty = DIFFICULTY.Easy;
-
     TOPIC _topic = TOPIC.Computer;
 
     // GAME: Start
@@ -95,6 +90,21 @@ public class SinglePlayerGameController : MonoBehaviour
         InitLives();
         PlaceCardsInTimeline();
         DrawCards();
+
+        InitTimer();
+    }
+
+    void InitTimer()
+    {
+        if (_difficulty == DIFFICULTY.Hard)
+        {
+            timer.seconds = turnSeconds;
+            timer.StartTimer();
+        }
+        else
+        {
+            timer.gameObject.SetActive(false);
+        }
     }
 
     void InitLives()
@@ -155,6 +165,7 @@ public class SinglePlayerGameController : MonoBehaviour
         // End the Game
         if (lastIndex <= 0)
         {
+            timer.StopTimer();
             menuManager.EndGame(false, playerStats);
         }
     }
@@ -167,7 +178,6 @@ public class SinglePlayerGameController : MonoBehaviour
         if (IsDropValid(droppedCard, dropPos))
         {
             timeline.AcceptDrop(droppedCard);
-
             playerStats.CorrectDrop();
 
             if (IsHandEmpty()) menuManager.EndGame(true, playerStats);
@@ -175,9 +185,10 @@ public class SinglePlayerGameController : MonoBehaviour
         else
         {
             HandleInvalidDrop(droppedCard);
-
             playerStats.IncorrectDrop();
         }
+
+        timer.StartTimer();
     }
 
     private bool IsHandEmpty()
@@ -190,12 +201,11 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         DecreaseLife();
 
-        // Add card first in graveyard, so that
-        // if there's no card left in deck, something in graveyard
-        // can be pulled by the deck
-        // then give it back again
-        graveyard.AddCard(droppedCard.CardData);
-        droppedCard.Discard();
+        if (droppedCard != null)
+        {
+            graveyard.AddCard(droppedCard.CardData);
+            droppedCard.Discard();
+        }
 
         try
         {
@@ -212,6 +222,8 @@ public class SinglePlayerGameController : MonoBehaviour
 
     private bool IsDropValid(Card droppedCard, int dropPos)
     {
+        if (droppedCard == null) return false;
+
         Card[] timelineCards =
             timelineCardContainer.GetComponentsInChildren<Card>();
 
