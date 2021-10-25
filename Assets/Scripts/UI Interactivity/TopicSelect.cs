@@ -17,17 +17,7 @@ public class TopicSelect : MonoBehaviour
 
     void Awake()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
-        }
-        catch (System.NullReferenceException)
-        {
-            Debug.LogError("No Static Data detected: Run from Main Menu");
-        }
+        staticData = StaticData.Instance;
 
         btnComputer
             .GetComponent<Button>()
@@ -104,7 +94,7 @@ public class TopicSelect : MonoBehaviour
 
     void OnTopicSelect(TOPIC topic)
     {
-        staticData.SelectedTopic = topic;
+        staticData.SetTopic(topic);
 
         GAMEMODE gameMode = staticData.SelectedGameMode;
 
@@ -143,7 +133,7 @@ public class TopicSelect : MonoBehaviour
     {
         Debug.Log("LoadPreAssessment");
 
-        staticData.SelectedGameMode = GAMEMODE.PreAssessment;
+        staticData.SetGameMode(GAMEMODE.PreAssessment);
         staticData.IsPostAssessment = false;
         sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();
     }

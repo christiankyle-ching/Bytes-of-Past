@@ -26,6 +26,22 @@ public enum DIFFICULTY
 
 public class StaticData : MonoBehaviour
 {
+    private static StaticData _instance;
+    public static StaticData Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+            LoadProfileData();
+        }
+    }
+
     public GameObject sceneLoader;
 
     // These variables are exposed to all Scenes to pass data between them by DontDestroyOnLoad
@@ -41,14 +57,27 @@ public class StaticData : MonoBehaviour
 
     public ProfileStatisticsData profileStatisticsData;
 
-    void Awake()
-    {
-        // Load necessary data
-        LoadProfileData();
-    }
 
     public void LoadProfileData()
     {
         profileStatisticsData = SaveLoadSystem.LoadProfileStatisticsData();
+    }
+
+    public void SetTopic(TOPIC topic)
+    {
+        SelectedTopic = topic;
+        Debug.Log("Changed Topic: " + TopicUtils.GetName(SelectedTopic));
+    }
+
+    public void SetDifficulty(DIFFICULTY diff)
+    {
+        SelectedDifficulty = diff;
+        Debug.Log("Changed Difficulty: " + diff);
+    }
+
+    public void SetGameMode(GAMEMODE gm)
+    {
+        SelectedGameMode = gm;
+        Debug.Log("Changed GameMode: " + gm);
     }
 }

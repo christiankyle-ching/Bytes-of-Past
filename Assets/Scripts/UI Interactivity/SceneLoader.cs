@@ -14,18 +14,7 @@ public class SceneLoader : MonoBehaviour
 
     void Awake()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
-        }
-        catch (System.Exception)
-        {
-            Debug
-                .Log("No Static Data Found: 'Main Menu' scene not loaded once");
-        }
+        staticData = StaticData.Instance;
     }
 
     public void GoBack()
@@ -66,7 +55,7 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToMultiplayerLobby()
     {
-         StartCoroutine(LoadScene("MPOffline"));
+        StartCoroutine(LoadScene("MPOffline"));
     }
 
     public void GoToAssessmentTest()

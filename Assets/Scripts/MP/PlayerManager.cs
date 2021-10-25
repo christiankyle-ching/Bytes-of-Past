@@ -87,7 +87,7 @@ public class PlayerManager : NetworkBehaviour
                     Resources
                         .Load
                         <TextAsset
-                        >("Cards/Cards - Networking");
+                        >("Cards/Cards - Software");
                 break;
         }
 
@@ -202,6 +202,16 @@ public class PlayerManager : NetworkBehaviour
 
         Debug.Log($"ILP: {isMyTurn}");
 
+        if (MPGameManager.Instance.gameStarted)
+        {
+            try
+            {
+                // Disable IP Address when game already started
+                GameObject.Find("IP-ADDRESS").SetActive(false);
+            }
+            catch { }
+        }
+
         if (isMyTurn && !gameFinished)
         {
             timer.StartTimer();
@@ -283,7 +293,8 @@ public class PlayerManager : NetworkBehaviour
                     playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
                     playerName.text = "";
                     cardCount.text = "";
-                } else
+                }
+                else
                 {
                     playerName.text = "Waiting For Players";
                     playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = true;

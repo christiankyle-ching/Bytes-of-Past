@@ -194,6 +194,8 @@ MonoBehaviour:
   cardBGImage: {fileID: 825109125205122354}
   yearObj: {fileID: 6270178231346828008}
   initialContainer: {fileID: 0}
+  placeholderPrefab: {fileID: 4660164711729953355, guid: 0f082cb5ee1ded84abbaaec3ee851985,
+    type: 3}
   placeholderContainer: {fileID: 0}
 --- !u!114 &6151365191382263657
 MonoBehaviour:

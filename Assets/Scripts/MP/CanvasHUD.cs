@@ -15,11 +15,13 @@ public class CanvasHUD : MonoBehaviour
     public GameObject PanelStop;
 
     public TMP_InputField inputFieldAddress;
+    public TextMeshProUGUI ipAddress;
     public Text serverText;
     public Text clientText;
 
     private void Start()
     {
+        ValueChangeCheck();
         inputFieldAddress.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
 
         //Make sure to attach these Buttons in the Inspector
@@ -67,6 +69,9 @@ public class CanvasHUD : MonoBehaviour
     public void ValueChangeCheck()
     {
         NetworkManager.singleton.networkAddress = inputFieldAddress.text;
+        ipAddress.text = NetworkManager.singleton.networkAddress;
+
+        btnJoin.interactable = inputFieldAddress.text != string.Empty;
     }
 
     public void SetupCanvas()

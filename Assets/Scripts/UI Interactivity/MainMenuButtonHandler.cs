@@ -12,32 +12,36 @@ public class MainMenuButtonHandler : MonoBehaviour
 
     void Awake()
     {
-        staticData =
-            GameObject.FindWithTag("Static Data").GetComponent<StaticData>();
+        staticData = StaticData.Instance;
     }
 
     public void OnSelectSinglePlayer()
     {
-        staticData.SelectedGameMode = GAMEMODE.SinglePlayer;
+        staticData.SetGameMode(GAMEMODE.SinglePlayer);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 
     public void OnSelectMultiplayer()
     {
-        staticData.SelectedGameMode = GAMEMODE.Multiplayer;
+        staticData.SetGameMode(GAMEMODE.Multiplayer);
         sceneLoader.GetComponent<SceneLoader>().GoToMultiplayerLobby();
     }
 
     public void OnSelectPreAssessment()
     {
-        staticData.SelectedGameMode = GAMEMODE.PreAssessment;
+        staticData.SetGameMode(GAMEMODE.PreAssessment);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 
     public void OnSelectPostAssessment()
     {
-        staticData.SelectedGameMode = GAMEMODE.PostAssessment;
+        staticData.SetGameMode(GAMEMODE.PostAssessment);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
+    }
+
+    public void OnSelectTutorial()
+    {
+        sceneLoader.GetComponent<SceneLoader>().GoToTutorial();
     }
 
     public void onSelectGameSettings()

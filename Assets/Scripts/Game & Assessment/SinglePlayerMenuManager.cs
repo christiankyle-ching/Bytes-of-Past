@@ -25,24 +25,10 @@ public class SinglePlayerMenuManager : MonoBehaviour
 
     void Awake()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
+        staticData = StaticData.Instance;
 
-            SetTopicTexts("Topic: " +
-            TopicUtils.GetName(staticData.SelectedTopic));
-            SetDifficultyTexts(DifficultyUtils
-                .GetName(staticData.SelectedDifficulty) +
-            " Difficulty");
-        }
-        catch (System.Exception)
-        {
-            SetTopicTexts("NO TOPIC FROM MAIN MENU");
-            SetDifficultyTexts("NO DIFFICULTY FROM MAIN MENU");
-        }
+        SetTopicTexts($"Topic: {TopicUtils.GetName(staticData.SelectedTopic)}");
+        SetDifficultyTexts($"{DifficultyUtils.GetName(staticData.SelectedDifficulty)} Difficulty");
     }
 
     public void ResumeGame()

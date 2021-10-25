@@ -31,6 +31,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public Transform initialContainer;
 
     // Placeholder
+    public GameObject placeholderPrefab;
     private GameObject placeholder;
     public Transform placeholderContainer;
     public int PlaceholderPos { get => placeholder.transform.GetSiblingIndex(); }
@@ -81,14 +82,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void CreatePlaceholder()
     {
-        // TODO: This can be converted as a Prefab
-        placeholder = new GameObject();
+        placeholder = Instantiate(placeholderPrefab, placeholderContainer);
         placeholder.name = "Placeholder Card while Dragging";
 
-        RectTransform rect = placeholder.AddComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(100, 140);
-
-        placeholder.transform.SetParent(placeholderContainer);
         placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
     }
 
@@ -180,7 +176,24 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         Destroy(this.gameObject);
     }
 
-    public void Disable()
+    public void TempDisable()
+    {
+        DisableDrag();
+        StartCoroutine(DelayEnableDrag());
+    }
+
+    IEnumerator DelayEnableDrag()
+    {
+        yield return new WaitForSeconds(2.5f);
+        EnableDrag();
+    }
+
+    public void EnableDrag()
+    {
+        canDrag = true;
+    }
+
+    public void DisableDrag()
     {
         canDrag = false;
     }
@@ -189,7 +202,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         try
         {
-            Disable();
+            DisableDrag();
 
             // Show the year (answer)
             this.yearObj.color = Color.black;

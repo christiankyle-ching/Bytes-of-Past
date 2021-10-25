@@ -28,24 +28,13 @@ public class Deck : MonoBehaviour
 
     void Awake()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
-        }
-        catch (System.NullReferenceException)
-        {
-            Debug.LogError("Static Data Not Found: Play from the Main Menu");
-            staticData = new StaticData();
-        }
+        staticData = StaticData.Instance;
 
         this.cards = new Stack<CardData>();
 
         this.gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<SinglePlayerGameController>();
 
-        LoadCards(TOPIC.Computer);
+        LoadCards(staticData.SelectedTopic);
         SetRemainingCards();
     }
 
@@ -75,7 +64,8 @@ public class Deck : MonoBehaviour
 
     void LoadCards(TOPIC topic)
     {
-        CardData[] cardAssets = ParseCSVToCards(topic);
+        //CardData[] cardAssets = ParseCSVToCards(topic);
+        CardData[] cardAssets = ResourceParser.Instance.ParseCSVToCards(topic);
 
         foreach (CardData cardData in cardAssets)
         {
@@ -117,7 +107,7 @@ public class Deck : MonoBehaviour
                     Resources
                         .Load
                         <TextAsset
-                        >("Cards/Cards - Networking");
+                        >("Cards/Cards - Software");
                 break;
         }
 

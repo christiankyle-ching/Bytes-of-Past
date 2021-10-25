@@ -88,11 +88,9 @@ public class MPGameManager : NetworkBehaviour
     {
         base.OnStartServer();
 
-        _staticData =
-            GameObject
-                .FindWithTag("Static Data")
-                .GetComponent<StaticData>();
+        _staticData = StaticData.Instance;
         _topic = _staticData.SelectedTopic;
+
         LoadCards(_topic);
     }
 
@@ -138,7 +136,7 @@ public class MPGameManager : NetworkBehaviour
                     Resources
                         .Load
                         <TextAsset
-                        >("Cards/Cards - Networking");
+                        >("Cards/Cards - Software");
                 break;
         }
 

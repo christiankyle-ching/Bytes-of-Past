@@ -18,17 +18,7 @@ public class DropdownTopicSelect : MonoBehaviour
 
     private void Start()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
-        }
-        catch (System.NullReferenceException)
-        {
-            Debug.LogError("No Static Data detected: Run from Main Menu");
-        }
+        staticData = StaticData.Instance;
 
         // Load first before attaching listeners
         dropdown = GetComponent<TMP_Dropdown>();
@@ -40,7 +30,7 @@ public class DropdownTopicSelect : MonoBehaviour
 
     private void UpdateValue(int index)
     {
-        staticData.SelectedTopic = topics[index];
+        staticData.SetTopic(topics[index]);
     }
 
     private void LoadTopics()

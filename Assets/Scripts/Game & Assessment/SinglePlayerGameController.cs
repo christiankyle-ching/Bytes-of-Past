@@ -41,25 +41,16 @@ public class SinglePlayerGameController : MonoBehaviour
     // GAME: Start
     private void Awake()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
+        staticData = StaticData.Instance;
 
-            _difficulty = staticData.SelectedDifficulty;
-            _topic = staticData.SelectedTopic;
-        }
-        catch (System.NullReferenceException)
-        {
-            Debug.LogError("Static Data Not Found: Play from the Main Menu");
-            staticData = new StaticData();
-        }
+        _difficulty = StaticData.Instance.SelectedDifficulty;
+        _topic = StaticData.Instance.SelectedTopic;
+
+        Debug.Log($"Difficulty: {_difficulty}");
+        Debug.Log($"Topic: {_topic}");
 
         this.player = GameObject.FindGameObjectWithTag("Player").transform;
         this.playerStats = player.gameObject.GetComponent<PlayerStats>();
-        this.playerStats.initialLife = playerLives;
 
         GameObject _timelineObj = GameObject.FindGameObjectWithTag("Timeline");
         this.timeline = _timelineObj.GetComponent<DropZone>();
@@ -98,6 +89,8 @@ public class SinglePlayerGameController : MonoBehaviour
                 startingCardsCount = 8;
                 break;
         }
+
+        this.playerStats.initialLife = playerLives;
 
         InitLives();
         PlaceCardsInTimeline();
@@ -169,6 +162,8 @@ public class SinglePlayerGameController : MonoBehaviour
     // Game Flow Functions
     public void HandleDropInTimeline(Card droppedCard, int dropPos)
     {
+        DisableCardDragTemp();
+
         if (IsDropValid(droppedCard, dropPos))
         {
             timeline.AcceptDrop(droppedCard);
@@ -247,5 +242,15 @@ public class SinglePlayerGameController : MonoBehaviour
 
         Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
         return (yearBefore <= cardYear && cardYear <= yearAfter);
+    }
+
+    // Disable card drag for 1s to prevent spam
+    private void DisableCardDragTemp()
+    {
+        Card[] cards = player.GetChild(0).GetComponentsInChildren<Card>();
+        foreach (Card card in cards)
+        {
+            card.TempDisable();
+        }
     }
 }

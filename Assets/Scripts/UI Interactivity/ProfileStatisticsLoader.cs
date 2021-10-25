@@ -30,20 +30,8 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
     void Awake()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
-
-            ShowStatisticsData();
-        }
-        catch (System.NullReferenceException)
-        {
-            Debug.LogError("Static Data Not Found: Play from the Main Menu");
-            staticData = new StaticData();
-        }
+        staticData = StaticData.Instance;
+        ShowStatisticsData();
     }
 
     void ShowStatisticsData()

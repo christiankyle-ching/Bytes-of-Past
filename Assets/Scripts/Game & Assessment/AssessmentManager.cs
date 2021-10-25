@@ -51,18 +51,7 @@ public class AssessmentManager : MonoBehaviour
 
     void Awake()
     {
-        try
-        {
-            staticData =
-                GameObject
-                    .FindWithTag("Static Data")
-                    .GetComponent<StaticData>();
-        }
-        catch (System.NullReferenceException)
-        {
-            Debug.LogError("Static Data Not Found: Play from the Main Menu");
-            staticData = new StaticData();
-        }
+        staticData = StaticData.Instance;
 
         // Bind OnClick to functions
         btnAnswer1
@@ -95,10 +84,13 @@ public class AssessmentManager : MonoBehaviour
         selectedTopic = staticData.SelectedTopic;
         isPostAssessment = staticData.IsPostAssessment;
 
+        Debug.Log($"Topic: {selectedTopic}");
+        Debug.Log($"IsPostAssessment: {isPostAssessment}");
+
         txtTestTopic.GetComponent<TextMeshProUGUI>().text =
             "Topic: " + TopicUtils.GetName(selectedTopic);
 
-        QuestionData[] resourcesQuestions = ParseCSVToQuestions(TOPIC.Computer);
+        QuestionData[] resourcesQuestions = ParseCSVToQuestions(selectedTopic);
 
         txtPreOrPostAssessment.GetComponent<TextMeshProUGUI>().text =
             isPostAssessment ? "Post-Assessment" : "Pre-Assessment";
