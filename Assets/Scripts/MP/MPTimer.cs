@@ -9,7 +9,8 @@ public class MPTimer : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip tickSFX;
 
-    public int seconds = 15;
+    // TODO: Set in Prod
+    private int seconds = 30;
     public Color runningColor = Color.yellow;
     public Color dangerColor = Color.red;
     private Color defaultColor;
@@ -61,7 +62,15 @@ public class MPTimer : MonoBehaviour
 
         if (isRunning)
         {
-            textObj.color = (secondsLeft <= dangerSeconds) ? dangerColor : runningColor;
+            if (secondsLeft <= dangerSeconds)
+            {
+                textObj.color = dangerColor;
+                audioSource.Play();
+            }
+            else
+            {
+                textObj.color = runningColor;
+            }
         }
         else
         {

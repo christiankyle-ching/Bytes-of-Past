@@ -105,7 +105,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (!canDrag) return;
 
-        // TODO: currently anchored to the center, use offset instead
         transform.position = eventData.pointerCurrentRaycast.worldPosition;
 
         AdjustPlaceholderPos();
@@ -154,7 +153,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 newIndex = i;
 
-                // TODO: attempt to fix immediate switch of cards when going left to right
                 if (placeholder.transform.GetSiblingIndex() < placeholderContainer.GetChild(i).position.x)
                     newIndex--;
 

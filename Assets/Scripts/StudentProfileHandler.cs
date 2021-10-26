@@ -20,9 +20,8 @@ public class StudentProfileHandler : MonoBehaviour
         PlayerPrefs.SetInt("Profile_Section", sectionIndex);
     }
 
-    void Awake()
+    void Start()
     {
-        // TODO
         txtStudentName.GetComponent<TMP_InputField>().text =
             PlayerPrefs.GetString("Profile_Name", "");
 

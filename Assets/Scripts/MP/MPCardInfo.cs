@@ -89,7 +89,7 @@ public class MPCardInfo : MonoBehaviour
         }
     }
 
-    private static string GetSpecialActionLabel(SPECIALACTION special)
+    public static string GetSpecialActionLabel(SPECIALACTION special)
     {
         switch (special)
         {

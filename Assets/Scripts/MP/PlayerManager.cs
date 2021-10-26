@@ -22,6 +22,7 @@ public class PlayerManager : NetworkBehaviour
     private GameObject playerArea;
     private GameObject enemyAreas;
 
+    private MPGameMessage messenger;
     private GameObject gameStateText;
     private GameObject activeSpecialAction;
     private GameObject deck;
@@ -47,6 +48,7 @@ public class PlayerManager : NetworkBehaviour
         timer = GameObject.Find("MPTimer").GetComponent<MPTimer>();
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
         menuCanvas = GameObject.Find("MenuCanvas").GetComponent<MPCanvasHUD>();
+        messenger = GameObject.Find("MESSENGER").GetComponent<MPGameMessage>();
 
         LoadCards();
     }
@@ -145,7 +147,6 @@ public class PlayerManager : NetworkBehaviour
         }
 
         UpdateTurn(currentPlayer, gameFinished, gameMsg);
-        UpdateActiveSpecialAction();
         UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands, playerNames);
         UpdateDeckCount(deckCount);
     }
@@ -188,9 +189,10 @@ public class PlayerManager : NetworkBehaviour
             gameMsg);
     }
 
-    public void UpdateActiveSpecialAction()
+    [ClientRpc]
+    public void RpcShowDoubleDraw(bool doubleDrawActive)
     {
-        if (MPGameManager.Instance.doubleDrawActive)
+        if (doubleDrawActive)
         {
             activeSpecialAction.GetComponentInChildren<TextMeshProUGUI>().text = "Next Player to make mistake gets double card!";
             activeSpecialAction.GetComponentInChildren<Image>().sprite = MPCardInfo.GetSpecialActionSprite(SPECIALACTION.DoubleDraw);
@@ -307,9 +309,9 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcGameInterrupted(string playerName)
+    public void RpcGameInterrupted(string playerName, bool isHost)
     {
-        menuCanvas.ShowInterruptedGame(playerName);
+        menuCanvas.ShowInterruptedGame(playerName, isHost);
     }
 
     [TargetRpc]
@@ -324,6 +326,12 @@ public class PlayerManager : NetworkBehaviour
             int randIndex = UnityEngine.Random.Range(0, cardCount);
             playerArea.transform.GetChild(randIndex).GetComponent<MPCardInfo>().RevealCard();
         }
+    }
+
+    [ClientRpc]
+    public void RpcShowGameMessage(string message, MPGameMessageType type)
+    {
+        messenger.ShowMessage(message, type);
     }
     #endregion
 

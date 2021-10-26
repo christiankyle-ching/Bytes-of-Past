@@ -172,7 +172,6 @@ public class MPNetworkManager : NetworkManager
             // TODO: Some error regarding Array index out of range
         }
 
-
         base.OnServerDisconnect(conn);
     }
 
@@ -182,7 +181,8 @@ public class MPNetworkManager : NetworkManager
     /// </summary>
     /// <param name="conn">Connection of the client...may be null</param>
     /// <param name="exception">Exception thrown from the Transport.</param>
-    public override void OnServerError(NetworkConnection conn, Exception exception) { }
+    public override void OnServerError(NetworkConnection conn, Exception exception)
+    { }
 
     #endregion
 

@@ -5,14 +5,9 @@ using Mirror;
 using UnityEngine.UI;
 //using ParrelSync;
 
-public class DrawCards : NetworkBehaviour
+public class DrawCards : MonoBehaviour
 {
     private PlayerManager playerManager;
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-    }
 
     public void Draw()
     {
@@ -21,8 +16,8 @@ public class DrawCards : NetworkBehaviour
 
         string playerName = PlayerPrefs.GetString("Profile_Name", "");
 
-        // TODO: Comment on Prod
-        //string playerName = ClonesManager.IsClone() ?
+        //TODO: Comment on Build (including ParallelSync)
+        //playerName = ClonesManager.IsClone() ?
         //    $"Clone {Random.Range(100, 999)}" :
         //    PlayerPrefs.GetString("Profile_Name", "");
 

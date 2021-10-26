@@ -23,7 +23,7 @@ public class MPCanvasHUD : MonoBehaviour
         btnPause.SetActive(true);
     }
 
-    public void ShowEndGameMenu(string[] winnerNames, NetworkIdentity[] winnerIdens, bool interrupted = false, string interruptingPlayer = "")
+    public void ShowEndGameMenu(string[] winnerNames, NetworkIdentity[] winnerIdens, bool interrupted = false, bool isHost = false, string interruptingPlayer = "")
     {
         bgMenu.SetActive(true);
         endGameMenu.SetActive(true);
@@ -48,14 +48,17 @@ public class MPCanvasHUD : MonoBehaviour
         else
         {
             endGameMenu.transform.Find("WINSTATUS").GetComponent<TextMeshProUGUI>().text = "ERROR";
-            endGameMenu.transform.Find("WinnerList").GetComponent<TextMeshProUGUI>().text = $"Player {interruptingPlayer} has quit.";
-            endGameMenu.transform.Find("BUTTONS").GetChild(0).gameObject.SetActive(false); // Disable Resume Button
+            endGameMenu.transform.Find("WINNER").GetComponent<TextMeshProUGUI>().text = "";
+            endGameMenu.transform.Find("WinnerList").GetComponent<TextMeshProUGUI>().text = 
+                (isHost) ? $"Player {interruptingPlayer} has quit." :
+                "The server left the game";
+            endGameMenu.transform.Find("BUTTONS").Find("BTNRESUME").gameObject.SetActive(false); // Disable Resume Button
         }
     }
 
-    public void ShowInterruptedGame(string playerName)
+    public void ShowInterruptedGame(string playerName, bool isHost)
     {
-        ShowEndGameMenu(new string[0], new NetworkIdentity[0], true, playerName);
+        ShowEndGameMenu(new string[0], new NetworkIdentity[0], true, isHost, playerName);
     }
 
     public void ShowPauseMenu()

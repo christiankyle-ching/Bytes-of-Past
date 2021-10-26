@@ -42,6 +42,4 @@ public class CardData
     {
         this.SpecialAction = special;
     }
-
-
 }

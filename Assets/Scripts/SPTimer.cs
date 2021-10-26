@@ -42,7 +42,6 @@ public class SPTimer : MonoBehaviour
             if (secondsLeft > 0)
             {
                 secondsLeft--;
-                audioSource.Play();
             }
             else
             {
@@ -61,7 +60,14 @@ public class SPTimer : MonoBehaviour
 
         if (isRunning)
         {
-            textObj.color = (secondsLeft <= dangerSeconds) ? dangerColor : runningColor;
+            if (secondsLeft <= dangerSeconds)
+            {
+                textObj.color = dangerColor;
+                audioSource.Play();
+            } else
+            {
+                textObj.color = runningColor;
+            }
         }
         else
         {

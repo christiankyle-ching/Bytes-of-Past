@@ -232,14 +232,10 @@ public class MPGameManager : NetworkBehaviour
             if (isDropValid)
             {
                 timeline.Insert(pos, infoIndex);
-                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. CORRECT.");
-
                 ApplySpecialAction(special, identity);
             }
             else
             {
-                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. WRONG.");
-
                 deck.Add(infoIndex); // Add back the card wrongly placed
 
                 // Add new card to player
@@ -265,8 +261,6 @@ public class MPGameManager : NetworkBehaviour
             }
         }
 
-        Debug.Log($"Special Action: {special}");
-
         // Calculate next turn then check if starting another round to check winners
         NextPlayerTurn();
         if (skipTurnActive)
@@ -280,6 +274,11 @@ public class MPGameManager : NetworkBehaviour
         if (isStartRound) CheckWinners();
 
         ClientsUpdateUI();
+
+        // Message to all clients
+        string thisTurnPlayer = playerNames[FindPlayerIndex(identity)]; // The one who played a card
+        string nextTurnPlayer = playerNames[currentPlayerIndex]; // The next person
+        ShowMessageToClients(thisTurnPlayer, nextTurnPlayer, special, hasDrop, isDropValid, doubleDrawActive);
 
         return isDropValid;
     }
@@ -318,6 +317,53 @@ public class MPGameManager : NetworkBehaviour
     #endregion
 
     #region ------------------------------ Remote Calls ------------------------------
+
+    public void ShowMessageToClients(string thisTurnPlayer, string nextTurnPlayer, SPECIALACTION special, bool hasDrop, bool isDropValid, bool doubleDrawActive)
+    {
+        string message = "";
+        MPGameMessageType type = MPGameMessageType.NONE;
+
+        // Build Message String
+        if (hasDrop)
+        {
+            message += $"Player {thisTurnPlayer} placed a card {(isDropValid ? "correct" : "wrong")}! ";
+            message += (special != SPECIALACTION.None) ? $"A special action has been activated \"{MPCardInfo.GetSpecialActionLabel(special)}\". " : "";
+        }
+        else
+        {
+            message += $"Player {thisTurnPlayer} has skipped their turn! ";
+        }
+        message += $"It's {nextTurnPlayer}'s turn.";
+
+        // Pick Type of Message
+        if (hasDrop)
+        {
+            if (special == SPECIALACTION.SkipTurn)
+            {
+                type = MPGameMessageType.SA_SKIP;
+            }
+            else if (special == SPECIALACTION.Peek)
+            {
+                type = MPGameMessageType.SA_PEEK;
+            }
+            else if (isDropValid)
+            {
+                type = MPGameMessageType.CORRECT;
+            }
+            else
+            {
+                type = MPGameMessageType.WRONG;
+            }
+        }
+        else
+        {
+            type = MPGameMessageType.NONE;
+        }
+
+        PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        player.RpcShowGameMessage(message, type);
+        player.RpcShowDoubleDraw(doubleDrawActive);
+    }
 
     public string GetGameStateMessage()
     {
@@ -370,9 +416,9 @@ public class MPGameManager : NetworkBehaviour
         return players.FindIndex(iden => iden == i);
     }
 
-    public void OnPlayerQuit(string playerName)
+    public void OnPlayerQuit(string playerName, bool isHost = false)
     {
-        NetworkClient.connection.identity.GetComponent<PlayerManager>().RpcGameInterrupted(playerName);
+        NetworkClient.connection.identity.GetComponent<PlayerManager>().RpcGameInterrupted(playerName, isHost);
     }
 
     #endregion
@@ -385,6 +431,8 @@ public class MPGameManager : NetworkBehaviour
 
     public SPECIALACTION GetRandomSpecialAction()
     {
+        return SPECIALACTION.DoubleDraw;
+
         float rand = UnityEngine.Random.Range(0f, 1f);
 
         if (rand <= specialActionRate)

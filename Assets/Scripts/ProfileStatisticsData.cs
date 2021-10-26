@@ -46,7 +46,7 @@ public class ProfileStatisticsData
             gameAccuracy[gameModeIndex, topicIndex, difficultyIndex];
 
         gameAccuracy[gameModeIndex, topicIndex, difficultyIndex] =
-            (existingAccuracy == 0f) // TODO: change logic to detect whether it's their first game
+            (existingAccuracy == 0f)
                 ? newAccuracy
                 : ((newAccuracy + existingAccuracy) / 2);
 
