@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using TMPro;
 
 public class MPCardZoom : NetworkBehaviour
 {
@@ -62,9 +63,17 @@ public class MPCardZoom : NetworkBehaviour
         zoomCard.transform.localPosition = new Vector2(0f, 0f);
         zoomCard.transform.localScale = new Vector2(2f, 2f);
 
-        zoomCard.GetComponent<MPCardInfo>().InitCardData(GetComponent<MPCardInfo>().cardData);
+        CardData data = GetComponent<MPCardInfo>().cardData;
+        zoomCard.GetComponent<MPCardInfo>().InitCardData(data, data.SpecialAction);
 
-        zoomCard.GetComponent<Animator>().SetTrigger("Zoom");
+        if (GetComponent<MPCardInfo>().isRevealed)
+        {
+            zoomCard.GetComponent<Animator>().SetTrigger("ZoomWithYear");
+        }
+        else
+        {
+            zoomCard.GetComponent<Animator>().SetTrigger("Zoom");
+        }
     }
 
     void UnzoomCard()

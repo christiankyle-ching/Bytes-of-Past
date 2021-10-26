@@ -31,7 +31,8 @@ public class MPGameManager : NetworkBehaviour
 
     [SyncVar] public TOPIC _topic = TOPIC.Computer;
     private StaticData _staticData;
-    private GameObject timer;
+
+    #region ------------------------------ Init ------------------------------
 
     private void Awake()
     {
@@ -53,21 +54,6 @@ public class MPGameManager : NetworkBehaviour
         _topic = _staticData.SelectedTopic;
 
         LoadCards(_topic);
-    }
-
-    public int PopCard(NetworkIdentity i)
-    {
-        if (deck.Count > 0)
-        {
-            int id = deck[0];
-            deck.RemoveAt(0);
-
-            Debug.Log($"Player #{i.netId} [{FindPlayerIndex(i)}] gets a CARD.");
-            playerHands[FindPlayerIndex(i)]++;
-            return id;
-        }
-
-        return -1;
     }
 
     private void LoadCards(TOPIC topic)
@@ -96,83 +82,9 @@ public class MPGameManager : NetworkBehaviour
         }
     }
 
-    public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity, bool hasDrop)
-    {
-        turns++; // Add Turn
+    #endregion
 
-        bool isDropValid;
-
-        if (hasDrop)
-        {
-            playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
-
-            CardData data = cardInfos[infoIndex];
-
-            isDropValid = IsDropValid(data.Year, pos);
-
-            if (isDropValid)
-            {
-                timeline.Insert(pos, infoIndex);
-                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. CORRECT.");
-            }
-            else
-            {
-                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. WRONG.");
-
-                deck.Add(infoIndex); // Add back the card wrongly placed
-
-                // Add new card to player
-                identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
-            }
-        }
-        else
-        {
-            isDropValid = false;
-
-            // Add new card to player
-            identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
-        }
-
-        // Calculate next turn then check if starting another round to check winners
-        NextPlayerTurn();
-        bool isStartRound = turns % playerHands.Count == 0;
-        if (isStartRound) CheckWinners();
-
-        ClientsUpdateUI();
-
-        return isDropValid;
-    }
-
-    private bool IsDropValid(int year, int dropPos)
-    {
-        // Shorten code
-        int
-            yearBefore,
-            cardYear,
-            yearAfter;
-
-        cardYear = year;
-        try
-        {
-            yearBefore = cardInfos[timeline[dropPos - 1]].Year;
-        }
-        catch
-        {
-            yearBefore = int.MinValue;
-        }
-
-        try
-        {
-            yearAfter = cardInfos[timeline[dropPos]].Year;
-        }
-        catch
-        {
-            yearAfter = int.MaxValue;
-        }
-
-        //Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
-        return (yearBefore <= cardYear && cardYear <= yearAfter);
-    }
+    #region ------------------------------ Player Actions ------------------------------
 
     public void AddPlayer(NetworkIdentity nid)
     {
@@ -215,6 +127,19 @@ public class MPGameManager : NetworkBehaviour
 
         Debug.Log($"Ready Players: {readyPlayersCount}. Players: {String.Join(",", playerNames)}");
     }
+
+    public void SetPlayerName(NetworkIdentity i, string name)
+    {
+        if (name != string.Empty)
+        {
+            int index = FindPlayerIndex(i);
+            playerNames[index] = name;
+        }
+    }
+
+    #endregion
+
+    #region ------------------------------ Game Flow ------------------------------
 
     public void StartGame()
     {
@@ -277,6 +202,123 @@ public class MPGameManager : NetworkBehaviour
         Debug.Log("End Game!");
     }
 
+    public int PopCard(NetworkIdentity i)
+    {
+        if (deck.Count > 0)
+        {
+            int id = deck[0];
+            deck.RemoveAt(0);
+
+            Debug.Log($"Player #{i.netId} [{FindPlayerIndex(i)}] gets a CARD.");
+            playerHands[FindPlayerIndex(i)]++;
+            return id;
+        }
+
+        return -1;
+    }
+
+    public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity, bool hasDrop, SPECIALACTION special)
+    {
+        turns++; // Add Turn
+
+        bool isDropValid;
+
+        if (hasDrop)
+        {
+            playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
+            CardData data = cardInfos[infoIndex]; // Get Local copy of data
+            isDropValid = IsDropValid(data.Year, pos);
+
+            if (isDropValid)
+            {
+                timeline.Insert(pos, infoIndex);
+                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. CORRECT.");
+
+                ApplySpecialAction(special, identity);
+            }
+            else
+            {
+                Debug.Log($"Player #{identity.netId} [{FindPlayerIndex(identity)}]. WRONG.");
+
+                deck.Add(infoIndex); // Add back the card wrongly placed
+
+                // Add new card to player
+                identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+                if (doubleDrawActive)
+                {
+                    identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+                    doubleDrawActive = false;
+                }
+
+            }
+        }
+        else
+        {
+            isDropValid = false;
+
+            // Add new card to player
+            identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+            if (doubleDrawActive)
+            {
+                identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+                doubleDrawActive = false;
+            }
+        }
+
+        Debug.Log($"Special Action: {special}");
+
+        // Calculate next turn then check if starting another round to check winners
+        NextPlayerTurn();
+        if (skipTurnActive)
+        {
+            // If Skip Turn is activated, skip another turn
+            NextPlayerTurn();
+            skipTurnActive = false;
+        }
+
+        bool isStartRound = turns % playerHands.Count == 0;
+        if (isStartRound) CheckWinners();
+
+        ClientsUpdateUI();
+
+        return isDropValid;
+    }
+
+    private bool IsDropValid(int year, int dropPos)
+    {
+        // Shorten code
+        int
+            yearBefore,
+            cardYear,
+            yearAfter;
+
+        cardYear = year;
+        try
+        {
+            yearBefore = cardInfos[timeline[dropPos - 1]].Year;
+        }
+        catch
+        {
+            yearBefore = int.MinValue;
+        }
+
+        try
+        {
+            yearAfter = cardInfos[timeline[dropPos]].Year;
+        }
+        catch
+        {
+            yearAfter = int.MaxValue;
+        }
+
+        //Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
+        return (yearBefore <= cardYear && cardYear <= yearAfter);
+    }
+
+    #endregion
+
+    #region ------------------------------ Remote Calls ------------------------------
+
     public string GetGameStateMessage()
     {
         if (!gameStarted)
@@ -319,18 +361,13 @@ public class MPGameManager : NetworkBehaviour
 
     }
 
+    #endregion
+
+    #region ------------------------------ Utils ------------------------------
+
     public int FindPlayerIndex(NetworkIdentity i)
     {
         return players.FindIndex(iden => iden == i);
-    }
-
-    public void SetPlayerName(NetworkIdentity i, string name)
-    {
-        if (name != string.Empty)
-        {
-            int index = FindPlayerIndex(i);
-            playerNames[index] = name;
-        }
     }
 
     public void OnPlayerQuit(string playerName)
@@ -338,10 +375,13 @@ public class MPGameManager : NetworkBehaviour
         NetworkClient.connection.identity.GetComponent<PlayerManager>().RpcGameInterrupted(playerName);
     }
 
-    // ------------------------------ Special Actions ------------------------------
+    #endregion
 
+    #region ------------------------------ Special Actions ------------------------------
+
+    // TODO: Set in Prod
     [Range(0f, 1f)]
-    public float specialActionRate = 0.3f; // 0.0 to 1.0 = Percentage of special action
+    private float specialActionRate = 0.3f; // 0.0 to 1.0 = Percentage of special action
 
     public SPECIALACTION GetRandomSpecialAction()
     {
@@ -358,4 +398,28 @@ public class MPGameManager : NetworkBehaviour
             return SPECIALACTION.None;
         }
     }
+
+    [SyncVar] public bool doubleDrawActive = false;
+    [SyncVar] public bool skipTurnActive = false;
+
+    private void ApplySpecialAction(SPECIALACTION special, NetworkIdentity player)
+    {
+        if (special == SPECIALACTION.None) return;
+
+        Debug.Log($"Apply Special: {special}, Activated By: #{player.netId}");
+        switch (special)
+        {
+            case SPECIALACTION.Peek:
+                player.GetComponent<PlayerManager>().TargetPeekCard(player.connectionToClient);
+                break;
+            case SPECIALACTION.DoubleDraw:
+                doubleDrawActive = true;
+                break;
+            case SPECIALACTION.SkipTurn:
+                skipTurnActive = true;
+                break;
+        }
+    }
+
+    #endregion
 }

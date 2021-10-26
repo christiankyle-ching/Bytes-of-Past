@@ -5,6 +5,7 @@ using Mirror;
 using System;
 using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 
 public enum CARDACTION
 {
@@ -14,8 +15,7 @@ public enum CARDACTION
 public class PlayerManager : NetworkBehaviour
 {
     private bool isMyTurn = false;
-
-    private int startingCardsCount = 2;
+    private int startingCardsCount = 5; // TODO: Set in Prod
 
     public GameObject cardPrefab;
 
@@ -23,6 +23,7 @@ public class PlayerManager : NetworkBehaviour
     private GameObject enemyAreas;
 
     private GameObject gameStateText;
+    private GameObject activeSpecialAction;
     private GameObject deck;
     private GameObject dropzone;
     private MPTimer timer;
@@ -41,6 +42,7 @@ public class PlayerManager : NetworkBehaviour
         playerArea = GameObject.Find("PlayerArea");
         enemyAreas = GameObject.Find("EnemyAreas");
         gameStateText = GameObject.Find("RoundText");
+        activeSpecialAction = GameObject.Find("ActiveSpecialAction");
         deck = GameObject.Find("Deck");
         timer = GameObject.Find("MPTimer").GetComponent<MPTimer>();
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
@@ -67,12 +69,13 @@ public class PlayerManager : NetworkBehaviour
         for (int i = 0; i < startingCardsCount; i++)
         {
             int infoIndex = MPGameManager.Instance.PopCard(netIdentity);
+            SPECIALACTION randSpecial = MPGameManager.Instance.GetRandomSpecialAction();
 
             if (infoIndex < 0) break; // if deck has no cards
 
             GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(card, connectionToClient);
-            RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
+            RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt, randSpecial);
         }
 
         NetworkIdentity ni = connectionToClient.identity;
@@ -80,26 +83,39 @@ public class PlayerManager : NetworkBehaviour
         MPGameManager.Instance.ReadyPlayer(ni);
     }
 
+    [Command(requiresAuthority = false)]
+    public void CmdGetAnotherCard()
+    {
+        int infoIndex = MPGameManager.Instance.PopCard(connectionToClient.identity);
+        SPECIALACTION randSpecial = MPGameManager.Instance.GetRandomSpecialAction();
+
+        if (infoIndex < 0) return; // if deck has no cards
+
+        GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
+        NetworkServer.Spawn(card, connectionToClient);
+        RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt, randSpecial);
+    }
+
     public void PlayCard(GameObject card, int infoIndex, int pos, bool hasDrop = true)
     {
         if (hasAuthority)
         {
-            CmdPlayCard(card, infoIndex, pos, hasDrop);
+            CmdPlayCard(card, infoIndex, pos, hasDrop, card.GetComponent<MPCardInfo>().cardData.SpecialAction);
             isMyTurn = false;
         }
     }
 
     [Command]
-    private void CmdPlayCard(GameObject card, int infoIndex, int pos, bool hasDrop)
+    private void CmdPlayCard(GameObject card, int infoIndex, int pos, bool hasDrop, SPECIALACTION special)
     {
-        bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos, netIdentity, hasDrop);
+        bool isDropValid = MPGameManager.Instance.OnPlayCard(infoIndex, pos, netIdentity, hasDrop, special);
 
         if (hasDrop)
         {
             if (isDropValid)
             {
                 // Show card only if card drop is right
-                RpcShowCard(card, infoIndex, pos, CARDACTION.Played);
+                RpcShowCard(card, infoIndex, pos, CARDACTION.Played, special);
             }
             else
             {
@@ -111,17 +127,6 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    [Command(requiresAuthority = false)]
-    public void CmdGetAnotherCard()
-    {
-        int infoIndex = MPGameManager.Instance.PopCard(connectionToClient.identity);
-
-        if (infoIndex < 0) return; // if deck has no cards
-
-        GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
-        NetworkServer.Spawn(card, connectionToClient);
-        RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt);
-    }
 
     [TargetRpc]
     private void TargetDiscard(NetworkConnection conn, GameObject card)
@@ -140,6 +145,7 @@ public class PlayerManager : NetworkBehaviour
         }
 
         UpdateTurn(currentPlayer, gameFinished, gameMsg);
+        UpdateActiveSpecialAction();
         UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands, playerNames);
         UpdateDeckCount(deckCount);
     }
@@ -180,6 +186,22 @@ public class PlayerManager : NetworkBehaviour
             (isMyTurn && MPGameManager.Instance.gameStarted) ?
             $"{gameMsg} (Your Turn)" :
             gameMsg);
+    }
+
+    public void UpdateActiveSpecialAction()
+    {
+        if (MPGameManager.Instance.doubleDrawActive)
+        {
+            activeSpecialAction.GetComponentInChildren<TextMeshProUGUI>().text = "Next Player to make mistake gets double card!";
+            activeSpecialAction.GetComponentInChildren<Image>().sprite = MPCardInfo.GetSpecialActionSprite(SPECIALACTION.DoubleDraw);
+            activeSpecialAction.GetComponentInChildren<Image>().color = Color.white;
+        }
+        else
+        {
+            activeSpecialAction.GetComponentInChildren<TextMeshProUGUI>().text = "";
+            activeSpecialAction.GetComponentInChildren<Image>().sprite = null;
+            activeSpecialAction.GetComponentInChildren<Image>().color = Color.clear;
+        }
     }
 
     public void UpdateOpponentCards(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, string[] playerNames)
@@ -263,9 +285,9 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcShowCard(GameObject card, int infoIndex, int pos, CARDACTION type)
+    public void RpcShowCard(GameObject card, int infoIndex, int pos, CARDACTION type, SPECIALACTION special)
     {
-        card.GetComponent<MPCardInfo>().InitCardData(cardInfos[infoIndex]);
+        card.GetComponent<MPCardInfo>().InitCardData(cardInfos[infoIndex], special);
         card.GetComponent<MPCardInfo>().infoIndex = infoIndex;
         card.GetComponent<MPDragDrop>().DisableDrag();
 
@@ -280,7 +302,7 @@ public class PlayerManager : NetworkBehaviour
         {
             card.transform.SetParent(dropzone.transform, false);
             card.transform.SetSiblingIndex(pos);
-            card.GetComponent<Animator>().SetTrigger("Correct");
+            card.GetComponent<MPCardInfo>().RevealCard();
         }
     }
 
@@ -288,6 +310,20 @@ public class PlayerManager : NetworkBehaviour
     public void RpcGameInterrupted(string playerName)
     {
         menuCanvas.ShowInterruptedGame(playerName);
+    }
+
+    [TargetRpc]
+    public void TargetPeekCard(NetworkConnection conn)
+    {
+        Debug.Log("Activate Peek");
+
+        int cardCount = playerArea.transform.childCount;
+
+        if (cardCount > 0)
+        {
+            int randIndex = UnityEngine.Random.Range(0, cardCount);
+            playerArea.transform.GetChild(randIndex).GetComponent<MPCardInfo>().RevealCard();
+        }
     }
     #endregion
 

@@ -6,6 +6,8 @@ using UnityEngine;
 public class SinglePlayerGameController : MonoBehaviour
 {
     int playerLives = 0;
+
+    // TODO: Set in Prod
     int startingCardsCount = 8;
     public int turnSeconds = 30;
 

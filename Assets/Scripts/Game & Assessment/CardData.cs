@@ -10,79 +10,38 @@ public enum CARDCOLOR
 
 public enum SPECIALACTION
 {
-    Peek, DisableNext, DoubleDraw, None
+    Peek, SkipTurn, DoubleDraw, None
 }
 
 // [CreateAssetMenu(fileName = "New Card", menuName = "Card")]
 public class CardData
 {
-    // public -> private to prevent access, used getter methods instead
+    public string Title;
+    public string Inventor;
+    public string Description;
+    public int Year;
+    public Sprite Artwork;
+    public CARDCOLOR Color;
+    public SPECIALACTION SpecialAction;
+    public string ID;
 
-    [SerializeField]
-    private string title;
-    [SerializeField]
-    private string inventor;
-    [SerializeField]
-    private string description;
-    [SerializeField]
-    private int year;
-    [SerializeField]
-    private Sprite artwork;
-    [SerializeField]
-    private CARDCOLOR color;
-    [SerializeField]
-    private SPECIALACTION specialAction;
-
-    private string id;
-
-    public string ID
+    public CardData(string id, int year, string title, string inventor, string description, SPECIALACTION special = SPECIALACTION.None)
     {
-        get => this.id;
+        this.ID = id;
+        this.Year = year;
+        this.Title = title;
+        this.Inventor = inventor;
+        this.Description = description;
+        this.Artwork = Resources.Load<Sprite>($"Cards/Icons/{id}");
+        SetSpecialAction(special);
+
+        this.Color = (CARDCOLOR)UnityEngine.Random.Range(0, 5); // random color scheme
     }
 
-    public string Title
+    public void SetSpecialAction(SPECIALACTION special)
     {
-        get => this.title;
-    }
-
-    public string Inventor
-    {
-        get => this.Inventor;
+        this.SpecialAction = special;
     }
 
 
-    public string Description
-    {
-        get => this.description;
-    }
-
-    public int Year
-    {
-        get
-        {
-            return this.year;
-        }
-    }
-
-    public Sprite Artwork
-    {
-        get => this.artwork;
-    }
-
-    public CARDCOLOR Color
-    {
-        get => this.color;
-    }
-
-    public CardData(string id, int year, string title, string inventor, string description)
-    {
-        this.id = id;
-        this.year = year;
-        this.title = title;
-        this.inventor = inventor;
-        this.description = description;
-        this.artwork = Resources.Load<Sprite>($"Cards/Icons/{id}");
-
-        this.color = (CARDCOLOR)UnityEngine.Random.Range(0, 5); // random color scheme
-    }
 }
