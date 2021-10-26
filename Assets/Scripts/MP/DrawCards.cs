@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.UI;
-using ParrelSync;
+//using ParrelSync;
 
 public class DrawCards : NetworkBehaviour
 {
@@ -19,9 +19,13 @@ public class DrawCards : NetworkBehaviour
         NetworkIdentity ni = NetworkClient.connection.identity;
         playerManager = ni.GetComponent<PlayerManager>();
 
-        string playerName = ClonesManager.IsClone() ?
-            $"Clone {Random.Range(100, 999)}" :
-            PlayerPrefs.GetString("Profile_Name", "");
+        string playerName = PlayerPrefs.GetString("Profile_Name", "");
+
+        // TODO: Comment on Prod
+        //string playerName = ClonesManager.IsClone() ?
+        //    $"Clone {Random.Range(100, 999)}" :
+        //    PlayerPrefs.GetString("Profile_Name", "");
+
         playerManager.CmdReady(playerName);
 
         gameObject.SetActive(false);

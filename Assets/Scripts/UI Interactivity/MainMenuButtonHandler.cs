@@ -10,7 +10,7 @@ public class MainMenuButtonHandler : MonoBehaviour
 
     public GameObject settingsCanvas;
 
-    void Awake()
+    void Start()
     {
         staticData = StaticData.Instance;
     }
