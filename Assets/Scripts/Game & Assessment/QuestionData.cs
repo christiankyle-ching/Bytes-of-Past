@@ -51,6 +51,4 @@ public class QuestionData
         this.wrongAnswers = wrongAnswers;
         this.correctAnswer = correctAnswer;
     }
-
-    
 }

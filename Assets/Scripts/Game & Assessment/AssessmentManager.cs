@@ -80,7 +80,7 @@ public class AssessmentManager : MonoBehaviour
         txtTestTopic.GetComponent<TextMeshProUGUI>().text =
             "Topic: " + TopicUtils.GetName(selectedTopic);
 
-        QuestionData[] resourcesQuestions = ParseCSVToQuestions(selectedTopic);
+        QuestionData[] resourcesQuestions = ResourceParser.Instance.ParseCSVToQuestions(selectedTopic);
 
         txtPreOrPostAssessment.GetComponent<TextMeshProUGUI>().text =
             isPostAssessment ? "Post-Assessment" : "Pre-Assessment";
@@ -96,66 +96,6 @@ public class AssessmentManager : MonoBehaviour
             questions =
                 resourcesQuestions.OrderBy(x => Random.Range(0f, 1f)).ToList();
         }
-    }
-
-    QuestionData[] ParseCSVToQuestions(TOPIC topic)
-    {
-        /* 
-        IMPORTANT: Download from Google Sheets in .tsv. Then RENAME format to .csv.
-        Then drag it to Unity (to be recognized as a TextAsset with tabs as delimiters).
-        */
-        List<QuestionData> questions = new List<QuestionData>();
-
-        // Parse a CSV file containing the questions and answers
-        TextAsset rawData = null;
-
-        switch (topic)
-        {
-            case TOPIC.Computer:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("AssessmentTests/Assessment Questions - Computers");
-                break;
-            case TOPIC.Networking:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("AssessmentTests/Assessment Questions - Networking");
-                break;
-            case TOPIC.Software:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("AssessmentTests/Assessment Questions - Software");
-                break;
-        }
-
-        if (rawData != null)
-        {
-            string[] lines = rawData.text.Split('\n'); // split into lines
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (i == 0) continue; // ignore header
-
-                string[] cells = lines[i].Split('\t');
-
-                // Cell 0 : ID
-                // Cell 1 : Question
-                // Cell 2 to 4 : Wrong Answers (3)
-                // Cell 5 : Correct Answers
-                questions
-                    .Add(new QuestionData(cells[1],
-                        cells.Skip(2).Take(3).ToArray(),
-                        cells[5]));
-            }
-        }
-
-        return questions.ToArray();
     }
 
     void ShowNextQuestion()

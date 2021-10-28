@@ -21,7 +21,6 @@ public class PlayerManager : NetworkBehaviour
 
     private GameObject playerArea;
     private GameObject enemyAreas;
-
     private MPGameMessage messenger;
     private GameObject gameStateText;
     private GameObject activeSpecialAction;
@@ -29,6 +28,7 @@ public class PlayerManager : NetworkBehaviour
     private GameObject dropzone;
     private MPTimer timer;
     private MPCanvasHUD menuCanvas;
+    private MPQuestionManager questionManager;
 
     [Header("Colors")]
     public Color normalTextColor = Color.white;
@@ -49,6 +49,7 @@ public class PlayerManager : NetworkBehaviour
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
         menuCanvas = GameObject.Find("MenuCanvas").GetComponent<MPCanvasHUD>();
         messenger = GameObject.Find("MESSENGER").GetComponent<MPGameMessage>();
+        questionManager = GameObject.Find("QuestionCanvas").GetComponent<MPQuestionManager>();
 
         LoadCards();
     }
@@ -124,69 +125,92 @@ public class PlayerManager : NetworkBehaviour
                 // Discard the dropped card
                 NetworkConnection conn = card.GetComponent<NetworkIdentity>().connectionToClient;
                 TargetDiscard(conn, card);
-                StartCoroutine(DestroyObjectWithDelay(card));
             }
         }
-    }
 
+        timer.StopTimer();
+    }
 
     [TargetRpc]
     private void TargetDiscard(NetworkConnection conn, GameObject card)
     {
         card.GetComponent<MPDragDrop>().OnDiscard(); // Animator.SetTrigger()
+        StartCoroutine(DestroyObjectWithDelay(card));
     }
 
     #region ------------------------------ UPDATE GUI FUNCTIONS ------------------------------
 
     [ClientRpc]
-    public void RpcUpdateUI(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, string[] playerNames, int deckCount, bool gameFinished, string gameMsg, string[] winnerNames, NetworkIdentity[] winnerIdens)
+    public void RpcUpdateUI(NetworkIdentity currentPlayer,
+        int currentPlayerIndex,
+        NetworkIdentity[] players,
+        int[] playerHands,
+        string[] playerNames,
+        int deckCount,
+        bool gameFinished,
+        string gameMsg,
+        string[] winnerNames,
+        NetworkIdentity[] winnerIdens,
+        string question,
+        string[] choices)
     {
         if (gameFinished)
         {
             menuCanvas.ShowEndGameMenu(winnerNames, winnerIdens);
         }
+        else
+        {
+            UpdateTurn(currentPlayer, gameFinished, gameMsg, question, choices);
+            UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands, playerNames);
+            UpdateDeckCount(deckCount);
+        }
 
-        UpdateTurn(currentPlayer, gameFinished, gameMsg);
-        UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands, playerNames);
-        UpdateDeckCount(deckCount);
     }
 
-    public void UpdateTurn(NetworkIdentity identity, bool gameFinished, string gameMsg)
+    public void UpdateTurn(NetworkIdentity identity, bool gameFinished, string gameMsg, string question, string[] choices)
     {
         isMyTurn = identity.isLocalPlayer && MPGameManager.Instance.gameStarted;
 
         Debug.Log($"ILP: {isMyTurn}");
 
+        // Disable IP Address when game already started
         if (MPGameManager.Instance.gameStarted)
         {
             try
             {
-                // Disable IP Address when game already started
                 GameObject.Find("IP-ADDRESS").SetActive(false);
             }
             catch { }
         }
 
-        if (isMyTurn && !gameFinished)
+        if (question != null && choices != null)
         {
-            timer.StartTimer();
-            foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
-            {
-                dragDrop.EnableDrag();
-            }
+            questionManager.ShowQuestion(question, choices);
+            timer.StartQuizTimer();
         }
         else
         {
-            foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+            if (isMyTurn && !gameFinished)
             {
-                dragDrop.DisableDrag();
+                timer.StartTimer();
+                foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+                {
+                    dragDrop.EnableDrag();
+                }
             }
-        }
+            else
+            {
+                foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+                {
+                    dragDrop.DisableDrag();
+                }
+            }
 
-        gameStateText.GetComponent<RoundText>().SetText(
+            gameStateText.GetComponent<RoundText>().SetText(
             (isMyTurn && MPGameManager.Instance.gameStarted) ?
             $"{gameMsg} (Your Turn)" :
             gameMsg);
+        }
     }
 
     [ClientRpc]
@@ -328,10 +352,32 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
+    [TargetRpc]
+    public void TargetDiscardRandomHand(NetworkConnection conn)
+    {
+        int cardCount = playerArea.transform.childCount;
+
+        if (cardCount > 0)
+        {
+            int randIndex = UnityEngine.Random.Range(0, cardCount);
+
+            GameObject card = playerArea.transform.GetChild(randIndex).gameObject;
+            card.GetComponent<MPDragDrop>().OnDiscard();
+            StartCoroutine(DestroyObjectWithDelay(card));
+        }
+    }
+
     [ClientRpc]
     public void RpcShowGameMessage(string message, MPGameMessageType type)
     {
         messenger.ShowMessage(message, type);
+    }
+
+    [TargetRpc]
+    public void TargetShowQuizResult(NetworkConnection conn, string message, MPGameMessageType type)
+    {
+        messenger.ShowMessage(message, type);
+        questionManager.SetVisibility(false);
     }
     #endregion
 
@@ -341,6 +387,21 @@ public class PlayerManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(1f);
         NetworkServer.Destroy(obj);
+    }
+
+    #endregion
+
+    #region ------------------------------ QUESTION MANAGER ------------------------------
+
+    public void AnswerQuiz(string answer)
+    {
+        CmdAnswerQuiz(answer);
+    }
+
+    [Command]
+    public void CmdAnswerQuiz(string answer)
+    {
+        MPGameManager.Instance.OnAnswerQuiz(netIdentity, answer);
     }
 
     #endregion

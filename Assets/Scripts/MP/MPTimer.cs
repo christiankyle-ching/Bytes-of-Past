@@ -11,11 +11,15 @@ public class MPTimer : MonoBehaviour
 
     // TODO: Set in Prod
     private int seconds = 30;
+    private int quizSeconds = 30;
+
+    private bool isRunningQuiz = false;
     public Color runningColor = Color.yellow;
     public Color dangerColor = Color.red;
     private Color defaultColor;
 
     private int dangerSeconds;
+    private int dangerQuizSeconds;
 
     private int secondsLeft = 0;
     private float interval = 1f;
@@ -31,6 +35,7 @@ public class MPTimer : MonoBehaviour
 
         defaultColor = textObj.color;
         dangerSeconds = seconds / 3;
+        dangerQuizSeconds = quizSeconds / 3;
     }
 
     private void Update()
@@ -46,8 +51,16 @@ public class MPTimer : MonoBehaviour
             }
             else
             {
+                if (isRunningQuiz)
+                {
+                    SkipQuiz();
+                }
+                else
+                {
+                    DrawCard();
+                }
+
                 StopTimer();
-                DrawCard();
             }
 
             UpdateText();
@@ -62,7 +75,11 @@ public class MPTimer : MonoBehaviour
 
         if (isRunning)
         {
-            if (secondsLeft <= dangerSeconds)
+            bool inDanger = isRunningQuiz ?
+                (secondsLeft <= dangerQuizSeconds) :
+                (secondsLeft <= dangerSeconds);
+
+            if (inDanger)
             {
                 textObj.color = dangerColor;
                 audioSource.Play();
@@ -83,17 +100,31 @@ public class MPTimer : MonoBehaviour
         NetworkClient.connection.identity.GetComponent<PlayerManager>().PlayCard(null, -1, -1, false);
     }
 
+    private void SkipQuiz()
+    {
+        NetworkClient.connection.identity.GetComponent<PlayerManager>().AnswerQuiz("");
+    }
+
     public void StartTimer()
     {
         secondsLeft = seconds;
-        interval = 1f;
         isRunning = true;
+        isRunningQuiz = false;
+        UpdateText();
+    }
+
+    public void StartQuizTimer()
+    {
+        secondsLeft = quizSeconds;
+        isRunning = true;
+        isRunningQuiz = true;
         UpdateText();
     }
 
     public void StopTimer()
     {
         isRunning = false;
+        isRunningQuiz = false;
         secondsLeft = 0;
         UpdateText();
     }

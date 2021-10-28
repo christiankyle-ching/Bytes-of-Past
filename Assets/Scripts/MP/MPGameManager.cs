@@ -11,9 +11,12 @@ public class MPGameManager : NetworkBehaviour
     private static MPGameManager _instance;
     public static MPGameManager Instance { get { return _instance; } }
 
+    // TODO: Set in prod
     private float minPlayers = 2;
+    private float quizIntervalRounds = 3;
 
     [SyncVar] public int turns = 0;
+    [SyncVar] public int currentRound = 0;
     [SyncVar] public bool gameStarted = false;
     [SyncVar] public int currentPlayerIndex = 0;
     [SyncVar] public bool gameFinished = false;
@@ -22,6 +25,11 @@ public class MPGameManager : NetworkBehaviour
     private SyncList<NetworkIdentity> winnerPlayerIdens = new SyncList<NetworkIdentity>();
     private SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
     private int readyPlayersCount = 0;
+
+    private List<QuestionData> questions = new List<QuestionData>();
+    private QuestionData currentQuestion;
+    [SyncVar] public bool isQuizActive = false;
+    [SyncVar] public int quizAnswerCount = 0;
 
     private List<CardData> cardInfos = new List<CardData>();
     public SyncList<int> deck = new SyncList<int>(); // indices of card info
@@ -54,6 +62,7 @@ public class MPGameManager : NetworkBehaviour
         _topic = _staticData.SelectedTopic;
 
         LoadCards(_topic);
+        LoadQuestions(_topic);
     }
 
     private void LoadCards(TOPIC topic)
@@ -81,6 +90,17 @@ public class MPGameManager : NetworkBehaviour
             deck.Add(id);
         }
     }
+
+    private void LoadQuestions(TOPIC topic)
+    {
+        QuestionData[] questions = ResourceParser.Instance.ParseCSVToQuestions(topic);
+
+        foreach (QuestionData q in questions)
+        {
+            this.questions.Add(q);
+        }
+    }
+
 
     #endregion
 
@@ -145,6 +165,8 @@ public class MPGameManager : NetworkBehaviour
     {
         currentPlayerIndex = 0;
         gameStarted = true;
+        currentRound = GetCurrentRound();
+
         ClientsUpdateUI();
 
         Debug.Log("Start Game!");
@@ -187,7 +209,6 @@ public class MPGameManager : NetworkBehaviour
             }
         }
 
-        Debug.Log(GetGameStateMessage());
         Debug.Log("Checking Winners: " + winnersPlayerIndex.Count);
 
         if (winnersPlayerIndex.Count > 0)
@@ -270,8 +291,8 @@ public class MPGameManager : NetworkBehaviour
             skipTurnActive = false;
         }
 
-        bool isStartRound = turns % playerHands.Count == 0;
-        if (isStartRound) CheckWinners();
+        // Check Winners or Play Quiz on change of rounds
+        CheckRound(GetCurrentRound());
 
         ClientsUpdateUI();
 
@@ -373,11 +394,31 @@ public class MPGameManager : NetworkBehaviour
         }
         else if (gameStarted)
         {
-            return "ROUND " + ((turns / playerHands.Count) + 1);
+            return "ROUND " + GetCurrentRound();
         }
         else
         {
             return "";
+        }
+    }
+
+    public int GetCurrentRound()
+    {
+        return ((turns / playerHands.Count) + 1);
+    }
+
+    public void CheckRound(int newValue)
+    {
+        if (newValue > currentRound)
+        {
+            currentRound = newValue;
+
+            CheckWinners();
+
+            if (newValue % quizIntervalRounds == 0 && !gameFinished)
+            {
+                PlayQuiz();
+            }
         }
     }
 
@@ -398,7 +439,9 @@ public class MPGameManager : NetworkBehaviour
                 gameFinished,
                 GetGameStateMessage(),
                 winnerPlayerNames.ToArray(),
-                winnerPlayerIdens.ToArray());
+                winnerPlayerIdens.ToArray(),
+                currentQuestion?.Question,
+                currentQuestion?.Choices);
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -431,8 +474,6 @@ public class MPGameManager : NetworkBehaviour
 
     public SPECIALACTION GetRandomSpecialAction()
     {
-        return SPECIALACTION.DoubleDraw;
-
         float rand = UnityEngine.Random.Range(0f, 1f);
 
         if (rand <= specialActionRate)
@@ -467,6 +508,60 @@ public class MPGameManager : NetworkBehaviour
                 skipTurnActive = true;
                 break;
         }
+    }
+
+    #endregion
+
+    #region ------------------------------ Quiz Round ------------------------------
+
+    public void PlayQuiz()
+    {
+        isQuizActive = true;
+
+        int randIndex = UnityEngine.Random.Range(0, this.questions.Count - 1);
+        this.currentQuestion = this.questions[randIndex];
+    }
+
+    public void OnAnswerQuiz(NetworkIdentity player, string answer)
+    {
+        quizAnswerCount++;
+
+        int playerIndex = FindPlayerIndex(player);
+
+        Debug.Log($"Player [{playerIndex}] answered '{answer}'. QuizAnswers: {quizAnswerCount}. currentQuestion: {currentQuestion == null}");
+
+        if (currentQuestion.isAnswerCorrect(answer))
+        {
+            playerHands[playerIndex]--; // Reduce Hand Count
+            player.GetComponent<PlayerManager>().TargetDiscardRandomHand(player.connectionToClient);
+
+            player.GetComponent<PlayerManager>().TargetShowQuizResult(
+                player.connectionToClient,
+                "Your answer is correct! A random card has been discarded.",
+                MPGameMessageType.CORRECT);
+        }
+        else
+        {
+            player.GetComponent<PlayerManager>().TargetShowQuizResult(
+                player.connectionToClient,
+                (answer == string.Empty) ?
+                    "Sorry! You ran out of time." :
+                    "Sorry! Your answer is wrong.",
+                MPGameMessageType.WRONG);
+        }
+
+        if (quizAnswerCount >= players.Count)
+        {
+            EndQuiz();
+            ClientsUpdateUI();
+        }
+    }
+
+    private void EndQuiz()
+    {
+        quizAnswerCount = 0;
+        isQuizActive = false;
+        currentQuestion = null;
     }
 
     #endregion
