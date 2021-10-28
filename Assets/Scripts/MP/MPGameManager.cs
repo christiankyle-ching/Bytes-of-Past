@@ -34,7 +34,7 @@ public class MPGameManager : NetworkBehaviour
     private List<CardData> cardInfos = new List<CardData>();
     public SyncList<int> deck = new SyncList<int>(); // indices of card info
     public SyncList<int> timeline = new SyncList<int>(); // indices of card info
-    public SyncList<int> playerHands = new SyncList<int>(); // count of hands
+    public SyncDictionary<uint, List<int>> playerHands = new SyncDictionary<uint, List<int>>();
     public SyncList<string> playerNames = new SyncList<string>(); // count of hands
 
     [SyncVar] public TOPIC _topic = TOPIC.Computer;
@@ -109,11 +109,11 @@ public class MPGameManager : NetworkBehaviour
     public void AddPlayer(NetworkIdentity nid)
     {
         players.Add(nid);
-        playerHands.Add(0);
-        //playerNames.Add($"Unnamed Player #{nid.netId}");
+        playerHands.Add(nid.netId, new List<int>());
         playerNames.Add("Not Ready");
 
-        Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid.netId} joined!");
+        Debug.Log($"Players: {players.Count}. NetID #{nid.netId} joined!");
+
         ClientsUpdateUI();
     }
 
@@ -123,10 +123,11 @@ public class MPGameManager : NetworkBehaviour
         string playerName = playerNames[index];
 
         players.Remove(nid);
-        playerHands.RemoveAt(index);
+        playerHands.Remove(nid.netId);
         playerNames.RemoveAt(index);
 
-        Debug.Log($"Players: {players.Count} = {playerHands.Count}. NetID #{nid} left!");
+        Debug.Log($"Players: {players.Count}. NetID #{nid} left!");
+
         ClientsUpdateUI();
 
         return playerName ?? "";
@@ -150,11 +151,8 @@ public class MPGameManager : NetworkBehaviour
 
     public void SetPlayerName(NetworkIdentity i, string name)
     {
-        if (name != string.Empty)
-        {
-            int index = FindPlayerIndex(i);
-            playerNames[index] = name;
-        }
+        int index = FindPlayerIndex(i);
+        playerNames[index] = (name != string.Empty) ? name : $"Unnamed Player #{i.netId}";
     }
 
     #endregion
@@ -193,7 +191,7 @@ public class MPGameManager : NetworkBehaviour
         // Get Winners Indices
         for (int i = 0; i < players.Count; i++)
         {
-            if (playerHands[i] <= 0)
+            if (playerHands[players[i].netId].Count <= 0)
             {
                 winnersPlayerIndex.Add(i);
             }
@@ -227,12 +225,12 @@ public class MPGameManager : NetworkBehaviour
     {
         if (deck.Count > 0)
         {
-            int id = deck[0];
+            int cardId = deck[0];
             deck.RemoveAt(0);
 
             Debug.Log($"Player #{i.netId} [{FindPlayerIndex(i)}] gets a CARD.");
-            playerHands[FindPlayerIndex(i)]++;
-            return id;
+            playerHands[i.netId].Add(cardId);
+            return cardId;
         }
 
         return -1;
@@ -240,13 +238,12 @@ public class MPGameManager : NetworkBehaviour
 
     public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity, bool hasDrop, SPECIALACTION special)
     {
-        turns++; // Add Turn
-
         bool isDropValid;
 
         if (hasDrop)
         {
-            playerHands[FindPlayerIndex(identity)]--; // Decrease Hand Count
+            playerHands[identity.netId].Remove(infoIndex);
+
             CardData data = cardInfos[infoIndex]; // Get Local copy of data
             isDropValid = IsDropValid(data.Year, pos);
 
@@ -290,6 +287,9 @@ public class MPGameManager : NetworkBehaviour
             NextPlayerTurn();
             skipTurnActive = false;
         }
+
+        turns++; // Add Turn
+        currentRound = GetCurrentRound();
 
         // Check Winners or Play Quiz on change of rounds
         CheckRound(GetCurrentRound());
@@ -404,7 +404,7 @@ public class MPGameManager : NetworkBehaviour
 
     public int GetCurrentRound()
     {
-        return ((turns / playerHands.Count) + 1);
+        return ((turns / players.Count) + 1);
     }
 
     public void CheckRound(int newValue)
@@ -433,7 +433,6 @@ public class MPGameManager : NetworkBehaviour
                 currentPlayer,
                 currentPlayerIndex,
                 players.ToArray(),
-                playerHands.ToArray(),
                 playerNames.ToArray(),
                 deck.Count,
                 gameFinished,
@@ -459,9 +458,19 @@ public class MPGameManager : NetworkBehaviour
         return players.FindIndex(iden => iden == i);
     }
 
+    public int FindPlayerIndex(int _netid)
+    {
+        return players.FindIndex(iden => iden.netId == _netid);
+    }
+
     public void OnPlayerQuit(string playerName, bool isHost = false)
     {
         NetworkClient.connection.identity.GetComponent<PlayerManager>().RpcGameInterrupted(playerName, isHost);
+    }
+
+    public List<int> GetPlayerHand(uint _netId)
+    {
+        return playerHands[_netId];
     }
 
     #endregion
@@ -532,8 +541,14 @@ public class MPGameManager : NetworkBehaviour
 
         if (currentQuestion.isAnswerCorrect(answer))
         {
-            playerHands[playerIndex]--; // Reduce Hand Count
-            player.GetComponent<PlayerManager>().TargetDiscardRandomHand(player.connectionToClient);
+            //playerHands[playerIndex]--; // Reduce Hand Count
+            List<int> playerHand = playerHands[player.netId];
+
+            if (playerHand.Count > 0)
+            {
+                int randCard = UnityEngine.Random.Range(0, playerHand.Count - 1);
+                player.GetComponent<PlayerManager>().TargetDiscardRandomHand(player.connectionToClient, randCard);
+            }
 
             player.GetComponent<PlayerManager>().TargetShowQuizResult(
                 player.connectionToClient,

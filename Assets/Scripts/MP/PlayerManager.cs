@@ -49,7 +49,7 @@ public class PlayerManager : NetworkBehaviour
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
         menuCanvas = GameObject.Find("MenuCanvas").GetComponent<MPCanvasHUD>();
         messenger = GameObject.Find("MESSENGER").GetComponent<MPGameMessage>();
-        questionManager = GameObject.Find("QuestionCanvas").GetComponent<MPQuestionManager>();
+        questionManager = GameObject.Find("RoundQuestion").GetComponent<MPQuestionManager>();
 
         LoadCards();
     }
@@ -103,7 +103,15 @@ public class PlayerManager : NetworkBehaviour
     {
         if (hasAuthority)
         {
-            CmdPlayCard(card, infoIndex, pos, hasDrop, card.GetComponent<MPCardInfo>().cardData.SpecialAction);
+            if (hasDrop)
+            {
+                CmdPlayCard(card, infoIndex, pos, hasDrop, card.GetComponent<MPCardInfo>().cardData.SpecialAction);
+            }
+            else
+            {
+                CmdPlayCard(card, infoIndex, pos, hasDrop, SPECIALACTION.None);
+            }
+
             isMyTurn = false;
         }
     }
@@ -144,7 +152,6 @@ public class PlayerManager : NetworkBehaviour
     public void RpcUpdateUI(NetworkIdentity currentPlayer,
         int currentPlayerIndex,
         NetworkIdentity[] players,
-        int[] playerHands,
         string[] playerNames,
         int deckCount,
         bool gameFinished,
@@ -161,7 +168,7 @@ public class PlayerManager : NetworkBehaviour
         else
         {
             UpdateTurn(currentPlayer, gameFinished, gameMsg, question, choices);
-            UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, playerHands, playerNames);
+            UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, /*playerHands,*/ playerNames);
             UpdateDeckCount(deckCount);
         }
 
@@ -230,44 +237,60 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    public void UpdateOpponentCards(NetworkIdentity currentPlayer, int currentPlayerIndex, NetworkIdentity[] players, int[] playerHands, string[] playerNames)
+    public void UpdateOpponentCards(
+        NetworkIdentity currentPlayer,
+        int currentPlayerIndex,
+        NetworkIdentity[] players,
+        string[] playerNames)
     {
-        List<string> tmpOpponentNames = new List<string>();
-        List<int> tmpOpponentHands = new List<int>();
+        List<int> tmpOpponentIndex = new List<int>();
         int opponentCurrentIndex = -1;
 
-        // Populate Names and HandCounts
+        // Get Opponent Indices only
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i].isLocalPlayer) continue;
 
-            // .Count because the next index would be the current count before adding the elements
-            if (currentPlayerIndex == i) opponentCurrentIndex = tmpOpponentHands.Count;
+            if (currentPlayerIndex == i) opponentCurrentIndex = tmpOpponentIndex.Count;
 
-            tmpOpponentNames.Add(playerNames[i]);
-            tmpOpponentHands.Add(playerHands[i]);
+            tmpOpponentIndex.Add(i);
         }
 
-        // Update UI
+        Debug.Log("Players: " + String.Join(",", players.Select(iden => iden.netId)));
+        Debug.Log("Opponent Indexes: " + String.Join(",", tmpOpponentIndex));
+
+        foreach (KeyValuePair<uint, List<int>> kvp in MPGameManager.Instance.playerHands)
+        {
+            Debug.Log($"Player #{kvp.Key} Cards: {String.Join(",", kvp.Value)}");
+        }
+
+        //Update UI
         for (int i = 0; i < enemyAreas.transform.childCount; i++)
         {
             TextMeshProUGUI cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining").GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI playerName = enemyAreas.transform.GetChild(i).Find("PlayerName").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI playerNameGO = enemyAreas.transform.GetChild(i).Find("PlayerName").GetComponent<TextMeshProUGUI>();
 
-            if (i < tmpOpponentHands.Count)
+            if (i < tmpOpponentIndex.Count)
             {
-                int handCount = tmpOpponentHands[i];
+                int playerIndex = tmpOpponentIndex[i];
+                uint playerId = players[playerIndex].netId;
+
+                string playerName = playerNames[playerIndex];
+                int handCount = MPGameManager.Instance.GetPlayerHand(playerId).Count;
+
                 string cardMsg = $"{handCount} Cards";
 
-                playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
+                Debug.Log($"Player #{playerId} has {handCount}");
+
+                playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
 
                 if (MPGameManager.Instance.gameStarted)
                 {
                     // Highlight current player if game started
                     if (opponentCurrentIndex == i) cardMsg += " (Playing)";
 
-                    // Highlight player when no cards remaining
-                    if (handCount <= 0)
+                    // Highlight player when only 1 card remaining
+                    if (handCount <= 1)
                     {
                         cardCount.fontStyle = FontStyles.Bold;
                         cardCount.color = dangerTextColor;
@@ -279,30 +302,24 @@ public class PlayerManager : NetworkBehaviour
                     }
                 }
 
-                playerName.text = tmpOpponentNames[i];
+                playerNameGO.text = playerName;
                 cardCount.text = cardMsg;
             }
             else
             {
                 if (MPGameManager.Instance.gameStarted)
                 {
-                    playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
-                    playerName.text = "";
+                    playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
+                    playerNameGO.text = "";
                     cardCount.text = "";
                 }
                 else
                 {
-                    playerName.text = "Waiting For Players";
-                    playerName.gameObject.GetComponent<TextEllipsisAnimation>().enabled = true;
+                    playerNameGO.text = "Waiting For Players";
+                    playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = true;
                 }
             }
         }
-
-        //Debug.Log($"Current Player [{currentPlayerIndex}]");
-        //Debug.Log($"My Player? {currentPlayer.isLocalPlayer}");
-        //Debug.Log("Player Names: " + String.Join(",", playerNames));
-        //Debug.Log("Player Hands: " + String.Join(",", playerHands));
-        //Debug.Log("Opponent Hands: " + String.Join(",", tmpOpponentHands));
     }
 
     public void UpdateDeckCount(int deckCount)
@@ -353,17 +370,19 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [TargetRpc]
-    public void TargetDiscardRandomHand(NetworkConnection conn)
+    public void TargetDiscardRandomHand(NetworkConnection conn, int infoIndex)
     {
-        int cardCount = playerArea.transform.childCount;
+        string cardIdToRemove = this.cardInfos[infoIndex].ID;
 
-        if (cardCount > 0)
+        foreach (GameObject card in playerArea.transform)
         {
-            int randIndex = UnityEngine.Random.Range(0, cardCount);
 
-            GameObject card = playerArea.transform.GetChild(randIndex).gameObject;
-            card.GetComponent<MPDragDrop>().OnDiscard();
-            StartCoroutine(DestroyObjectWithDelay(card));
+            if (card.GetComponent<MPCardInfo>().cardData.ID == cardIdToRemove)
+            {
+                card.GetComponent<MPDragDrop>().OnDiscard();
+                StartCoroutine(DestroyObjectWithDelay(card));
+                break;
+            }
         }
     }
 
