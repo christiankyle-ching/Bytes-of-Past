@@ -61,10 +61,6 @@ public class TopicSelect : MonoBehaviour
 
         if (staticData.SelectedGameMode == GAMEMODE.PostAssessment)
         {
-            /*
-                TODO: Uncomment isPlayed on release. Student shouldn't be able to
-                take POST-Assessment without playing the game first!
-            */
             bool postAssessmentAllowed =
                 isPreAssessmentDone && !isPostAssessmentDone && isPlayed;
 

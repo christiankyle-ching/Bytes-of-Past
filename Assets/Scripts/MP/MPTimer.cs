@@ -97,12 +97,12 @@ public class MPTimer : MonoBehaviour
 
     private void DrawCard()
     {
-        NetworkClient.connection.identity.GetComponent<PlayerManager>().PlayCard(null, -1, -1, false);
+        NetworkClient.localPlayer.GetComponent<PlayerManager>().PlayCard(null, -1, -1, false);
     }
 
     private void SkipQuiz()
     {
-        NetworkClient.connection.identity.GetComponent<PlayerManager>().AnswerQuiz("");
+        NetworkClient.localPlayer.GetComponent<PlayerManager>().AnswerQuiz("");
     }
 
     public void StartTimer()

@@ -37,10 +37,10 @@ public class MPQuestionManager : MonoBehaviour
 
     private void SelectAnswer(int index)
     {
-        NetworkIdentity ni = NetworkClient.connection.identity;
+        NetworkIdentity ni = NetworkClient.localPlayer;
         PlayerManager pm = ni.GetComponent<PlayerManager>();
 
-        pm.CmdAnswerQuiz(this.choices[index]);
+        pm.AnswerQuiz(this.choices[index]);
 
         SetVisibility(false);
     }

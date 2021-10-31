@@ -66,22 +66,23 @@ public class MPGameManager : NetworkBehaviour
 
         LoadCards(_topic);
         LoadQuestions(_topic);
+        GenerateDeck();
     }
 
     private void LoadCards(TOPIC topic)
     {
         CardData[] cards = ResourceParser.Instance.ParseCSVToCards(topic);
 
+        // Load Card Infos
+        foreach (CardData data in cards) { cardInfos.Add(data); }
+    }
+
+    private void GenerateDeck()
+    {
         List<int> tmpDeck = new List<int>();
 
-        // Load Card Infos
-        foreach (CardData data in cards)
-        {
-            cardInfos.Add(data);
-        }
-
         // Generate IDs
-        for (int i = 0; i < cards.Length; i++)
+        for (int i = 0; i < cardInfos.Count; i++)
         {
             tmpDeck.Add(i);
         }
@@ -114,10 +115,10 @@ public class MPGameManager : NetworkBehaviour
         players.Add(nid.netId, "Not Ready");
         playerHands.Add(nid.netId, new List<int>());
 
-
         Debug.Log($"Players: {players.Count}. NetID #{nid.netId} joined!");
 
         ClientsUpdateUI();
+        nid.GetComponent<PlayerManager>().RpcSetTopic(_topic);
     }
 
     public string RemovePlayer(NetworkIdentity nid)
@@ -207,17 +208,36 @@ public class MPGameManager : NetworkBehaviour
         Debug.Log("End Game!");
     }
 
-    public int PopCard(NetworkIdentity i)
+    public int PopCard(NetworkIdentity iden)
     {
         if (deck.Count > 0)
         {
             int cardId = deck[0];
             deck.RemoveAt(0);
-            playerHands[i.netId].Add(cardId);
+            playerHands[iden.netId].Add(cardId);
             return cardId;
         }
 
         return -1;
+    }
+
+    public List<int> PopCard(NetworkIdentity iden, int count)
+    {
+        List<int> cards = new List<int>();
+
+        for (int i = 0; i < count; i++)
+        {
+            if (deck.Count <= 0) break;
+
+            int cardId = deck[0];
+            deck.RemoveAt(0);
+
+            cards.Add(cardId);
+
+        }
+
+        playerHands[iden.netId].AddRange(cards);
+        return cards;
     }
 
     public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity iden, bool hasDrop, SPECIALACTION special)
@@ -371,7 +391,7 @@ public class MPGameManager : NetworkBehaviour
         }
         else if (gmState == GameState.STARTED)
         {
-            return "ROUND " + GetCurrentRound();
+            return "ROUND " + (GetCurrentRound() + 1); // Add 1 because Round is 0-based
         }
         else
         {
@@ -381,7 +401,7 @@ public class MPGameManager : NetworkBehaviour
 
     public int GetCurrentRound()
     {
-        return ((turns / players.Count) + 1);
+        return turns / players.Count;
     }
 
     public void CheckRound()
@@ -392,6 +412,8 @@ public class MPGameManager : NetworkBehaviour
         // If Round has changed
         if (currentRound > prevRound)
         {
+            Debug.Log("----- NEXT ROUND -----");
+
             CheckWinners();
 
             if (currentRound % quizIntervalRounds == 0
@@ -490,12 +512,14 @@ public class MPGameManager : NetworkBehaviour
         gmState = GameState.QUIZ;
 
         int randIndex = UnityEngine.Random.Range(0, this.questions.Count - 1);
-        //this.currentQuestion = this.questions[randIndex];
-        this.currentQuestion = this.questions[0];
+        this.currentQuestion = this.questions[randIndex];
     }
 
+    [Server]
     public void OnAnswerQuiz(NetworkIdentity player, string answer)
     {
+        Debug.Log($"QUIZ: Player #{player.netId} answered {answer}");
+
         quizAnswerCount++;
 
         if (currentQuestion.isAnswerCorrect(answer))
@@ -504,8 +528,10 @@ public class MPGameManager : NetworkBehaviour
 
             if (playerHand.Count > 0)
             {
-                int randCard = playerHand[UnityEngine.Random.Range(0, playerHand.Count - 1)];
+                int randIndex = UnityEngine.Random.Range(0, playerHand.Count - 1);
+                int randCard = playerHand[randIndex];
                 player.GetComponent<PlayerManager>().TargetDiscardRandomHand(player.connectionToClient, randCard);
+                playerHand.RemoveAt(randIndex);
             }
 
             player.GetComponent<PlayerManager>().TargetShowQuizResult(

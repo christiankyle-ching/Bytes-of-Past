@@ -7,12 +7,9 @@ using UnityEngine.UI;
 
 public class DrawCards : MonoBehaviour
 {
-    private PlayerManager playerManager;
-
     public void Draw()
     {
-        NetworkIdentity ni = NetworkClient.connection.identity;
-        playerManager = ni.GetComponent<PlayerManager>();
+        PlayerManager playerManager = NetworkClient.localPlayer.GetComponent<PlayerManager>();
 
         string playerName = PlayerPrefs.GetString("Profile_Name", "");
 

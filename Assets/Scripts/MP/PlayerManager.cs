@@ -14,6 +14,7 @@ public enum CARDACTION
 
 public class PlayerManager : NetworkBehaviour
 {
+    private TOPIC _topic = TOPIC.Computer;
     private bool isMyTurn = false;
     private int startingCardsCount = 5; // TODO: Set in Prod
 
@@ -34,7 +35,11 @@ public class PlayerManager : NetworkBehaviour
     public Color normalTextColor = Color.white;
     public Color dangerTextColor = Color.red;
 
-    private List<CardData> cardInfos = new List<CardData>();
+    //private List<CardData> cardInfos = new List<CardData>();
+
+    private List<CardData> computerCards = new List<CardData>();
+    private List<CardData> networkingCards = new List<CardData>();
+    private List<CardData> softwareCards = new List<CardData>();
 
     public override void OnStartClient()
     {
@@ -56,14 +61,43 @@ public class PlayerManager : NetworkBehaviour
 
     #region ------------------------------ LOCAL LOAD CARDS ------------------------------
 
-    private void LoadCards()
+    [ClientRpc]
+    public void RpcSetTopic(TOPIC topic)
     {
-        CardData[] loadedCards = ResourceParser.Instance.ParseCSVToCards(MPGameManager.Instance._topic);
-        foreach (CardData data in loadedCards)
-        {
-            this.cardInfos.Add(data);
-        }
+        this._topic = topic;
     }
+
+    public void LoadCards()
+    {
+        //if (cardInfos.Count <= 0)
+        //{
+        //    Debug.Log($"LOADED CARDS: {_topic}");
+
+        //    // Loads cards from .csv
+        //    CardData[] loadedCards = ResourceParser.Instance.ParseCSVToCards(_topic);
+        //    foreach (CardData card in loadedCards) { cardInfos.Add(card); }
+        //}
+
+        computerCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Computer).ToList();
+        networkingCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Networking).ToList();
+        softwareCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Software).ToList();
+    }
+
+    public CardData GetCard(int index)
+    {
+        switch (_topic)
+        {
+            case TOPIC.Computer:
+                return computerCards[index];
+            case TOPIC.Networking:
+                return networkingCards[index];
+            case TOPIC.Software:
+                return softwareCards[index];
+        }
+
+        return null;
+    }
+
     #endregion
 
     [Command]
@@ -326,7 +360,7 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcShowCard(GameObject card, int infoIndex, int pos, CARDACTION type, SPECIALACTION special)
     {
-        card.GetComponent<MPCardInfo>().InitCardData(cardInfos[infoIndex], special);
+        card.GetComponent<MPCardInfo>().InitCardData(GetCard(infoIndex), special);
         card.GetComponent<MPCardInfo>().infoIndex = infoIndex;
         card.GetComponent<MPDragDrop>().DisableDrag();
 
@@ -368,7 +402,7 @@ public class PlayerManager : NetworkBehaviour
     [TargetRpc]
     public void TargetDiscardRandomHand(NetworkConnection conn, int infoIndex)
     {
-        string cardIdToRemove = this.cardInfos[infoIndex].ID;
+        string cardIdToRemove = GetCard(infoIndex).ID;
 
         for (int i = 0; i < playerArea.transform.childCount; i++)
         {
