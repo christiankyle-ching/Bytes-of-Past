@@ -6,6 +6,11 @@ using System.Linq;
 using System;
 using TMPro;
 
+public enum GameState
+{
+    WAITING, STARTED, QUIZ, FINISHED
+}
+
 public class MPGameManager : NetworkBehaviour
 {
     private static MPGameManager _instance;
@@ -15,29 +20,27 @@ public class MPGameManager : NetworkBehaviour
     private float minPlayers = 2;
     private float quizIntervalRounds = 3;
 
-    [SyncVar] public int turns = 0;
-    [SyncVar] public int currentRound = 0;
-    [SyncVar] public bool gameStarted = false;
-    [SyncVar] public int currentPlayerIndex = 0;
-    [SyncVar] public bool gameFinished = false;
-    private SyncList<int> winnersPlayerIndex = new SyncList<int>();
-    private SyncList<string> winnerPlayerNames = new SyncList<string>();
-    private SyncList<NetworkIdentity> winnerPlayerIdens = new SyncList<NetworkIdentity>();
-    private SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
+    public GameState gmState = GameState.WAITING;
+    public int turns = 0;
+    public int currentRound = 0;
+    public int currentPlayerIndex = 0;
+
     private int readyPlayersCount = 0;
 
-    private List<QuestionData> questions = new List<QuestionData>();
-    private QuestionData currentQuestion;
-    [SyncVar] public bool isQuizActive = false;
-    [SyncVar] public int quizAnswerCount = 0;
-
     private List<CardData> cardInfos = new List<CardData>();
-    public SyncList<int> deck = new SyncList<int>(); // indices of card info
-    public SyncList<int> timeline = new SyncList<int>(); // indices of card info
-    public SyncDictionary<uint, List<int>> playerHands = new SyncDictionary<uint, List<int>>();
-    public SyncList<string> playerNames = new SyncList<string>(); // count of hands
+    private List<QuestionData> questions = new List<QuestionData>();
 
-    [SyncVar] public TOPIC _topic = TOPIC.Computer;
+    private QuestionData currentQuestion;
+    public int quizAnswerCount = 0;
+
+    public List<int> deck = new List<int>(); // indices of card info
+    public List<int> timeline = new List<int>(); // indices of card info
+
+    public Dictionary<uint, string> winners = new Dictionary<uint, string>();
+    public Dictionary<uint, string> players = new Dictionary<uint, string>();
+    public Dictionary<uint, List<int>> playerHands = new Dictionary<uint, List<int>>();
+
+    public TOPIC _topic = TOPIC.Computer;
     private StaticData _staticData;
 
     #region ------------------------------ Init ------------------------------
@@ -108,9 +111,9 @@ public class MPGameManager : NetworkBehaviour
 
     public void AddPlayer(NetworkIdentity nid)
     {
-        players.Add(nid);
+        players.Add(nid.netId, "Not Ready");
         playerHands.Add(nid.netId, new List<int>());
-        playerNames.Add("Not Ready");
+
 
         Debug.Log($"Players: {players.Count}. NetID #{nid.netId} joined!");
 
@@ -119,18 +122,15 @@ public class MPGameManager : NetworkBehaviour
 
     public string RemovePlayer(NetworkIdentity nid)
     {
-        int index = players.FindIndex(identity => identity == nid);
-        string playerName = playerNames[index];
-
-        players.Remove(nid);
+        players.Remove(nid.netId);
         playerHands.Remove(nid.netId);
-        playerNames.RemoveAt(index);
 
         Debug.Log($"Players: {players.Count}. NetID #{nid} left!");
 
         ClientsUpdateUI();
 
-        return playerName ?? "";
+        return "";
+        //return playerName ?? "";
     }
 
     public void ReadyPlayer(NetworkIdentity ni)
@@ -141,18 +141,15 @@ public class MPGameManager : NetworkBehaviour
         {
             StartGame();
         }
-        else
-        {
-            ClientsUpdateUI();
-        }
 
-        Debug.Log($"Ready Players: {readyPlayersCount}. Players: {String.Join(",", playerNames)}");
+        ClientsUpdateUI();
+
+        Debug.Log($"Ready Players: {readyPlayersCount}. Players: {String.Join(",", players)}");
     }
 
-    public void SetPlayerName(NetworkIdentity i, string name)
+    public void SetPlayerName(NetworkIdentity iden, string name)
     {
-        int index = FindPlayerIndex(i);
-        playerNames[index] = (name != string.Empty) ? name : $"Unnamed Player #{i.netId}";
+        players[iden.netId] = (name != string.Empty) ? name : $"Unnamed Player #{iden.netId}";
     }
 
     #endregion
@@ -162,10 +159,7 @@ public class MPGameManager : NetworkBehaviour
     public void StartGame()
     {
         currentPlayerIndex = 0;
-        gameStarted = true;
-        currentRound = GetCurrentRound();
-
-        ClientsUpdateUI();
+        gmState = GameState.STARTED;
 
         Debug.Log("Start Game!");
     }
@@ -184,32 +178,24 @@ public class MPGameManager : NetworkBehaviour
         {
             currentPlayerIndex = 0;
         }
+
+        turns++;
     }
 
     public void CheckWinners()
     {
         // Get Winners Indices
-        for (int i = 0; i < players.Count; i++)
+        foreach (KeyValuePair<uint, string> player in players)
         {
-            if (playerHands[players[i].netId].Count <= 0)
+            if (playerHands[player.Key].Count <= 0)
             {
-                winnersPlayerIndex.Add(i);
+                winners.Add(player.Key, player.Value);
             }
         }
 
-        // Get their Names
-        for (int i = 0; i < players.Count; i++)
-        {
-            if (winnersPlayerIndex.Contains(i))
-            {
-                winnerPlayerNames.Add(playerNames[i]);
-                winnerPlayerIdens.Add(players[i]);
-            }
-        }
+        Debug.Log("Checking Winners: " + winners.Count);
 
-        Debug.Log("Checking Winners: " + winnersPlayerIndex.Count);
-
-        if (winnersPlayerIndex.Count > 0)
+        if (winners.Count > 0)
         {
             EndGame();
         }
@@ -217,7 +203,7 @@ public class MPGameManager : NetworkBehaviour
 
     public void EndGame()
     {
-        gameFinished = true;
+        gmState = GameState.FINISHED;
         Debug.Log("End Game!");
     }
 
@@ -227,8 +213,6 @@ public class MPGameManager : NetworkBehaviour
         {
             int cardId = deck[0];
             deck.RemoveAt(0);
-
-            Debug.Log($"Player #{i.netId} [{FindPlayerIndex(i)}] gets a CARD.");
             playerHands[i.netId].Add(cardId);
             return cardId;
         }
@@ -236,13 +220,13 @@ public class MPGameManager : NetworkBehaviour
         return -1;
     }
 
-    public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity identity, bool hasDrop, SPECIALACTION special)
+    public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity iden, bool hasDrop, SPECIALACTION special)
     {
         bool isDropValid;
 
         if (hasDrop)
         {
-            playerHands[identity.netId].Remove(infoIndex);
+            playerHands[iden.netId].Remove(infoIndex);
 
             CardData data = cardInfos[infoIndex]; // Get Local copy of data
             isDropValid = IsDropValid(data.Year, pos);
@@ -250,17 +234,17 @@ public class MPGameManager : NetworkBehaviour
             if (isDropValid)
             {
                 timeline.Insert(pos, infoIndex);
-                ApplySpecialAction(special, identity);
+                ApplySpecialAction(special, iden);
             }
             else
             {
                 deck.Add(infoIndex); // Add back the card wrongly placed
 
                 // Add new card to player
-                identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+                iden.GetComponent<PlayerManager>().CmdGetAnotherCard();
                 if (doubleDrawActive)
                 {
-                    identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+                    iden.GetComponent<PlayerManager>().CmdGetAnotherCard();
                     doubleDrawActive = false;
                 }
 
@@ -271,10 +255,10 @@ public class MPGameManager : NetworkBehaviour
             isDropValid = false;
 
             // Add new card to player
-            identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+            iden.GetComponent<PlayerManager>().CmdGetAnotherCard();
             if (doubleDrawActive)
             {
-                identity.GetComponent<PlayerManager>().CmdGetAnotherCard();
+                iden.GetComponent<PlayerManager>().CmdGetAnotherCard();
                 doubleDrawActive = false;
             }
         }
@@ -288,17 +272,14 @@ public class MPGameManager : NetworkBehaviour
             skipTurnActive = false;
         }
 
-        turns++; // Add Turn
-        currentRound = GetCurrentRound();
-
         // Check Winners or Play Quiz on change of rounds
-        CheckRound(GetCurrentRound());
+        CheckRound();
 
         ClientsUpdateUI();
 
         // Message to all clients
-        string thisTurnPlayer = playerNames[FindPlayerIndex(identity)]; // The one who played a card
-        string nextTurnPlayer = playerNames[currentPlayerIndex]; // The next person
+        string thisTurnPlayer = players[iden.netId]; // The one who played a card
+        string nextTurnPlayer = players.ElementAt(currentPlayerIndex).Value; // The next person
         ShowMessageToClients(thisTurnPlayer, nextTurnPlayer, special, hasDrop, isDropValid, doubleDrawActive);
 
         return isDropValid;
@@ -348,37 +329,33 @@ public class MPGameManager : NetworkBehaviour
         if (hasDrop)
         {
             message += $"Player {thisTurnPlayer} placed a card {(isDropValid ? "correct" : "wrong")}! ";
-            message += (special != SPECIALACTION.None) ? $"A special action has been activated \"{MPCardInfo.GetSpecialActionLabel(special)}\". " : "";
+            message += (special != SPECIALACTION.None && isDropValid) ? $"A special action has been activated \"{MPCardInfo.GetSpecialActionLabel(special)}\". " : "";
         }
         else
         {
             message += $"Player {thisTurnPlayer} has skipped their turn! ";
         }
+
         message += $"It's {nextTurnPlayer}'s turn.";
 
         // Pick Type of Message
-        if (hasDrop)
+        switch (special)
         {
-            if (special == SPECIALACTION.SkipTurn)
-            {
-                type = MPGameMessageType.SA_SKIP;
-            }
-            else if (special == SPECIALACTION.Peek)
-            {
+            case SPECIALACTION.Peek:
                 type = MPGameMessageType.SA_PEEK;
-            }
-            else if (isDropValid)
-            {
-                type = MPGameMessageType.CORRECT;
-            }
-            else
-            {
-                type = MPGameMessageType.WRONG;
-            }
-        }
-        else
-        {
-            type = MPGameMessageType.NONE;
+                break;
+            case SPECIALACTION.SkipTurn:
+                type = MPGameMessageType.SA_SKIP;
+                break;
+            case SPECIALACTION.DoubleDraw:
+                type = MPGameMessageType.SA_DOUBLE;
+                break;
+            case SPECIALACTION.None:
+                type = isDropValid ? MPGameMessageType.CORRECT : MPGameMessageType.WRONG;
+                break;
+            default:
+                type = MPGameMessageType.NONE;
+                break;
         }
 
         PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
@@ -388,11 +365,11 @@ public class MPGameManager : NetworkBehaviour
 
     public string GetGameStateMessage()
     {
-        if (!gameStarted)
+        if (gmState != GameState.STARTED)
         {
             return $"Waiting for Players to Ready ({readyPlayersCount}/{players.Count})...";
         }
-        else if (gameStarted)
+        else if (gmState == GameState.STARTED)
         {
             return "ROUND " + GetCurrentRound();
         }
@@ -407,15 +384,18 @@ public class MPGameManager : NetworkBehaviour
         return ((turns / players.Count) + 1);
     }
 
-    public void CheckRound(int newValue)
+    public void CheckRound()
     {
-        if (newValue > currentRound)
-        {
-            currentRound = newValue;
+        int prevRound = currentRound;
+        currentRound = GetCurrentRound();
 
+        // If Round has changed
+        if (currentRound > prevRound)
+        {
             CheckWinners();
 
-            if (newValue % quizIntervalRounds == 0 && !gameFinished)
+            if (currentRound % quizIntervalRounds == 0
+                && gmState != GameState.FINISHED && gmState == GameState.STARTED)
             {
                 PlayQuiz();
             }
@@ -426,21 +406,19 @@ public class MPGameManager : NetworkBehaviour
     {
         try
         {
-            PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
-            NetworkIdentity currentPlayer = players[currentPlayerIndex];
+            PlayerManager pm = NetworkClient.localPlayer.GetComponent<PlayerManager>();
 
-            player.RpcUpdateUI(
-                currentPlayer,
-                currentPlayerIndex,
-                players.ToArray(),
-                playerNames.ToArray(),
-                deck.Count,
-                gameFinished,
-                GetGameStateMessage(),
-                winnerPlayerNames.ToArray(),
-                winnerPlayerIdens.ToArray(),
+            pm.RpcUpdateUI(
+                gmState,
+                CustomSerializer.SerializePlayers(players),
+                CustomSerializer.SerializePlayerHands(playerHands),
                 currentQuestion?.Question,
-                currentQuestion?.Choices);
+                currentQuestion?.Choices,
+                GetGameStateMessage(),
+                players.ElementAt(currentPlayerIndex).Key,
+                deck.Count,
+                CustomSerializer.SerializePlayers(winners)
+                );
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -453,26 +431,10 @@ public class MPGameManager : NetworkBehaviour
 
     #region ------------------------------ Utils ------------------------------
 
-    public int FindPlayerIndex(NetworkIdentity i)
-    {
-        return players.FindIndex(iden => iden == i);
-    }
-
-    public int FindPlayerIndex(int _netid)
-    {
-        return players.FindIndex(iden => iden.netId == _netid);
-    }
-
     public void OnPlayerQuit(string playerName, bool isHost = false)
     {
         NetworkClient.connection.identity.GetComponent<PlayerManager>().RpcGameInterrupted(playerName, isHost);
     }
-
-    public List<int> GetPlayerHand(uint _netId)
-    {
-        return playerHands[_netId];
-    }
-
     #endregion
 
     #region ------------------------------ Special Actions ------------------------------
@@ -497,8 +459,8 @@ public class MPGameManager : NetworkBehaviour
         }
     }
 
-    [SyncVar] public bool doubleDrawActive = false;
-    [SyncVar] public bool skipTurnActive = false;
+    public bool doubleDrawActive = false;
+    public bool skipTurnActive = false;
 
     private void ApplySpecialAction(SPECIALACTION special, NetworkIdentity player)
     {
@@ -525,28 +487,24 @@ public class MPGameManager : NetworkBehaviour
 
     public void PlayQuiz()
     {
-        isQuizActive = true;
+        gmState = GameState.QUIZ;
 
         int randIndex = UnityEngine.Random.Range(0, this.questions.Count - 1);
-        this.currentQuestion = this.questions[randIndex];
+        //this.currentQuestion = this.questions[randIndex];
+        this.currentQuestion = this.questions[0];
     }
 
     public void OnAnswerQuiz(NetworkIdentity player, string answer)
     {
         quizAnswerCount++;
 
-        int playerIndex = FindPlayerIndex(player);
-
-        Debug.Log($"Player [{playerIndex}] answered '{answer}'. QuizAnswers: {quizAnswerCount}. currentQuestion: {currentQuestion == null}");
-
         if (currentQuestion.isAnswerCorrect(answer))
         {
-            //playerHands[playerIndex]--; // Reduce Hand Count
             List<int> playerHand = playerHands[player.netId];
 
             if (playerHand.Count > 0)
             {
-                int randCard = UnityEngine.Random.Range(0, playerHand.Count - 1);
+                int randCard = playerHand[UnityEngine.Random.Range(0, playerHand.Count - 1)];
                 player.GetComponent<PlayerManager>().TargetDiscardRandomHand(player.connectionToClient, randCard);
             }
 
@@ -575,7 +533,7 @@ public class MPGameManager : NetworkBehaviour
     private void EndQuiz()
     {
         quizAnswerCount = 0;
-        isQuizActive = false;
+        gmState = GameState.STARTED;
         currentQuestion = null;
     }
 

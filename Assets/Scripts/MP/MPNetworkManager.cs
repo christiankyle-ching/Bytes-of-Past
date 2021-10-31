@@ -162,7 +162,7 @@ public class MPNetworkManager : NetworkManager
         {
             string playerName = MPGameManager.Instance.RemovePlayer(conn.identity);
 
-            if (MPGameManager.Instance.gameStarted)
+            if (MPGameManager.Instance.gmState == GameState.STARTED || MPGameManager.Instance.gmState == GameState.QUIZ)
             {
                 MPGameManager.Instance.OnPlayerQuit(playerName);
             }

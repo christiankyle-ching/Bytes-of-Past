@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public enum MPGameMessageType
 {
-    CORRECT, WRONG, SA_SKIP, SA_PEEK, NONE
+    CORRECT, WRONG, SA_SKIP, SA_PEEK, SA_DOUBLE, NONE
 }
 
 [RequireComponent(typeof(Animator), typeof(AudioSource))]

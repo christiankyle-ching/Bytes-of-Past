@@ -51,9 +51,9 @@ public class MPQuestionManager : MonoBehaviour
         questionText.text = question;
         this.choices = chs;
 
-        for (int i = 0; i < chs.Length; i++)
+        for (int i = 0; i < choices.Length; i++)
         {
-            buttonsContainer.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = chs[i];
+            buttonsContainer.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = choices[i];
         }
 
         SetVisibility(true);

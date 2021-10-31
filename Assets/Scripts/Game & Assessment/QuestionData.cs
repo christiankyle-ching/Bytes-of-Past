@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // [CreateAssetMenu(fileName = "New Question", menuName = "Question")]
+
 public class QuestionData 
 {
     [SerializeField]

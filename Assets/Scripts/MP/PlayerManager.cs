@@ -114,6 +114,8 @@ public class PlayerManager : NetworkBehaviour
 
             isMyTurn = false;
         }
+
+        timer.StopTimer();
     }
 
     [Command]
@@ -135,8 +137,6 @@ public class PlayerManager : NetworkBehaviour
                 TargetDiscard(conn, card);
             }
         }
-
-        timer.StopTimer();
     }
 
     [TargetRpc]
@@ -149,39 +149,57 @@ public class PlayerManager : NetworkBehaviour
     #region ------------------------------ UPDATE GUI FUNCTIONS ------------------------------
 
     [ClientRpc]
-    public void RpcUpdateUI(NetworkIdentity currentPlayer,
-        int currentPlayerIndex,
-        NetworkIdentity[] players,
-        string[] playerNames,
-        int deckCount,
-        bool gameFinished,
+    public void RpcUpdateUI(
+        GameState gmState,
+        byte[] _players,
+        byte[] _playerHands,
+        string qQuestion,
+        string[] qChoices,
         string gameMsg,
-        string[] winnerNames,
-        NetworkIdentity[] winnerIdens,
-        string question,
-        string[] choices)
+        uint currentPlayerId,
+        int deckCount,
+        byte[] _winners)
     {
-        if (gameFinished)
+        Dictionary<uint, string> players = CustomSerializer.DeserializePlayers(_players) ?? new Dictionary<uint, string>();
+        Dictionary<uint, List<int>> playerHands = CustomSerializer.DeserializePlayerHands(_playerHands) ?? new Dictionary<uint, List<int>>();
+        Dictionary<uint, string> winners = CustomSerializer.DeserializePlayers(_winners) ?? new Dictionary<uint, string>();
+
+        if (gmState == GameState.FINISHED)
         {
-            menuCanvas.ShowEndGameMenu(winnerNames, winnerIdens);
+            menuCanvas.ShowEndGameMenu(winners);
         }
         else
         {
-            UpdateTurn(currentPlayer, gameFinished, gameMsg, question, choices);
-            UpdateOpponentCards(currentPlayer, currentPlayerIndex, players, /*playerHands,*/ playerNames);
+            UpdateTurn(
+                gmState,
+                qQuestion,
+                qChoices,
+                gameMsg,
+                currentPlayerId);
+            UpdateOpponentCards(
+                gmState,
+                currentPlayerId,
+                players,
+                playerHands);
             UpdateDeckCount(deckCount);
         }
 
     }
 
-    public void UpdateTurn(NetworkIdentity identity, bool gameFinished, string gameMsg, string question, string[] choices)
+    public void UpdateTurn(
+        GameState gmState,
+        string qQuestion,
+        string[] qChoices,
+        string gameMsg,
+        uint currentPlayerId)
     {
-        isMyTurn = identity.isLocalPlayer && MPGameManager.Instance.gameStarted;
+        isMyTurn = NetworkClient.localPlayer.netId == currentPlayerId &&
+            gmState == GameState.STARTED;
 
-        Debug.Log($"ILP: {isMyTurn}");
+        Debug.Log($"ILP: {isMyTurn}, GameState: {gmState}");
 
         // Disable IP Address when game already started
-        if (MPGameManager.Instance.gameStarted)
+        if (gmState == GameState.STARTED)
         {
             try
             {
@@ -190,14 +208,14 @@ public class PlayerManager : NetworkBehaviour
             catch { }
         }
 
-        if (question != null && choices != null)
+        if (gmState == GameState.QUIZ && qQuestion != null && qChoices != null)
         {
-            questionManager.ShowQuestion(question, choices);
+            questionManager.ShowQuestion(qQuestion, qChoices);
             timer.StartQuizTimer();
         }
         else
         {
-            if (isMyTurn && !gameFinished)
+            if (isMyTurn && gmState == GameState.STARTED)
             {
                 timer.StartTimer();
                 foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
@@ -214,7 +232,7 @@ public class PlayerManager : NetworkBehaviour
             }
 
             gameStateText.GetComponent<RoundText>().SetText(
-            (isMyTurn && MPGameManager.Instance.gameStarted) ?
+            (isMyTurn && gmState == GameState.STARTED) ?
             $"{gameMsg} (Your Turn)" :
             gameMsg);
         }
@@ -238,31 +256,12 @@ public class PlayerManager : NetworkBehaviour
     }
 
     public void UpdateOpponentCards(
-        NetworkIdentity currentPlayer,
-        int currentPlayerIndex,
-        NetworkIdentity[] players,
-        string[] playerNames)
+        GameState gmState,
+        uint currentPlayerId,
+        Dictionary<uint, string> players,
+        Dictionary<uint, List<int>> playerHands)
     {
-        List<int> tmpOpponentIndex = new List<int>();
-        int opponentCurrentIndex = -1;
-
-        // Get Opponent Indices only
-        for (int i = 0; i < players.Length; i++)
-        {
-            if (players[i].isLocalPlayer) continue;
-
-            if (currentPlayerIndex == i) opponentCurrentIndex = tmpOpponentIndex.Count;
-
-            tmpOpponentIndex.Add(i);
-        }
-
-        Debug.Log("Players: " + String.Join(",", players.Select(iden => iden.netId)));
-        Debug.Log("Opponent Indexes: " + String.Join(",", tmpOpponentIndex));
-
-        foreach (KeyValuePair<uint, List<int>> kvp in MPGameManager.Instance.playerHands)
-        {
-            Debug.Log($"Player #{kvp.Key} Cards: {String.Join(",", kvp.Value)}");
-        }
+        IEnumerable<KeyValuePair<uint, string>> opponents = players.Where(p => p.Key != NetworkClient.localPlayer.netId);
 
         //Update UI
         for (int i = 0; i < enemyAreas.transform.childCount; i++)
@@ -270,24 +269,21 @@ public class PlayerManager : NetworkBehaviour
             TextMeshProUGUI cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI playerNameGO = enemyAreas.transform.GetChild(i).Find("PlayerName").GetComponent<TextMeshProUGUI>();
 
-            if (i < tmpOpponentIndex.Count)
+            try
             {
-                int playerIndex = tmpOpponentIndex[i];
-                uint playerId = players[playerIndex].netId;
+                uint _opponentId = opponents.ElementAt(i).Key;
 
-                string playerName = playerNames[playerIndex];
-                int handCount = MPGameManager.Instance.GetPlayerHand(playerId).Count;
+                string playerName = players[_opponentId];
+                int handCount = playerHands[_opponentId].Count;
 
                 string cardMsg = $"{handCount} Cards";
 
-                Debug.Log($"Player #{playerId} has {handCount}");
-
                 playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
 
-                if (MPGameManager.Instance.gameStarted)
+                if (gmState == GameState.STARTED)
                 {
                     // Highlight current player if game started
-                    if (opponentCurrentIndex == i) cardMsg += " (Playing)";
+                    if (_opponentId == currentPlayerId) cardMsg += " (Playing)";
 
                     // Highlight player when only 1 card remaining
                     if (handCount <= 1)
@@ -305,9 +301,9 @@ public class PlayerManager : NetworkBehaviour
                 playerNameGO.text = playerName;
                 cardCount.text = cardMsg;
             }
-            else
+            catch
             {
-                if (MPGameManager.Instance.gameStarted)
+                if (gmState == GameState.STARTED)
                 {
                     playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
                     playerNameGO.text = "";
@@ -374,8 +370,9 @@ public class PlayerManager : NetworkBehaviour
     {
         string cardIdToRemove = this.cardInfos[infoIndex].ID;
 
-        foreach (GameObject card in playerArea.transform)
+        for (int i = 0; i < playerArea.transform.childCount; i++)
         {
+            GameObject card = playerArea.transform.GetChild(i).gameObject;
 
             if (card.GetComponent<MPCardInfo>().cardData.ID == cardIdToRemove)
             {
@@ -415,6 +412,7 @@ public class PlayerManager : NetworkBehaviour
     public void AnswerQuiz(string answer)
     {
         CmdAnswerQuiz(answer);
+        timer.StopTimer();
     }
 
     [Command]

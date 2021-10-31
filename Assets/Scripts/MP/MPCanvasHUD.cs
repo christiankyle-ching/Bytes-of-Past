@@ -23,7 +23,7 @@ public class MPCanvasHUD : MonoBehaviour
         btnPause.SetActive(true);
     }
 
-    public void ShowEndGameMenu(string[] winnerNames, NetworkIdentity[] winnerIdens, bool interrupted = false, bool isHost = false, string interruptingPlayer = "")
+    public void ShowEndGameMenu(Dictionary<uint, string> winners, bool interrupted = false, bool isHost = false, string interruptingPlayer = "")
     {
         bgMenu.SetActive(true);
         endGameMenu.SetActive(true);
@@ -33,9 +33,9 @@ public class MPCanvasHUD : MonoBehaviour
         if (!interrupted)
         {
             bool gameWon = false;
-            foreach (NetworkIdentity iden in winnerIdens)
+            foreach (KeyValuePair<uint, string> winner in winners)
             {
-                if (iden.isLocalPlayer)
+                if (winner.Key == NetworkClient.localPlayer.netId)
                 {
                     gameWon = true;
                     break;
@@ -43,13 +43,17 @@ public class MPCanvasHUD : MonoBehaviour
             }
 
             endGameMenu.transform.Find("WINSTATUS").GetComponent<TextMeshProUGUI>().text = gameWon ? "You Win" : "You Lose";
+
+            List<string> winnerNames = new List<string>();
+            foreach (KeyValuePair<uint, string> kvp in winners) { winnerNames.Add(kvp.Value); }
+
             endGameMenu.transform.Find("WinnerList").GetComponent<TextMeshProUGUI>().text = String.Join("\n", winnerNames);
         }
         else
         {
             endGameMenu.transform.Find("WINSTATUS").GetComponent<TextMeshProUGUI>().text = "ERROR";
             endGameMenu.transform.Find("WINNER").GetComponent<TextMeshProUGUI>().text = "";
-            endGameMenu.transform.Find("WinnerList").GetComponent<TextMeshProUGUI>().text = 
+            endGameMenu.transform.Find("WinnerList").GetComponent<TextMeshProUGUI>().text =
                 (isHost) ? $"Player {interruptingPlayer} has quit." :
                 "The server left the game";
             endGameMenu.transform.Find("BUTTONS").Find("BTNRESUME").gameObject.SetActive(false); // Disable Resume Button
@@ -58,7 +62,7 @@ public class MPCanvasHUD : MonoBehaviour
 
     public void ShowInterruptedGame(string playerName, bool isHost)
     {
-        ShowEndGameMenu(new string[0], new NetworkIdentity[0], true, isHost, playerName);
+        ShowEndGameMenu(new Dictionary<uint, string> { }, true, isHost, playerName);
     }
 
     public void ShowPauseMenu()
