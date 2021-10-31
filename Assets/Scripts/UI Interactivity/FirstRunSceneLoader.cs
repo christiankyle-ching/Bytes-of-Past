@@ -5,17 +5,23 @@ using UnityEngine;
 public class FirstRunSceneLoader : MonoBehaviour
 {
     public SceneLoader sceneLoader;
+    public StaticData staticData;
 
     void Awake()
     {
-        if (PlayerPrefs.GetInt("IsFirstRun", 1) == 0)
+        staticData = StaticData.Instance;
+
+        if (!staticData.showTutorial)
         {
-            // TODO: Uncomment on production to show tutorial
-             sceneLoader.GoToMainMenu(true);
-        }
-        else
-        {
-            PlayerPrefs.SetInt("IsFirstRun", 0);
+            if (PlayerPrefs.GetInt("IsFirstRun", 1) == 0)
+            {
+                // TODO: Uncomment on production to show tutorial
+                sceneLoader.GoToMainMenu(true);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("IsFirstRun", 0);
+            }
         }
     }
 }

@@ -14,8 +14,7 @@ public enum CARDACTION
 
 public class PlayerManager : NetworkBehaviour
 {
-    private TOPIC _topic = TOPIC.Computer;
-    private bool isMyTurn = false;
+    private static TOPIC _topic = TOPIC.Computer;
     private int startingCardsCount = 5; // TODO: Set in Prod
 
     public GameObject cardPrefab;
@@ -30,16 +29,15 @@ public class PlayerManager : NetworkBehaviour
     private MPTimer timer;
     private MPCanvasHUD menuCanvas;
     private MPQuestionManager questionManager;
+    private TradingSystem tradingSystem;
 
     [Header("Colors")]
     public Color normalTextColor = Color.white;
     public Color dangerTextColor = Color.red;
 
-    //private List<CardData> cardInfos = new List<CardData>();
-
-    private List<CardData> computerCards = new List<CardData>();
-    private List<CardData> networkingCards = new List<CardData>();
-    private List<CardData> softwareCards = new List<CardData>();
+    public static List<CardData> computerCards = new List<CardData>();
+    public static List<CardData> networkingCards = new List<CardData>();
+    public static List<CardData> softwareCards = new List<CardData>();
 
     public override void OnStartClient()
     {
@@ -55,6 +53,7 @@ public class PlayerManager : NetworkBehaviour
         menuCanvas = GameObject.Find("MenuCanvas").GetComponent<MPCanvasHUD>();
         messenger = GameObject.Find("MESSENGER").GetComponent<MPGameMessage>();
         questionManager = GameObject.Find("RoundQuestion").GetComponent<MPQuestionManager>();
+        tradingSystem = GameObject.Find("TRADING").GetComponent<TradingSystem>();
 
         LoadCards();
     }
@@ -64,7 +63,8 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcSetTopic(TOPIC topic)
     {
-        this._topic = topic;
+        _topic = topic;
+        tradingSystem.SetTopic(topic);
     }
 
     public void LoadCards()
@@ -83,7 +83,7 @@ public class PlayerManager : NetworkBehaviour
         softwareCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Software).ToList();
     }
 
-    public CardData GetCard(int index)
+    public static CardData GetCard(int index)
     {
         switch (_topic)
         {
@@ -145,10 +145,9 @@ public class PlayerManager : NetworkBehaviour
             {
                 CmdPlayCard(card, infoIndex, pos, hasDrop, SPECIALACTION.None);
             }
-
-            isMyTurn = false;
         }
 
+        tradingSystem.SetupCanvas(false);
         timer.StopTimer();
     }
 
@@ -204,13 +203,17 @@ public class PlayerManager : NetworkBehaviour
         }
         else
         {
+            bool isMyTurn = NetworkClient.localPlayer.netId == currentPlayerId && gmState == GameState.STARTED;
+
             UpdateTurn(
+                isMyTurn,
                 gmState,
                 qQuestion,
                 qChoices,
                 gameMsg,
                 currentPlayerId);
-            UpdateOpponentCards(
+            UpdateOpponents(
+                isMyTurn,
                 gmState,
                 currentPlayerId,
                 players,
@@ -221,14 +224,13 @@ public class PlayerManager : NetworkBehaviour
     }
 
     public void UpdateTurn(
+        bool isMyTurn,
         GameState gmState,
         string qQuestion,
         string[] qChoices,
         string gameMsg,
         uint currentPlayerId)
     {
-        isMyTurn = NetworkClient.localPlayer.netId == currentPlayerId &&
-            gmState == GameState.STARTED;
 
         Debug.Log($"ILP: {isMyTurn}, GameState: {gmState}");
 
@@ -289,27 +291,37 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    public void UpdateOpponentCards(
+    public void UpdateOpponents(
+        bool isMyTurn,
         GameState gmState,
         uint currentPlayerId,
         Dictionary<uint, string> players,
         Dictionary<uint, List<int>> playerHands)
     {
+        // Get Self
+        uint _playerId = NetworkClient.localPlayer.netId;
+        string _playerName = players[_playerId];
+        int[] _playerHand = playerHands[_playerId].ToArray();
+
+        // Get Opponents
         IEnumerable<KeyValuePair<uint, string>> opponents = players.Where(p => p.Key != NetworkClient.localPlayer.netId);
 
         //Update UI
         for (int i = 0; i < enemyAreas.transform.childCount; i++)
         {
-            TextMeshProUGUI cardCount = enemyAreas.transform.GetChild(i).Find("CardsRemaining").GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI playerNameGO = enemyAreas.transform.GetChild(i).Find("PlayerName").GetComponent<TextMeshProUGUI>();
+            Transform enemyGO = enemyAreas.transform.GetChild(i);
+
+            TextMeshProUGUI cardCountGO = enemyGO.GetChild(0).Find("CARDS").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI playerNameGO = enemyGO.GetChild(0).Find("NAME").GetComponent<TextMeshProUGUI>();
+            Button btnTrade = enemyGO.GetChild(1).GetChild(0).GetComponent<Button>();
 
             try
             {
                 uint _opponentId = opponents.ElementAt(i).Key;
+                string _opponentName = players[_opponentId];
+                int[] _opponentHand = playerHands[_opponentId].ToArray();
 
-                string playerName = players[_opponentId];
-                int handCount = playerHands[_opponentId].Count;
-
+                int handCount = _opponentHand.Length;
                 string cardMsg = $"{handCount} Cards";
 
                 playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
@@ -317,23 +329,24 @@ public class PlayerManager : NetworkBehaviour
                 if (gmState == GameState.STARTED)
                 {
                     // Highlight current player if game started
-                    if (_opponentId == currentPlayerId) cardMsg += " (Playing)";
+                    cardMsg += _opponentId == currentPlayerId ? " (Playing)" : "";
+                    cardCountGO.fontStyle = _opponentId == currentPlayerId ? FontStyles.Bold : FontStyles.Normal;
 
                     // Highlight player when only 1 card remaining
-                    if (handCount <= 1)
-                    {
-                        cardCount.fontStyle = FontStyles.Bold;
-                        cardCount.color = dangerTextColor;
-                    }
-                    else
-                    {
-                        cardCount.fontStyle = FontStyles.Normal;
-                        cardCount.color = normalTextColor;
-                    }
+                    cardCountGO.color = handCount <= 1 ? dangerTextColor : normalTextColor;
                 }
 
-                playerNameGO.text = playerName;
-                cardCount.text = cardMsg;
+                playerNameGO.text = _opponentName;
+                cardCountGO.text = cardMsg;
+
+                // Attach Trade Callback
+                btnTrade.gameObject.SetActive(true);
+                btnTrade.onClick.RemoveAllListeners();
+                btnTrade.onClick.AddListener(() => StartTrade(
+                    _playerId, _playerName, _playerHand,
+                    _opponentId, _opponentName, _opponentHand));
+                btnTrade.interactable = isMyTurn; // Disable trading when not my turn
+
             }
             catch
             {
@@ -341,15 +354,26 @@ public class PlayerManager : NetworkBehaviour
                 {
                     playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
                     playerNameGO.text = "";
-                    cardCount.text = "";
+                    cardCountGO.text = "";
                 }
                 else
                 {
                     playerNameGO.text = "Waiting For Players";
                     playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = true;
                 }
+
+                btnTrade.gameObject.SetActive(false);
             }
         }
+    }
+
+    public void StartTrade(
+        uint playerId, string playerName, int[] playerHand,
+        uint opponentId, string opponentName, int[] opponentHand)
+    {
+        tradingSystem.ShowTrade(
+            playerId, playerName, playerHand,
+            opponentId, opponentName, opponentHand);
     }
 
     public void UpdateDeckCount(int deckCount)

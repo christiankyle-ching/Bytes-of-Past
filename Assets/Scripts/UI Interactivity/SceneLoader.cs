@@ -115,6 +115,14 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToTutorial()
     {
-        SceneManager.LoadScene("First Run Screen");
+        staticData.showTutorial = true;
+        SceneManager.LoadScene("Tutorial");
+        //staticData.SceneIndexHistory.Clear(); TODO: Do i need this?
     }
+
+    public void GoToMPTutorial()
+    {
+        StartCoroutine(LoadScene("MPTutorial"));
+    }
+
 }

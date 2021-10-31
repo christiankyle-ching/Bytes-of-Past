@@ -57,6 +57,7 @@ public class StaticData : MonoBehaviour
 
     public ProfileStatisticsData profileStatisticsData;
 
+    public bool showTutorial = false;
 
     public void LoadProfileData()
     {
