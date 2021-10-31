@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Mirror;
 
 public class TradingSystem : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class TradingSystem : MonoBehaviour
     public GameObject cardPrefab;
     public Button closeButton;
     public Button tradeButton;
+    public TextMeshProUGUI title;
+    public Image leftArrow;
+    public Image rightArrow;
 
     [Header("Your Player")]
     public TextMeshProUGUI player0NameGO;
@@ -22,9 +26,10 @@ public class TradingSystem : MonoBehaviour
     public TextMeshProUGUI player1NameGO;
     public Transform player1CardsGO;
 
+    // TODO: Set in Prod
     [Header("Card Highlight")]
     public Color highlightColor = Color.green;
-    public Vector2 effectDistance = new Vector2(5f, 5f);
+    public Vector2 effectDistance = new Vector2(10f, 10f);
 
     private uint player0NetId;
     private int selectedCard_player0 = -1;
@@ -57,8 +62,11 @@ public class TradingSystem : MonoBehaviour
         int[] player0Cards,
         uint player1Id,
         string player1Name,
-        int[] player1Cards)
+        int[] player1Cards,
+        int tradesLeft)
     {
+        title.text = $"Trade Cards ({tradesLeft} chances remaining)";
+
         selectedCard_player0 = -1;
         selectedCard_player1 = -1;
         CheckValidTrade();
@@ -94,8 +102,7 @@ public class TradingSystem : MonoBehaviour
         outline.effectDistance = effectDistance;
 
         // Load Info
-        //Debug.Log("TRADING CARDS: " + PlayerManager.computerCards.Count);
-        //card.GetComponent<MPCardInfo>().InitCardData(infoIndex); // TODO: 
+        card.GetComponent<MPCardInfo>().InitCardData(PlayerManager.GetCard(infoIndex));
         card.GetComponent<MPCardInfo>().infoIndex = infoIndex;
         card.transform.SetParent(parent, false);
 
@@ -139,14 +146,9 @@ public class TradingSystem : MonoBehaviour
 
     void CheckValidTrade()
     {
-        if (selectedCard_player0 >= 0 && selectedCard_player1 >= 0)
-        {
-            tradeButton.interactable = true;
-        }
-        else
-        {
-            tradeButton.interactable = false;
-        }
+        rightArrow.color = selectedCard_player0 >= 0 ? Color.white : new Color(1, 1, 1, 0.5f);
+        leftArrow.color = selectedCard_player1 >= 0 ? Color.white : new Color(1, 1, 1, 0.5f);
+        tradeButton.interactable = selectedCard_player0 >= 0 && selectedCard_player1 >= 0;
     }
 
     void TradeCards()
@@ -154,6 +156,6 @@ public class TradingSystem : MonoBehaviour
         int player0Card = player0CardsGO.GetChild(selectedCard_player0).GetComponent<MPCardInfo>().infoIndex;
         int player1Card = player1CardsGO.GetChild(selectedCard_player1).GetComponent<MPCardInfo>().infoIndex;
 
-        // TODO: Call Command
+        NetworkClient.localPlayer.GetComponent<PlayerManager>().TradeCard(player0NetId, player0Card, player1NetId, player1Card);
     }
 }

@@ -64,4 +64,33 @@ public static class CustomSerializer
         }
     }
 
+    // PlayerTrades
+    public static byte[] SerializePlayerTrades(Dictionary<uint, int> _object)
+    {
+        if (_object == null) return null;
+
+        BinaryFormatter binaryF = new BinaryFormatter();
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            binaryF.Serialize(memoryStream, _object);
+
+            return memoryStream.ToArray();
+        }
+    }
+
+    public static Dictionary<uint, int> DeserializePlayerTrades(byte[] dataStream)
+    {
+        if (dataStream == null) return null;
+
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            BinaryFormatter binaryF = new BinaryFormatter();
+
+            memoryStream.Write(dataStream, 0, dataStream.Length);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return (Dictionary<uint, int>)binaryF.Deserialize(memoryStream);
+        }
+    }
+
 }

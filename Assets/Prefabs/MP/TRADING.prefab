@@ -218,6 +218,9 @@ MonoBehaviour:
     type: 3}
   closeButton: {fileID: 9129779002950557077}
   tradeButton: {fileID: 9129779002541011637}
+  title: {fileID: 9129779003106317537}
+  leftArrow: {fileID: 9129779003677428371}
+  rightArrow: {fileID: 9129779003984474156}
   player0NameGO: {fileID: 9129779002493325422}
   player0CardsGO: {fileID: 9129779002206806329}
   player1NameGO: {fileID: 9129779002863273029}

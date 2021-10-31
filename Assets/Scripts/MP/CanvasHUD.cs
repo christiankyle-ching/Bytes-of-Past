@@ -24,6 +24,12 @@ public class CanvasHUD : MonoBehaviour
         ValueChangeCheck();
         inputFieldAddress.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
 
+#if UNITY_EDITOR
+        inputFieldAddress.text = "localhost";
+#else
+        inputFieldAddress.text = "192.168.";
+#endif
+
         //Make sure to attach these Buttons in the Inspector
         btnHost.onClick.AddListener(HostGame);
         btnJoin.onClick.AddListener(JoinGame);

@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 80, y: 0}
+  m_AnchoredPosition: {x: 126, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5647147246520633973
@@ -108,8 +108,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 54.1, y: 0}
-  m_SizeDelta: {x: -211.2898, y: 177.26541}
+  m_AnchoredPosition: {x: 81.7, y: 0}
+  m_SizeDelta: {x: -266.50415, y: 177.26541}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5647147246723620878
 CanvasRenderer:
@@ -283,14 +283,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3647059, g: 0.69411767, b: 0.9960785, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bc34572c1487e3748af1d9353d98fe06, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: e382fb962f8c8be4682765049814b5a8, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -315,9 +315,7 @@ MonoBehaviour:
   _image: {fileID: 5647147246520633974}
   checkmark: {fileID: 21300000, guid: 007323c9511980c4e85f2b7c93ef2952, type: 3}
   cross: {fileID: 21300000, guid: 254065be78d9ac646a8a175f8c6745f4, type: 3}
-  SpecialAction_SkipTurn: {fileID: 21300000, guid: 2dbf94e2def09f24399bc142de5e28c0,
-    type: 3}
-  SpecialAction_Peek: {fileID: 21300000, guid: a66a7e7535a20814c98927bed2728509, type: 3}
+  trade: {fileID: 21300000, guid: f411799d2db434ea7a9cad5c2cbb23d1, type: 3}
   correctSFX: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
   defaultSFX: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
   wrongSFX: {fileID: 8300000, guid: 5039414d94a6e4e70a5ab9e8833e992a, type: 3}

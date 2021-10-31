@@ -133,6 +133,30 @@ public class PlayerManager : NetworkBehaviour
         RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt, randSpecial);
     }
 
+    // TODO: TRADE: 
+    public void TradeCard(uint fromPlayer, int fromCard, uint toPlayer, int toCard)
+    {
+        CmdTradeCard(fromPlayer, fromCard, toPlayer, toCard);
+        tradingSystem.SetupCanvas(false);
+        timer.StopTimer();
+    }
+
+    [Command]
+    public void CmdTradeCard(uint fromPlayer, int fromCard, uint toPlayer, int toCard)
+    {
+        MPGameManager.Instance.OnTradeCard(fromPlayer, fromCard, toPlayer, toCard);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdGetSpecificCard(int infoIndex)
+    {
+        GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
+        NetworkServer.Spawn(card, connectionToClient);
+
+        // No special action on traded cards
+        RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt, SPECIALACTION.None);
+    }
+
     public void PlayCard(GameObject card, int infoIndex, int pos, bool hasDrop = true)
     {
         if (hasAuthority)
@@ -179,6 +203,20 @@ public class PlayerManager : NetworkBehaviour
         StartCoroutine(DestroyObjectWithDelay(card));
     }
 
+    [TargetRpc]
+    public void TargetDiscardByInfoIndex(NetworkConnection conn, int cardToRemove)
+    {
+        foreach (Transform _card in playerArea.transform)
+        {
+            if (_card.GetComponent<MPCardInfo>().infoIndex == cardToRemove)
+            {
+                _card.GetComponent<MPDragDrop>().OnDiscard();
+                StartCoroutine(DestroyObjectWithDelay(_card.gameObject));
+                break;
+            }
+        }
+    }
+
     #region ------------------------------ UPDATE GUI FUNCTIONS ------------------------------
 
     [ClientRpc]
@@ -191,11 +229,13 @@ public class PlayerManager : NetworkBehaviour
         string gameMsg,
         uint currentPlayerId,
         int deckCount,
-        byte[] _winners)
+        byte[] _winners,
+        byte[] _playerTrades)
     {
         Dictionary<uint, string> players = CustomSerializer.DeserializePlayers(_players) ?? new Dictionary<uint, string>();
         Dictionary<uint, List<int>> playerHands = CustomSerializer.DeserializePlayerHands(_playerHands) ?? new Dictionary<uint, List<int>>();
         Dictionary<uint, string> winners = CustomSerializer.DeserializePlayers(_winners) ?? new Dictionary<uint, string>();
+        Dictionary<uint, int> playerTrades = CustomSerializer.DeserializePlayerTrades(_playerTrades) ?? new Dictionary<uint, int>();
 
         if (gmState == GameState.FINISHED)
         {
@@ -217,7 +257,8 @@ public class PlayerManager : NetworkBehaviour
                 gmState,
                 currentPlayerId,
                 players,
-                playerHands);
+                playerHands,
+                playerTrades);
             UpdateDeckCount(deckCount);
         }
 
@@ -296,12 +337,14 @@ public class PlayerManager : NetworkBehaviour
         GameState gmState,
         uint currentPlayerId,
         Dictionary<uint, string> players,
-        Dictionary<uint, List<int>> playerHands)
+        Dictionary<uint, List<int>> playerHands,
+        Dictionary<uint, int> playerTrades)
     {
         // Get Self
         uint _playerId = NetworkClient.localPlayer.netId;
         string _playerName = players[_playerId];
         int[] _playerHand = playerHands[_playerId].ToArray();
+        int tradesLeft = playerTrades[_playerId];
 
         // Get Opponents
         IEnumerable<KeyValuePair<uint, string>> opponents = players.Where(p => p.Key != NetworkClient.localPlayer.netId);
@@ -344,9 +387,19 @@ public class PlayerManager : NetworkBehaviour
                 btnTrade.onClick.RemoveAllListeners();
                 btnTrade.onClick.AddListener(() => StartTrade(
                     _playerId, _playerName, _playerHand,
-                    _opponentId, _opponentName, _opponentHand));
-                btnTrade.interactable = isMyTurn; // Disable trading when not my turn
+                    _opponentId, _opponentName, _opponentHand, tradesLeft));
 
+                // Enable trading only when my turn and has trades left
+                if (tradesLeft <= 0)
+                {
+                    btnTrade.interactable = false;
+                    btnTrade.GetComponentInChildren<TextMeshProUGUI>().text = "NO TRADES LEFT";
+                }
+                else
+                {
+                    btnTrade.interactable = isMyTurn;
+                    btnTrade.GetComponentInChildren<TextMeshProUGUI>().text = "TRADE";
+                }
             }
             catch
             {
@@ -369,11 +422,13 @@ public class PlayerManager : NetworkBehaviour
 
     public void StartTrade(
         uint playerId, string playerName, int[] playerHand,
-        uint opponentId, string opponentName, int[] opponentHand)
+        uint opponentId, string opponentName, int[] opponentHand,
+        int tradesLeft)
     {
         tradingSystem.ShowTrade(
             playerId, playerName, playerHand,
-            opponentId, opponentName, opponentHand);
+            opponentId, opponentName, opponentHand,
+            tradesLeft);
     }
 
     public void UpdateDeckCount(int deckCount)
@@ -440,6 +495,8 @@ public class PlayerManager : NetworkBehaviour
             }
         }
     }
+
+
 
     [ClientRpc]
     public void RpcShowGameMessage(string message, MPGameMessageType type)

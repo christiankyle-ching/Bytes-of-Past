@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public enum MPGameMessageType
 {
-    CORRECT, WRONG, SA_SKIP, SA_PEEK, SA_DOUBLE, NONE
+    CORRECT, WRONG, SA_SKIP, SA_PEEK, SA_DOUBLE, TRADE, NONE
 }
 
 [RequireComponent(typeof(Animator), typeof(AudioSource))]
@@ -21,8 +21,7 @@ public class MPGameMessage : MonoBehaviour
     [Header("Images")]
     public Sprite checkmark;
     public Sprite cross;
-    public Sprite SpecialAction_SkipTurn;
-    public Sprite SpecialAction_Peek;
+    public Sprite trade;
 
     [Header("SFX")]
     public AudioClip correctSFX;
@@ -61,6 +60,14 @@ public class MPGameMessage : MonoBehaviour
                 break;
             case MPGameMessageType.SA_PEEK:
                 _image.sprite = MPCardInfo.GetSpecialActionSprite(SPECIALACTION.Peek);
+                PlayDefaultSFX();
+                break;
+            case MPGameMessageType.SA_DOUBLE:
+                _image.sprite = MPCardInfo.GetSpecialActionSprite(SPECIALACTION.DoubleDraw);
+                PlayDefaultSFX();
+                break;
+            case MPGameMessageType.TRADE:
+                _image.sprite = trade;
                 PlayDefaultSFX();
                 break;
             default:

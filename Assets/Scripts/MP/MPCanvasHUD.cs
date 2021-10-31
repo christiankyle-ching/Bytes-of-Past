@@ -54,10 +54,13 @@ public class MPCanvasHUD : MonoBehaviour
             endGameMenu.transform.Find("WINSTATUS").GetComponent<TextMeshProUGUI>().text = "ERROR";
             endGameMenu.transform.Find("WINNER").GetComponent<TextMeshProUGUI>().text = "";
             endGameMenu.transform.Find("WinnerList").GetComponent<TextMeshProUGUI>().text =
-                (isHost) ? $"Player {interruptingPlayer} has quit." :
+                (!isHost) ? $"Player {interruptingPlayer} has quit." :
                 "The server left the game";
             endGameMenu.transform.Find("BUTTONS").Find("BTNRESUME").gameObject.SetActive(false); // Disable Resume Button
         }
+
+        // Disable Resume
+        endGameMenu.transform.Find("BUTTONS").Find("BTNRESUME").gameObject.SetActive(false);
     }
 
     public void ShowInterruptedGame(string playerName, bool isHost)

@@ -17,8 +17,9 @@ public class MPGameManager : NetworkBehaviour
     public static MPGameManager Instance { get { return _instance; } }
 
     // TODO: Set in prod
-    private float minPlayers = 2;
-    private float quizIntervalRounds = 3;
+    private int minPlayers = 2;
+    private int quizIntervalRounds = 3;
+    private int tradeCount = 2;
 
     public GameState gmState = GameState.WAITING;
     public int turns = 0;
@@ -38,6 +39,7 @@ public class MPGameManager : NetworkBehaviour
 
     public Dictionary<uint, string> winners = new Dictionary<uint, string>();
     public Dictionary<uint, string> players = new Dictionary<uint, string>();
+    public Dictionary<uint, int> playerTrades = new Dictionary<uint, int>();
     public Dictionary<uint, List<int>> playerHands = new Dictionary<uint, List<int>>();
 
     public TOPIC _topic = TOPIC.Computer;
@@ -113,6 +115,7 @@ public class MPGameManager : NetworkBehaviour
     public void AddPlayer(NetworkIdentity nid)
     {
         players.Add(nid.netId, "Not Ready");
+        playerTrades.Add(nid.netId, tradeCount);
         playerHands.Add(nid.netId, new List<int>());
 
         Debug.Log($"Players: {players.Count}. NetID #{nid.netId} joined!");
@@ -124,6 +127,7 @@ public class MPGameManager : NetworkBehaviour
     public string RemovePlayer(NetworkIdentity nid)
     {
         players.Remove(nid.netId);
+        playerTrades.Remove(nid.netId);
         playerHands.Remove(nid.netId);
 
         Debug.Log($"Players: {players.Count}. NetID #{nid} left!");
@@ -150,7 +154,7 @@ public class MPGameManager : NetworkBehaviour
 
     public void SetPlayerName(NetworkIdentity iden, string name)
     {
-        players[iden.netId] = (name != string.Empty) ? name : $"Unnamed Player #{iden.netId}";
+        players[iden.netId] = (name != string.Empty) ? name : $"Player#{iden.netId}";
     }
 
     #endregion
@@ -238,6 +242,53 @@ public class MPGameManager : NetworkBehaviour
 
         playerHands[iden.netId].AddRange(cards);
         return cards;
+    }
+
+    public void OnTradeCard(uint p0Id, int p0Card, uint p1Id, int p1Card)
+    {
+        PlayerManager p0 = NetworkServer.spawned[p0Id].GetComponent<PlayerManager>();
+        PlayerManager p1 = NetworkServer.spawned[p1Id].GetComponent<PlayerManager>();
+
+        // Remove card from their hands
+        playerHands[p0Id].Remove(p0Card);
+        playerHands[p1Id].Remove(p1Card);
+
+        // Add back inversed
+        playerHands[p0Id].Add(p1Card);
+        playerHands[p1Id].Add(p0Card);
+
+        // Invoke Commands on both players
+        p0.TargetDiscardByInfoIndex(p0.connectionToClient, p0Card);
+        p0.CmdGetSpecificCard(p1Card);
+        p1.TargetDiscardByInfoIndex(p1.connectionToClient, p1Card);
+        p1.CmdGetSpecificCard(p0Card);
+
+        // Decrease available trade count
+        playerTrades[p0Id]--;
+
+        // Calculate next turn then check if starting another round to check winners
+        NextPlayerTurn();
+
+        // Check Winners or Play Quiz on change of rounds
+        CheckRound();
+
+        ClientsUpdateUI();
+
+        // Message to all clients
+        string fromPlayer = players[p0Id]; // The one who played a card
+        string toPlayer = players[p1Id]; // The next person
+        ShowTradeToClients(fromPlayer, toPlayer);
+    }
+
+    public void ShowTradeToClients(string fromPlayer, string toPlayer)
+    {
+        string message = "";
+        MPGameMessageType type = MPGameMessageType.TRADE;
+
+        message += $"{fromPlayer} has traded a card with {toPlayer}. It's {players.ElementAt(currentPlayerIndex)}'s turn!";
+
+        PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        player.RpcShowGameMessage(message, type);
     }
 
     public bool OnPlayCard(int infoIndex, int pos, NetworkIdentity iden, bool hasDrop, SPECIALACTION special)
@@ -359,23 +410,33 @@ public class MPGameManager : NetworkBehaviour
         message += $"It's {nextTurnPlayer}'s turn.";
 
         // Pick Type of Message
-        switch (special)
+        if (hasDrop)
         {
-            case SPECIALACTION.Peek:
-                type = MPGameMessageType.SA_PEEK;
-                break;
-            case SPECIALACTION.SkipTurn:
-                type = MPGameMessageType.SA_SKIP;
-                break;
-            case SPECIALACTION.DoubleDraw:
-                type = MPGameMessageType.SA_DOUBLE;
-                break;
-            case SPECIALACTION.None:
-                type = isDropValid ? MPGameMessageType.CORRECT : MPGameMessageType.WRONG;
-                break;
-            default:
-                type = MPGameMessageType.NONE;
-                break;
+            if (isDropValid)
+            {
+                switch (special)
+                {
+                    case SPECIALACTION.Peek:
+                        type = MPGameMessageType.SA_PEEK;
+                        break;
+                    case SPECIALACTION.SkipTurn:
+                        type = MPGameMessageType.SA_SKIP;
+                        break;
+                    case SPECIALACTION.DoubleDraw:
+                        type = MPGameMessageType.SA_DOUBLE;
+                        break;
+                    case SPECIALACTION.None:
+                        type = MPGameMessageType.CORRECT;
+                        break;
+                    default:
+                        type = MPGameMessageType.NONE;
+                        break;
+                }
+            }
+            else
+            {
+                type = MPGameMessageType.WRONG;
+            }
         }
 
         PlayerManager player = NetworkClient.connection.identity.GetComponent<PlayerManager>();
@@ -439,8 +500,8 @@ public class MPGameManager : NetworkBehaviour
                 GetGameStateMessage(),
                 players.ElementAt(currentPlayerIndex).Key,
                 deck.Count,
-                CustomSerializer.SerializePlayers(winners)
-                );
+                CustomSerializer.SerializePlayers(winners),
+                CustomSerializer.SerializePlayerTrades(playerTrades));
         }
         catch (ArgumentOutOfRangeException)
         {
