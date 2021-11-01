@@ -10,8 +10,8 @@ public class SinglePlayerGameController : MonoBehaviour
 
     // TODO: Set in Prod
     int startingCardsCount = 8;
-    int turnSeconds = 5;
-    int quizSeconds = 5;
+    int turnSeconds = 45;
+    int quizSeconds = 15;
 
     int quizIntervalRounds = 2;
     int turns = 0;
