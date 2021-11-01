@@ -72,6 +72,10 @@ public class SceneLoader : MonoBehaviour
     {
         StartCoroutine(LoadScene("Achievements"));
     }
+    public void GoToCredits()
+    {
+        StartCoroutine(LoadScene("Credits"));
+    }
 
     IEnumerator LoadScene(string sceneName, bool isGoingBack = false)
     {
@@ -125,9 +129,6 @@ public class SceneLoader : MonoBehaviour
         StartCoroutine(LoadScene("MPTutorial"));
     }
 
-    public void GoToCredits()
-    {
-        StartCoroutine(LoadScene("Credits"));
-    }
+    
 
 }

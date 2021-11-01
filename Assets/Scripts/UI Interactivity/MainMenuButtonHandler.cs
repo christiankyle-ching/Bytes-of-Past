@@ -49,6 +49,11 @@ public class MainMenuButtonHandler : MonoBehaviour
         settingsCanvas.SetActive(true);
     }
 
+    public void onSelectCredits()
+    {
+        sceneLoader.GetComponent<SceneLoader>().GoToCredits();
+    }
+
     public void onClose()
     {
         settingsCanvas.SetActive(false);
