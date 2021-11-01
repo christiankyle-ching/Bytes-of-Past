@@ -76,7 +76,7 @@ public class MPCardZoom : NetworkBehaviour
         }
     }
 
-    void UnzoomCard()
+    public void UnzoomCard()
     {
         isZoomed = false;
         if (zoomCard != null) Destroy(zoomCard.gameObject);

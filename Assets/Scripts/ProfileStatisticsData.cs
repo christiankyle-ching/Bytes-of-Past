@@ -2,21 +2,19 @@
 public class ProfileStatisticsData
 {
     /*
-    With size of [2,3,3]
-    2 or GAMEMODE (Single Player & Multiplayer)
+    With size of [3,3]
     3 for each of the TOPIC
     3 for each DIFFICULTY
     */
-    public float[,,] gameAccuracy = new float[2, 3, 3];
+    public float[,] SPGameAccuracy = new float[3, 3];
 
     /*
-    With size of [2,3,3,2]
-    2 or GAMEMODE (Single Player & Multiplayer)
+    With size of [3,3,2]
     3 for each of the TOPIC
     3 for each DIFFICULTY
     2 for Win/Loss counts
     */
-    public int[,,,] gameWinLossCount = new int[2, 3, 3, 2];
+    public int[,,] SPWinLossCount = new int[3, 3, 2];
 
     /*
     With size of [2,3]
@@ -25,17 +23,15 @@ public class ProfileStatisticsData
     */
     public int[,] assessmentScores = new int[2, 3];
 
-    public void UpdateGameAccuracy(
-        GAMEMODE gameMode,
+    public void UpdateSPGameAccuracy(
         TOPIC topic,
         DIFFICULTY difficulty,
         float newAccuracy,
         bool gameWon
     )
     {
-        int gameModeIndex = gameMode == GAMEMODE.SinglePlayer ? 0 : 1;
-        int topicIndex = (int) topic;
-        int difficultyIndex = (int) difficulty;
+        int topicIndex = (int)topic;
+        int difficultyIndex = (int)difficulty;
 
         /* 
         Update Accuracy in Array with their average
@@ -43,9 +39,9 @@ public class ProfileStatisticsData
         then the accuracy should be set without averaging
          */
         float existingAccuracy =
-            gameAccuracy[gameModeIndex, topicIndex, difficultyIndex];
+            SPGameAccuracy[topicIndex, difficultyIndex];
 
-        gameAccuracy[gameModeIndex, topicIndex, difficultyIndex] =
+        SPGameAccuracy[topicIndex, difficultyIndex] =
             (existingAccuracy == 0f)
                 ? newAccuracy
                 : ((newAccuracy + existingAccuracy) / 2);
@@ -53,22 +49,66 @@ public class ProfileStatisticsData
         /* 
         Update Win/Loss count
         */
-        gameWinLossCount[gameModeIndex,
-        topicIndex,
-        difficultyIndex,
-        (gameWon ? 0 : 1)] += 1;
+        SPWinLossCount[topicIndex, difficultyIndex, (gameWon ? 0 : 1)] += 1;
 
         SaveLoadSystem.SaveProfileStatisticsData(this);
     }
 
+
     public void UpdateAssessmentScore(GAMEMODE gameMode, TOPIC topic, int score)
     {
         int preOrPostIndex = gameMode == GAMEMODE.PreAssessment ? 0 : 1;
-        int topicIndex = (int) topic;
+        int topicIndex = (int)topic;
 
         // Update Score in Array
         assessmentScores[preOrPostIndex, topicIndex] = score;
 
         SaveLoadSystem.SaveProfileStatisticsData(this);
     }
+
+    // MULTPLAYER
+
+    /*
+    With size of [3]
+    3 for each of the TOPIC    
+    */
+    public float[] MPGameAccuracy = new float[3];
+
+    /*
+    With size of [3,3,2]
+    3 for each of the TOPIC
+    2 for Win/Loss counts
+    */
+    public int[,] MPWinLossCount = new int[3, 2];
+
+
+    public void UpdateMPGameAccuracy(
+        TOPIC topic,
+        float newAccuracy,
+        bool gameWon
+    )
+    {
+        int topicIndex = (int)topic;
+
+        /* 
+        Update Accuracy in Array with their average
+        unless it is 0, which MIGHT mean it's their first game,
+        then the accuracy should be set without averaging
+         */
+        float existingAccuracy =
+            MPGameAccuracy[topicIndex];
+
+        MPGameAccuracy[topicIndex] =
+            (existingAccuracy == 0f)
+                ? newAccuracy
+                : ((newAccuracy + existingAccuracy) / 2);
+
+        /* 
+        Update Win/Loss count
+        */
+        MPWinLossCount[topicIndex, (gameWon ? 0 : 1)] += 1;
+
+        SaveLoadSystem.SaveProfileStatisticsData(this);
+    }
+
 }

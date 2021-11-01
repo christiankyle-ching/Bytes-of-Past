@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MPTutorial.unity
     guid: 6eee065c577ab0d4aa80809adc0db5e1
   - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: 207103a1826671847b3eeb2b1ae9d41d
+  - enabled: 1
     path: Assets/Scenes/Main Menu.unity
     guid: e7e5eecc270dae94e8fc6e10c31c5174
   - enabled: 1

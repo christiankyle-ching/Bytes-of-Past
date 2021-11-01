@@ -58,11 +58,11 @@ public class SinglePlayerMenuManager : MonoBehaviour
         // Save new accuracy
         staticData
             .profileStatisticsData
-            .UpdateGameAccuracy(GAMEMODE.SinglePlayer,
-            staticData.SelectedTopic,
-            staticData.SelectedDifficulty,
-            playerStats.Accuracy,
-            isGameWon);
+            .UpdateSPGameAccuracy(
+                staticData.SelectedTopic,
+                staticData.SelectedDifficulty,
+                playerStats.Accuracy,
+                isGameWon);
 
         // Set the topic as already played
         PlayerPrefs

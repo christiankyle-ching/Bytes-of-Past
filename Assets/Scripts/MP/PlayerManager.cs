@@ -7,6 +7,10 @@ using System.Linq;
 using TMPro;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
+using ParrelSync;
+#endif
+
 public enum CARDACTION
 {
     Played, Dealt
@@ -15,7 +19,7 @@ public enum CARDACTION
 public class PlayerManager : NetworkBehaviour
 {
     private static TOPIC _topic = TOPIC.Computer;
-    private int startingCardsCount = 5; // TODO: Set in Prod
+    private int startingCardsCount = 2; // TODO: Set in Prod
 
     public GameObject cardPrefab;
 
@@ -30,6 +34,7 @@ public class PlayerManager : NetworkBehaviour
     private MPCanvasHUD menuCanvas;
     private MPQuestionManager questionManager;
     private TradingSystem tradingSystem;
+    private PlayerStats playerStats;
 
     [Header("Colors")]
     public Color normalTextColor = Color.white;
@@ -54,6 +59,7 @@ public class PlayerManager : NetworkBehaviour
         messenger = GameObject.Find("MESSENGER").GetComponent<MPGameMessage>();
         questionManager = GameObject.Find("RoundQuestion").GetComponent<MPQuestionManager>();
         tradingSystem = GameObject.Find("TRADING").GetComponent<TradingSystem>();
+        playerStats = GetComponent<PlayerStats>();
 
         LoadCards();
     }
@@ -69,15 +75,6 @@ public class PlayerManager : NetworkBehaviour
 
     public void LoadCards()
     {
-        //if (cardInfos.Count <= 0)
-        //{
-        //    Debug.Log($"LOADED CARDS: {_topic}");
-
-        //    // Loads cards from .csv
-        //    CardData[] loadedCards = ResourceParser.Instance.ParseCSVToCards(_topic);
-        //    foreach (CardData card in loadedCards) { cardInfos.Add(card); }
-        //}
-
         computerCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Computer).ToList();
         networkingCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Networking).ToList();
         softwareCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Software).ToList();
@@ -194,6 +191,19 @@ public class PlayerManager : NetworkBehaviour
                 TargetDiscard(conn, card);
             }
         }
+
+        TargetUpdateDropStats(isDropValid);
+    }
+
+    [TargetRpc]
+    public void TargetUpdateDropStats(bool isDropValid)
+    {
+        Debug.Log($"STATS UPDATE: {isDropValid}");
+
+        if (isDropValid)
+            playerStats.CorrectDrop();
+        else
+            playerStats.IncorrectDrop();
     }
 
     [TargetRpc]
@@ -237,9 +247,14 @@ public class PlayerManager : NetworkBehaviour
         Dictionary<uint, string> winners = CustomSerializer.DeserializePlayers(_winners) ?? new Dictionary<uint, string>();
         Dictionary<uint, int> playerTrades = CustomSerializer.DeserializePlayerTrades(_playerTrades) ?? new Dictionary<uint, int>();
 
+        string _playerName = null;
+        winners.TryGetValue(NetworkClient.localPlayer.netId, out string player);
+        bool gameWon = _playerName != null;
+
         if (gmState == GameState.FINISHED)
         {
-            menuCanvas.ShowEndGameMenu(winners);
+            menuCanvas.ShowEndGameMenu(winners, gameWon, false);
+            EndGameUpdatePlayerStats(gameWon);
         }
         else
         {
@@ -537,4 +552,20 @@ public class PlayerManager : NetworkBehaviour
     }
 
     #endregion
+
+    public void EndGameUpdatePlayerStats(bool gameWon)
+    {
+#if UNITY_EDITOR
+        if (!ClonesManager.IsClone())
+        {
+            Debug.Log("END GAME: UPDATE STATS EDITOR");
+
+            StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
+            _topic, playerStats.Accuracy, gameWon);
+        }
+#endif
+
+        StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
+            _topic, playerStats.Accuracy, gameWon);
+    }
 }

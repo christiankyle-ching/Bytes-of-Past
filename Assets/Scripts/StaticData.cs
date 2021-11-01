@@ -37,8 +37,8 @@ public class StaticData : MonoBehaviour
         }
         else
         {
-            _instance = this;
             LoadProfileData();
+            _instance = this;
         }
     }
 
@@ -61,6 +61,7 @@ public class StaticData : MonoBehaviour
 
     public void LoadProfileData()
     {
+        //SaveLoadSystem.ResetProfileData(); Use this when error occurs due to old version of stats
         profileStatisticsData = SaveLoadSystem.LoadProfileStatisticsData();
     }
 

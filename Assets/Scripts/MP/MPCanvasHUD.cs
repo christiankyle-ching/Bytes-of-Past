@@ -23,7 +23,7 @@ public class MPCanvasHUD : MonoBehaviour
         btnPause.SetActive(true);
     }
 
-    public void ShowEndGameMenu(Dictionary<uint, string> winners, bool interrupted = false, bool isHost = false, string interruptingPlayer = "")
+    public void ShowEndGameMenu(Dictionary<uint, string> winners, bool gameWon, bool interrupted, bool isHost = false, string interruptingPlayer = "")
     {
         bgMenu.SetActive(true);
         endGameMenu.SetActive(true);
@@ -32,16 +32,6 @@ public class MPCanvasHUD : MonoBehaviour
 
         if (!interrupted)
         {
-            bool gameWon = false;
-            foreach (KeyValuePair<uint, string> winner in winners)
-            {
-                if (winner.Key == NetworkClient.localPlayer.netId)
-                {
-                    gameWon = true;
-                    break;
-                }
-            }
-
             endGameMenu.transform.Find("WINSTATUS").GetComponent<TextMeshProUGUI>().text = gameWon ? "You Win" : "You Lose";
 
             List<string> winnerNames = new List<string>();
@@ -65,7 +55,7 @@ public class MPCanvasHUD : MonoBehaviour
 
     public void ShowInterruptedGame(string playerName, bool isHost)
     {
-        ShowEndGameMenu(new Dictionary<uint, string> { }, true, isHost, playerName);
+        ShowEndGameMenu(new Dictionary<uint, string> { }, false, true, isHost, playerName);
     }
 
     public void ShowPauseMenu()

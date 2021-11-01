@@ -135,7 +135,6 @@ public class MPGameManager : NetworkBehaviour
         ClientsUpdateUI();
 
         return "";
-        //return playerName ?? "";
     }
 
     public void ReadyPlayer(NetworkIdentity ni)
@@ -524,7 +523,7 @@ public class MPGameManager : NetworkBehaviour
 
     // TODO: Set in Prod
     [Range(0f, 1f)]
-    private float specialActionRate = 0.3f; // 0.0 to 1.0 = Percentage of special action
+    private float specialActionRate = 0.15f; // 0.0 to 1.0 = Percentage of special action
 
     public SPECIALACTION GetRandomSpecialAction()
     {
@@ -613,6 +612,9 @@ public class MPGameManager : NetworkBehaviour
         if (quizAnswerCount >= players.Count)
         {
             EndQuiz();
+            // TODO: Evaluate when players have another chance even when someone won the game in quiz
+            // Temp Fix
+            CheckWinners(); 
             ClientsUpdateUI();
         }
     }

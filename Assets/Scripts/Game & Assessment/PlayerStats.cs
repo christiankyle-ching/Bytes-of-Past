@@ -37,7 +37,6 @@ public class PlayerStats : MonoBehaviour
 
     public void CorrectDrop()
     {
-
         attemptCount++;
         correctAttempts++;
     }

@@ -98,6 +98,8 @@ public class MPDragDrop : NetworkBehaviour
             ReplacePlaceholder();
         }
 
+        startParent = null;
+
         GetComponent<AudioSource>().Play();
     }
 
@@ -133,6 +135,18 @@ public class MPDragDrop : NetworkBehaviour
     public void DisableDrag()
     {
         isDraggable = false;
+
+        try
+        {
+            GetComponent<MPCardZoom>().UnzoomCard();
+
+            if (startParent != null)
+            {
+                transform.SetParent(startParent);
+                transform.position = startPos;
+            }
+        }
+        catch { }
     }
 
     public void EnableDrag()

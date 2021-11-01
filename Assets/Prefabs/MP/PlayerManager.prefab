@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6539361655190536261}
   - component: {fileID: 5924998377703293356}
   - component: {fileID: -6287328444905458829}
+  - component: {fileID: 29851047059083538}
   m_Layer: 0
   m_Name: PlayerManager
   m_TagString: Untagged
@@ -93,8 +94,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  timePerTurn: 5
   cardPrefab: {fileID: 2742246380915928527, guid: e75ece27b5e7f824aa4fbcce38992a3a,
     type: 3}
   normalTextColor: {r: 1, g: 1, b: 1, a: 1}
   dangerTextColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &29851047059083538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687573332985811411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a62d8f91648c444c9812cb4f767e9b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  remainingLife: 0
+  initialLife: 0

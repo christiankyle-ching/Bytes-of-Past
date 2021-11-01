@@ -20,7 +20,7 @@ public class FirstRunSceneLoader : MonoBehaviour
             }
             else
             {
-                PlayerPrefs.SetInt("IsFirstRun", 0);
+                PlayerPrefs.SetInt("IsFirstRun", 1);
             }
         }
     }
