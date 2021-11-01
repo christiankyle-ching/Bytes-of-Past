@@ -89,26 +89,43 @@ public class ProfileStatisticsData
     )
     {
         int topicIndex = (int)topic;
+        float averageAccuracy = newAccuracy;
+        int gameWonIndex = gameWon ? 0 : 1;
 
-        /* 
-        Update Accuracy in Array with their average
-        unless it is 0, which MIGHT mean it's their first game,
-        then the accuracy should be set without averaging
-         */
-        float existingAccuracy =
-            MPGameAccuracy[topicIndex];
+        try
+        {
+            float existingAccuracy = MPGameAccuracy[topicIndex];
+            averageAccuracy = (existingAccuracy == 0f)
+                    ? newAccuracy
+                    : ((newAccuracy + existingAccuracy) / 2);
+        }
+        catch
+        {
+            // No existing MP Data, Generate Default
+            MPGameAccuracy = new float[3];
+            MPWinLossCount = new int[3, 2];
+        }
 
-        MPGameAccuracy[topicIndex] =
-            (existingAccuracy == 0f)
-                ? newAccuracy
-                : ((newAccuracy + existingAccuracy) / 2);
+        try
+        {
+            /* 
+            Update Accuracy in Array with their average
+            unless it is 0, which MIGHT mean it's their first game,
+            then the accuracy should be set without averaging
+             */
+            MPGameAccuracy[topicIndex] = averageAccuracy;
 
-        /* 
-        Update Win/Loss count
-        */
-        MPWinLossCount[topicIndex, (gameWon ? 0 : 1)] += 1;
+            /* 
+            Update Win/Loss count
+            */
+            MPWinLossCount[topicIndex, gameWonIndex] += 1;
 
-        SaveLoadSystem.SaveProfileStatisticsData(this);
+            SaveLoadSystem.SaveProfileStatisticsData(this);
+        }
+        catch
+        {
+            // TODO: ERROR: MPStats still null even previous catch?
+        }
     }
 
 }

@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using TMPro;
 using UnityEngine.UI;
+using System.IO;
 
 #if UNITY_EDITOR
 using ParrelSync;
@@ -249,8 +250,7 @@ public class PlayerManager : NetworkBehaviour
         Dictionary<uint, string> winners = CustomSerializer.DeserializePlayers(_winners) ?? new Dictionary<uint, string>();
         Dictionary<uint, int> playerTrades = CustomSerializer.DeserializePlayerTrades(_playerTrades) ?? new Dictionary<uint, int>();
 
-        string _playerName = null;
-        winners.TryGetValue(NetworkClient.localPlayer.netId, out string player);
+        winners.TryGetValue(NetworkClient.localPlayer.netId, out string _playerName);
         bool gameWon = _playerName != null;
 
         if (gmState == GameState.FINISHED)
@@ -562,17 +562,29 @@ public class PlayerManager : NetworkBehaviour
 
     public void EndGameUpdatePlayerStats(bool gameWon)
     {
-#if UNITY_EDITOR
-        if (!ClonesManager.IsClone())
-        {
-            Debug.Log("END GAME: UPDATE STATS EDITOR");
+        Debug.Log("GAMEWON? " + gameWon);
 
+#if UNITY_EDITOR
+        if (Application.isEditor)
+        {
+            if (!ClonesManager.IsClone())
+            {
+                Debug.Log("END GAME: UPDATE STATS EDITOR");
+
+                StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
+                _topic, playerStats.Accuracy, gameWon);
+            }
+        }
+        else
+        {
             StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
             _topic, playerStats.Accuracy, gameWon);
         }
+#else
+        StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
+                    _topic, playerStats.Accuracy, gameWon);
 #endif
 
-        StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
-            _topic, playerStats.Accuracy, gameWon);
+
     }
 }

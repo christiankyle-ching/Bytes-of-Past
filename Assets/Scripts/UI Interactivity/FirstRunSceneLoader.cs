@@ -9,7 +9,7 @@ public class FirstRunSceneLoader : MonoBehaviour
     void Start()
     {
         Debug.Log("FirstRun: " + StaticData.Instance.showTutorial);
-        
+
         if (!StaticData.Instance.showTutorial)
         {
             Debug.Log("Not from Main Menu");

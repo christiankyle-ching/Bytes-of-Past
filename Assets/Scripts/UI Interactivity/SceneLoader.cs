@@ -12,11 +12,9 @@ public class SceneLoader : MonoBehaviour
     public void GoBack()
     {
         Debug.Log("GoBack");
-        Debug.Log("StaticData.Instance null?" + StaticData.Instance == null);
         try
         {
             int lastSceneIndex = StaticData.Instance.SceneIndexHistory.Pop();
-            Debug.Log(lastSceneIndex);
             StartCoroutine(LoadScene(lastSceneIndex, true));
         }
         catch (InvalidOperationException)
@@ -103,8 +101,8 @@ public class SceneLoader : MonoBehaviour
 
     public void ResetProfile()
     {
-        Debug.Log("DEBUG_RESET");
-        SaveLoadSystem.ResetProfileData();
+        Debug.Log("DEBUG_COMPLETE_RESET");
+        SaveLoadSystem.ResetProfileData(true);
         Application.Quit();
     }
 

@@ -12,52 +12,73 @@ public static class SaveLoadSystem
         ProfileStatisticsData statsData
     )
     {
-        string path = Application.persistentDataPath + statisticsDataPath;
+        try
+        {
+            string path = Application.persistentDataPath + statisticsDataPath;
 
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(path, FileMode.Create);
-        formatter.Serialize (stream, statsData);
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Create);
+            formatter.Serialize(stream, statsData);
 
-        stream.Close();
+            stream.Close();
+        }
+        catch (IOException)
+        {
+            Debug.Log("Error saving player data.");
+        }
+
     }
 
     public static ProfileStatisticsData LoadProfileStatisticsData()
     {
-        string path = Application.persistentDataPath + statisticsDataPath;
-
-        if (File.Exists(path))
+        try
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(path, FileMode.Open);
-            ProfileStatisticsData statsData =
-                formatter.Deserialize(stream) as ProfileStatisticsData;
+            string path = Application.persistentDataPath + statisticsDataPath;
 
-            stream.Close();
+            if (File.Exists(path))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                FileStream stream = new FileStream(path, FileMode.Open);
+                ProfileStatisticsData statsData =
+                    formatter.Deserialize(stream) as ProfileStatisticsData;
 
-            return statsData;
+                stream.Close();
+
+                return statsData;
+            }
+            else
+            {
+                Debug.LogError("No Profile Data found in: " + path);
+
+                Debug.Log("Profile Data: Creating a default one.");
+
+                // Create an empty one
+                ProfileStatisticsData newProfileStatisticsData =
+                    new ProfileStatisticsData();
+                SaveLoadSystem.SaveProfileStatisticsData(newProfileStatisticsData);
+                return newProfileStatisticsData;
+            }
         }
-        else
+        catch (IOException)
         {
-            Debug.LogError("No Profile Data found in: " + path);
-
-            Debug.Log("Profile Data: Creating a default one.");
+            Debug.Log("Error saving player data.");
 
             // Create an empty one
             ProfileStatisticsData newProfileStatisticsData =
                 new ProfileStatisticsData();
-            SaveLoadSystem.SaveProfileStatisticsData (newProfileStatisticsData);
+            SaveLoadSystem.SaveProfileStatisticsData(newProfileStatisticsData);
             return newProfileStatisticsData;
         }
     }
 
-    public static void ResetProfileData()
+    public static void ResetProfileData(bool resetPrefs = false)
     {
         // Clear all Player Prefs
-        PlayerPrefs.DeleteAll();
+        if (resetPrefs) PlayerPrefs.DeleteAll();
 
         // Create an empty one
         ProfileStatisticsData newProfileStatisticsData =
             new ProfileStatisticsData();
-        SaveLoadSystem.SaveProfileStatisticsData (newProfileStatisticsData);
+        SaveLoadSystem.SaveProfileStatisticsData(newProfileStatisticsData);
     }
 }

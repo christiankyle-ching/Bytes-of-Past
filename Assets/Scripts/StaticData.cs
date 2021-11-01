@@ -55,8 +55,16 @@ public class StaticData : MonoBehaviour
 
     public void LoadProfileData()
     {
-        //SaveLoadSystem.ResetProfileData(); Use this when error occurs due to old version of stats
-        profileStatisticsData = SaveLoadSystem.LoadProfileStatisticsData();
+        if (PlayerPrefs.GetInt("GameHasData", 0) == 0)
+        {
+            // If this is first run, then reset old data, then load a new one
+            SaveLoadSystem.ResetProfileData();
+            PlayerPrefs.SetInt("GameHasData", 1);
+        }
+        else
+        {
+            profileStatisticsData = SaveLoadSystem.LoadProfileStatisticsData();
+        }
     }
 
     public void SetTopic(TOPIC topic)

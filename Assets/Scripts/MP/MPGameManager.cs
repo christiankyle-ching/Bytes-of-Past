@@ -105,15 +105,18 @@ public class MPGameManager : NetworkBehaviour
     {
         List<int> tmpCards = new List<int>();
 
+        // Get Cards
         for (int i = 0; i < startingTimelineCards; i++)
         {
             int cardInfo = PopCard(null);
             tmpCards.Add(cardInfo);
-            timeline.Add(cardInfo);
         }
 
+        // Sort then add to timeline
         tmpCards.Sort();
+        foreach (int card in tmpCards) { timeline.Add(card); }
 
+        // Show Players
         for (int i = 0; i < tmpCards.Count; i++)
         {
             GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
@@ -214,6 +217,8 @@ public class MPGameManager : NetworkBehaviour
                 startingCardsCount = 5;
                 break;
         }
+
+        startingCardsCount = 2; // TODO: Debug ONLY
     }
 
     public void NextPlayerTurn()
@@ -436,7 +441,8 @@ public class MPGameManager : NetworkBehaviour
             yearAfter = int.MaxValue;
         }
 
-        //Debug.Log(yearBefore + ", " + cardYear + ", " + yearAfter);
+        Debug.Log($"Timeline: {String.Join(",", timeline)}");
+        Debug.Log($"{yearBefore}[{dropPos - 1}] - {cardYear} - {yearAfter}[{dropPos}]");
         return (yearBefore <= cardYear && cardYear <= yearAfter);
     }
 
