@@ -7,25 +7,21 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     public Animator transition;
-
     private float transitionTime = 0.5f;
-
-    private StaticData staticData;
-
-    void Awake()
-    {
-        staticData = StaticData.Instance;
-    }
 
     public void GoBack()
     {
+        Debug.Log("GoBack");
+        Debug.Log("StaticData.Instance null?" + StaticData.Instance == null);
         try
         {
-            StartCoroutine(LoadScene(staticData.SceneIndexHistory.Pop(), true));
+            int lastSceneIndex = StaticData.Instance.SceneIndexHistory.Pop();
+            Debug.Log(lastSceneIndex);
+            StartCoroutine(LoadScene(lastSceneIndex, true));
         }
         catch (InvalidOperationException)
         {
-            StartCoroutine(LoadScene(1, true)); // Load Main Menu
+            GoToMainMenu(); // Load Main Menu
         }
 
     }
@@ -83,8 +79,8 @@ public class SceneLoader : MonoBehaviour
 
         yield return new WaitForSeconds(transitionTime);
 
-        if (!isGoingBack && staticData != null)
-            staticData
+        if (!isGoingBack && StaticData.Instance != null)
+            StaticData.Instance
                 .SceneIndexHistory
                 .Push(SceneManager.GetActiveScene().buildIndex);
 
@@ -97,8 +93,8 @@ public class SceneLoader : MonoBehaviour
 
         yield return new WaitForSeconds(transitionTime);
 
-        if (!isGoingBack && staticData != null)
-            staticData
+        if (!isGoingBack && StaticData.Instance != null)
+            StaticData.Instance
                 .SceneIndexHistory
                 .Push(SceneManager.GetActiveScene().buildIndex);
 
@@ -119,16 +115,12 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToTutorial()
     {
-        staticData.showTutorial = true;
+        StaticData.Instance.showTutorial = true;
         SceneManager.LoadScene("Tutorial");
-        //staticData.SceneIndexHistory.Clear(); TODO: Do i need this?
     }
 
     public void GoToMPTutorial()
     {
         StartCoroutine(LoadScene("MPTutorial"));
     }
-
-    
-
 }

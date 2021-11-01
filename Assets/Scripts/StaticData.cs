@@ -42,21 +42,15 @@ public class StaticData : MonoBehaviour
         }
     }
 
-    public GameObject sceneLoader;
-
     // These variables are exposed to all Scenes to pass data between them by DontDestroyOnLoad
     public GAMEMODE SelectedGameMode;
-
     public TOPIC SelectedTopic;
-
     public DIFFICULTY SelectedDifficulty;
-
     public bool IsPostAssessment;
 
     public Stack<int> SceneIndexHistory = new Stack<int>();
 
     public ProfileStatisticsData profileStatisticsData;
-
     public bool showTutorial = false;
 
     public void LoadProfileData()

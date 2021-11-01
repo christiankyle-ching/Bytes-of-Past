@@ -5,22 +5,22 @@ using UnityEngine;
 public class FirstRunSceneLoader : MonoBehaviour
 {
     public SceneLoader sceneLoader;
-    public StaticData staticData;
 
-    void Awake()
+    void Start()
     {
-        staticData = StaticData.Instance;
-
-        if (!staticData.showTutorial)
+        Debug.Log("FirstRun: " + StaticData.Instance.showTutorial);
+        
+        if (!StaticData.Instance.showTutorial)
         {
-            if (PlayerPrefs.GetInt("IsFirstRun", 1) == 0)
+            Debug.Log("Not from Main Menu");
+
+            if (PlayerPrefs.GetInt("GameHasRun", 0) == 1)
             {
-                // TODO: Uncomment on production to show tutorial
                 sceneLoader.GoToMainMenu(true);
             }
             else
             {
-                PlayerPrefs.SetInt("IsFirstRun", 1);
+                PlayerPrefs.SetInt("GameHasRun", 1);
             }
         }
     }
