@@ -19,7 +19,6 @@ public enum CARDACTION
 public class PlayerManager : NetworkBehaviour
 {
     private static TOPIC _topic = TOPIC.Computer;
-    private int startingCardsCount = 2; // TODO: Set in Prod
 
     public GameObject cardPrefab;
 
@@ -97,10 +96,10 @@ public class PlayerManager : NetworkBehaviour
 
     #endregion
 
-    [Command]
-    public void CmdReady(string playerName)
+    [Command(requiresAuthority = false)]
+    public void CmdDrawCards(int _startingCardsCount)
     {
-        for (int i = 0; i < startingCardsCount; i++)
+        for (int i = 0; i < _startingCardsCount; i++)
         {
             int infoIndex = MPGameManager.Instance.PopCard(netIdentity);
             SPECIALACTION randSpecial = MPGameManager.Instance.GetRandomSpecialAction();
@@ -111,7 +110,11 @@ public class PlayerManager : NetworkBehaviour
             NetworkServer.Spawn(card, connectionToClient);
             RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt, randSpecial);
         }
+    }
 
+    [Command]
+    public void CmdReady(string playerName)
+    {
         NetworkIdentity ni = connectionToClient.identity;
         MPGameManager.Instance.SetPlayerName(ni, playerName);
         MPGameManager.Instance.ReadyPlayer(ni);
@@ -130,7 +133,6 @@ public class PlayerManager : NetworkBehaviour
         RpcShowCard(card, infoIndex, -1, CARDACTION.Dealt, randSpecial);
     }
 
-    // TODO: TRADE: 
     public void TradeCard(uint fromPlayer, int fromCard, uint toPlayer, int toCard)
     {
         CmdTradeCard(fromPlayer, fromCard, toPlayer, toCard);
@@ -304,6 +306,11 @@ public class PlayerManager : NetworkBehaviour
         {
             questionManager.ShowQuestion(qQuestion, qChoices);
             timer.StartQuizTimer();
+
+            foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+            {
+                dragDrop.DisableDrag();
+            }
         }
         else
         {

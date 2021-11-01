@@ -138,29 +138,33 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void AdjustPlaceholderPos()
     {
-        // Set new placeholderContainer when value is changed by DropZone
-        if (placeholderContainer != placeholder.transform.parent)
-            placeholder.transform.SetParent(placeholderContainer);
-
-        // Set default index of placeholder to last,
-        // so if loop does not break (all cards are to the left of dragged
-        // card, the default index will take place.
-        int newIndex = placeholderContainer.childCount;
-
-        for (int i = 0; i < placeholderContainer.childCount; i++)
+        try
         {
-            if (transform.position.x < placeholderContainer.GetChild(i).position.x)
+            // Set new placeholderContainer when value is changed by DropZone
+            if (placeholderContainer != placeholder.transform.parent)
+                placeholder.transform.SetParent(placeholderContainer);
+
+            // Set default index of placeholder to last,
+            // so if loop does not break (all cards are to the left of dragged
+            // card, the default index will take place.
+            int newIndex = placeholderContainer.childCount;
+
+            for (int i = 0; i < placeholderContainer.childCount; i++)
             {
-                newIndex = i;
+                if (transform.position.x < placeholderContainer.GetChild(i).position.x)
+                {
+                    newIndex = i;
 
-                if (placeholder.transform.GetSiblingIndex() < placeholderContainer.GetChild(i).position.x)
-                    newIndex--;
+                    if (placeholder.transform.GetSiblingIndex() < placeholderContainer.GetChild(i).position.x)
+                        newIndex--;
 
-                break;
+                    break;
+                }
             }
-        }
 
-        placeholder.transform.SetSiblingIndex(newIndex);
+            placeholder.transform.SetSiblingIndex(newIndex);
+        }
+        catch { }
     }
 
     public void Discard()

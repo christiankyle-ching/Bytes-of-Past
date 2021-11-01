@@ -63,3 +63,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  cardPrefab: {fileID: 2742246380915928527, guid: e75ece27b5e7f824aa4fbcce38992a3a,
+    type: 3}
+  gmState: 0
+  turns: 0
+  currentRound: 0
+  currentPlayerIndex: 0
+  quizAnswerCount: 0
+  deck: 
+  timeline: 
+  _topic: 0
+  doubleDrawActive: 0
+  skipTurnActive: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SinglePlayerGameController : MonoBehaviour
@@ -9,9 +10,17 @@ public class SinglePlayerGameController : MonoBehaviour
 
     // TODO: Set in Prod
     int startingCardsCount = 8;
-    public int turnSeconds = 30;
+    int turnSeconds = 5;
+    int quizSeconds = 5;
+
+    int quizIntervalRounds = 2;
+    int turns = 0;
+
+    private QuestionData randQuestion;
 
     // Scene References
+    public SPQuestionManager questionManager;
+    public MPGameMessage messenger;
     private Transform player;
     private PlayerStats playerStats;
 
@@ -34,6 +43,8 @@ public class SinglePlayerGameController : MonoBehaviour
 
     DIFFICULTY _difficulty = DIFFICULTY.Easy;
     TOPIC _topic = TOPIC.Computer;
+
+    private List<QuestionData> questions = new List<QuestionData>();
 
     // GAME: Start
     private void Awake()
@@ -89,18 +100,25 @@ public class SinglePlayerGameController : MonoBehaviour
 
         this.playerStats.initialLife = playerLives;
 
+        LoadQuestions();
+
         InitLives();
         PlaceCardsInTimeline();
         DrawCards();
-
+        
         InitTimer();
+    }
+
+    void LoadQuestions()
+    {
+        questions = ResourceParser.Instance.ParseCSVToQuestions(_topic).ToList();
     }
 
     void InitTimer()
     {
         if (_difficulty == DIFFICULTY.Hard)
         {
-            timer.seconds = turnSeconds;
+            timer.InitTimer(turnSeconds, quizSeconds);
             timer.StartTimer();
         }
         else
@@ -113,8 +131,13 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         for (int i = 0; i < playerLives; i++)
         {
-            Instantiate(lifePrefab, livesContainer);
+            AddLife();
         }
+    }
+
+    void AddLife()
+    {
+        Instantiate(lifePrefab, livesContainer);
     }
 
     void DrawCards()
@@ -173,8 +196,29 @@ public class SinglePlayerGameController : MonoBehaviour
     }
 
     // Game Flow Functions
+    public void AnswerQuiz(string answer)
+    {
+        if (randQuestion.isAnswerCorrect(answer))
+        {
+            messenger.ShowMessage("Your answer is correct! A life has been added.", MPGameMessageType.CORRECT);
+            AddLife();
+        }
+        else
+        {
+            messenger.ShowMessage(
+                answer == string.Empty ? "Sorry! You ran out of time."
+                : "Sorry! Your answer is wrong."
+                , MPGameMessageType.WRONG);
+        }
+
+        timer.StartTimer();
+        questionManager.SetVisibility(false);
+    }
+
     public void HandleDropInTimeline(Card droppedCard, int dropPos)
     {
+        turns++;
+
         DisableCardDragTemp();
 
         if (IsDropValid(droppedCard, dropPos))
@@ -182,15 +226,28 @@ public class SinglePlayerGameController : MonoBehaviour
             timeline.AcceptDrop(droppedCard);
             playerStats.CorrectDrop();
 
+            messenger.ShowMessage("Good Job! That's correct.", MPGameMessageType.CORRECT);
+
             if (IsHandEmpty()) menuManager.EndGame(true, playerStats);
         }
         else
         {
+            messenger.ShowMessage("Oops! That's wrong.", MPGameMessageType.WRONG);
+
             HandleInvalidDrop(droppedCard);
             playerStats.IncorrectDrop();
         }
 
-        timer.StartTimer();
+        if (turns % quizIntervalRounds == 0)
+        {
+            timer.StartQuizTimer();
+            randQuestion = questions[UnityEngine.Random.Range(0, questions.Count - 1)];
+            questionManager.ShowQuestion(randQuestion);
+        }
+        else
+        {
+            timer.StartTimer();
+        }
     }
 
     private bool IsHandEmpty()

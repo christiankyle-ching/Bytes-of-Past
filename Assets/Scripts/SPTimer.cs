@@ -9,27 +9,28 @@ public class SPTimer : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip tickSFX;
 
-    public int seconds = 15;
+    int seconds = 15;
+    int quizSeconds = 15;
+    private bool isRunningQuiz = false;
     public Color runningColor = Color.yellow;
     public Color dangerColor = Color.red;
     private Color defaultColor;
 
     private int dangerSeconds;
+    private int dangerQuizSeconds;
 
     private int secondsLeft = 0;
     private float interval = 1f;
     private bool isRunning = false;
 
-    TextMeshProUGUI textObj;
+    public TextMeshProUGUI textObj;
 
     private void Start()
     {
-        textObj = GetComponentInChildren<TextMeshProUGUI>();
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = tickSFX;
 
         defaultColor = textObj.color;
-        dangerSeconds = seconds / 3;
     }
 
     private void Update()
@@ -45,7 +46,16 @@ public class SPTimer : MonoBehaviour
             }
             else
             {
-                DrawCard();
+                if (isRunningQuiz)
+                {
+                    SkipQuiz();
+                }
+                else
+                {
+                    SkipTurn();
+                }
+
+                //StopTimer();
             }
 
             UpdateText();
@@ -60,11 +70,16 @@ public class SPTimer : MonoBehaviour
 
         if (isRunning)
         {
-            if (secondsLeft <= dangerSeconds)
+            bool inDanger = isRunningQuiz ?
+                (secondsLeft <= dangerQuizSeconds) :
+                (secondsLeft <= dangerSeconds);
+
+            if (inDanger)
             {
                 textObj.color = dangerColor;
                 audioSource.Play();
-            } else
+            }
+            else
             {
                 textObj.color = runningColor;
             }
@@ -75,9 +90,14 @@ public class SPTimer : MonoBehaviour
         }
     }
 
-    private void DrawCard()
+    private void SkipTurn()
     {
         gameController.HandleDropInTimeline(null, -1);
+    }
+
+    private void SkipQuiz()
+    {
+        gameController.AnswerQuiz("");
     }
 
     public void StartTimer()
@@ -85,13 +105,33 @@ public class SPTimer : MonoBehaviour
         secondsLeft = seconds;
         interval = 1f;
         isRunning = true;
+        isRunningQuiz = false;
+        UpdateText();
+    }
+
+    public void StartQuizTimer()
+    {
+        secondsLeft = quizSeconds;
+        interval = 1f;
+        isRunning = true;
+        isRunningQuiz = true;
         UpdateText();
     }
 
     public void StopTimer()
     {
         isRunning = false;
+        isRunningQuiz = false;
         secondsLeft = 0;
         UpdateText();
+    }
+
+    public void InitTimer(int turnSeconds, int _quizSeconds)
+    {
+        seconds = turnSeconds;
+        dangerSeconds = turnSeconds / 3;
+
+        quizSeconds = _quizSeconds;
+        dangerQuizSeconds = _quizSeconds / 3;
     }
 }

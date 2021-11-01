@@ -16,7 +16,11 @@ public class MPGameManager : NetworkBehaviour
     private static MPGameManager _instance;
     public static MPGameManager Instance { get { return _instance; } }
 
+    public GameObject cardPrefab;
+
     // TODO: Set in prod
+    private int startingCardsCount = 5;
+    private int startingTimelineCards = 3;
     private int minPlayers = 2;
     private int quizIntervalRounds = 3;
     private int tradeCount = 2;
@@ -97,6 +101,27 @@ public class MPGameManager : NetworkBehaviour
         }
     }
 
+    private void GenerateTimeline()
+    {
+        List<int> tmpCards = new List<int>();
+
+        for (int i = 0; i < startingTimelineCards; i++)
+        {
+            int cardInfo = PopCard(null);
+            tmpCards.Add(cardInfo);
+            timeline.Add(cardInfo);
+        }
+
+        tmpCards.Sort();
+
+        for (int i = 0; i < tmpCards.Count; i++)
+        {
+            GameObject card = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
+            NetworkServer.Spawn(card);
+            NetworkClient.localPlayer.GetComponent<PlayerManager>().RpcShowCard(card, tmpCards[i], i, CARDACTION.Played, SPECIALACTION.None);
+        }
+    }
+
     private void LoadQuestions(TOPIC topic)
     {
         QuestionData[] questions = ResourceParser.Instance.ParseCSVToQuestions(topic);
@@ -165,7 +190,30 @@ public class MPGameManager : NetworkBehaviour
         currentPlayerIndex = 0;
         gmState = GameState.STARTED;
 
+        GenerateTimeline();
+        SetStartingCardsCount();
+        foreach (uint _netid in players.Keys)
+        {
+            NetworkServer.spawned[_netid].GetComponent<PlayerManager>().CmdDrawCards(startingCardsCount);
+        }
+
         Debug.Log("Start Game!");
+    }
+
+    public void SetStartingCardsCount()
+    {
+        switch (players.Count)
+        {
+            case 2:
+                startingCardsCount = 7;
+                break;
+            case 3:
+                startingCardsCount = 6;
+                break;
+            case 4:
+                startingCardsCount = 5;
+                break;
+        }
     }
 
     public void NextPlayerTurn()
@@ -217,7 +265,13 @@ public class MPGameManager : NetworkBehaviour
         {
             int cardId = deck[0];
             deck.RemoveAt(0);
-            playerHands[iden.netId].Add(cardId);
+
+            // If player, else it's timeline
+            if (iden != null)
+            {
+                playerHands[iden.netId].Add(cardId);
+            }
+
             return cardId;
         }
 
@@ -451,7 +505,13 @@ public class MPGameManager : NetworkBehaviour
         }
         else if (gmState == GameState.STARTED)
         {
-            return "ROUND " + (GetCurrentRound() + 1); // Add 1 because Round is 0-based
+            int roundNum = (GetCurrentRound() + 1);
+            int roundsToNextQuiz = quizIntervalRounds - (roundNum % quizIntervalRounds);
+            return $"ROUND {roundNum}. Next quiz in {roundsToNextQuiz} round/s."; // Add 1 because Round is 0-based
+        }
+        else if (gmState == GameState.QUIZ)
+        {
+            return $"QUIZ for ROUND {currentRound + 1}."; // Add 1 because Round is 0-based
         }
         else
         {
@@ -476,7 +536,7 @@ public class MPGameManager : NetworkBehaviour
 
             CheckWinners();
 
-            if (currentRound % quizIntervalRounds == 0
+            if ((currentRound + 1) % quizIntervalRounds == 0
                 && gmState != GameState.FINISHED && gmState == GameState.STARTED)
             {
                 PlayQuiz();
@@ -614,7 +674,7 @@ public class MPGameManager : NetworkBehaviour
             EndQuiz();
             // TODO: Evaluate when players have another chance even when someone won the game in quiz
             // Temp Fix
-            CheckWinners(); 
+            CheckWinners();
             ClientsUpdateUI();
         }
     }

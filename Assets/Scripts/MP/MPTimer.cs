@@ -108,6 +108,7 @@ public class MPTimer : MonoBehaviour
     public void StartTimer()
     {
         secondsLeft = seconds;
+        interval = 1f;
         isRunning = true;
         isRunningQuiz = false;
         UpdateText();
@@ -116,6 +117,7 @@ public class MPTimer : MonoBehaviour
     public void StartQuizTimer()
     {
         secondsLeft = quizSeconds;
+        interval = 1f;
         isRunning = true;
         isRunningQuiz = true;
         UpdateText();

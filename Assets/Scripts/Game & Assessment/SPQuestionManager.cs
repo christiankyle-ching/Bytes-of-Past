@@ -3,25 +3,23 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Mirror;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class MPQuestionManager : MonoBehaviour
+public class SPQuestionManager : MonoBehaviour
 {
     private CanvasGroup canvasGroup;
-    private MPGameMessage messenger;
 
     [Header("GameObject References")]
+    public SinglePlayerGameController gameController;
     public Transform buttonsContainer;
     public TextMeshProUGUI questionText;
 
-    private string question;
+    private QuestionData question;
     private string[] choices;
 
     private void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>();
-        messenger = GameObject.Find("MESSENGER").GetComponent<MPGameMessage>();
 
         // Set Listeners
         for (int i = 0; i < buttonsContainer.childCount; i++)
@@ -37,19 +35,17 @@ public class MPQuestionManager : MonoBehaviour
 
     private void SelectAnswer(int index)
     {
-        NetworkIdentity ni = NetworkClient.localPlayer;
-        PlayerManager pm = ni.GetComponent<PlayerManager>();
-
-        pm.AnswerQuiz(this.choices[index]);
-
+        gameController.AnswerQuiz(choices[index]);
         SetVisibility(false);
     }
 
-    public void ShowQuestion(string question, string[] chs)
+    public void ShowQuestion(QuestionData _q)
     {
+        question = _q;
+
         // Set UI
-        questionText.text = question;
-        this.choices = chs;
+        questionText.text = _q.Question;
+        choices = _q.Choices;
 
         for (int i = 0; i < choices.Length; i++)
         {
