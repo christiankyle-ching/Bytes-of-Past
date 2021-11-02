@@ -4,9 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    private float _delayDrag = 2f;
     public bool canDrag;
     public AudioSource audioSource;
     public AudioClip dropSFX;
@@ -35,7 +37,20 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public GameObject placeholderPrefab;
     private GameObject placeholder;
     public Transform placeholderContainer;
-    public int PlaceholderPos { get => placeholder.transform.GetSiblingIndex(); }
+    public int PlaceholderPos
+    {
+        get
+        {
+            try
+            {
+                return placeholder.transform.GetSiblingIndex();
+            }
+            catch (NullReferenceException)
+            {
+                return -1;
+            }
+        }
+    }
 
 
     // Start is called before the first frame update
@@ -195,7 +210,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     IEnumerator DelayEnableDrag()
     {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(_delayDrag);
         EnableDrag();
     }
 

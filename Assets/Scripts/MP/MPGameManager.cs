@@ -218,7 +218,9 @@ public class MPGameManager : NetworkBehaviour
                 break;
         }
 
-        startingCardsCount = 2; // TODO: Debug ONLY
+#if UNITY_EDITOR
+        startingCardsCount = 2;
+#endif
     }
 
     public void NextPlayerTurn()

@@ -35,6 +35,7 @@ public class PlayerManager : NetworkBehaviour
     private MPQuestionManager questionManager;
     private TradingSystem tradingSystem;
     private PlayerStats playerStats;
+    private EndGameAchievementChecker achievementChecker;
 
     [Header("Colors")]
     public Color normalTextColor = Color.white;
@@ -60,6 +61,7 @@ public class PlayerManager : NetworkBehaviour
         questionManager = GameObject.Find("RoundQuestion").GetComponent<MPQuestionManager>();
         tradingSystem = GameObject.Find("TRADING").GetComponent<TradingSystem>();
         playerStats = GetComponent<PlayerStats>();
+        achievementChecker = GameObject.Find("ENDGAMEACH").GetComponentInChildren<EndGameAchievementChecker>();
 
         LoadCards();
     }
@@ -307,7 +309,7 @@ public class PlayerManager : NetworkBehaviour
             questionManager.ShowQuestion(qQuestion, qChoices);
             timer.StartQuizTimer();
 
-            foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+            foreach (MPDragDrop dragDrop in FindObjectsOfType<MPDragDrop>())
             {
                 dragDrop.DisableDrag();
             }
@@ -324,7 +326,7 @@ public class PlayerManager : NetworkBehaviour
             }
             else
             {
-                foreach (MPDragDrop dragDrop in playerArea.GetComponentsInChildren<MPDragDrop>())
+                foreach (MPDragDrop dragDrop in FindObjectsOfType<MPDragDrop>())
                 {
                     dragDrop.DisableDrag();
                 }
@@ -585,6 +587,6 @@ public class PlayerManager : NetworkBehaviour
                     _topic, playerStats.Accuracy, gameWon);
 #endif
 
-
+        achievementChecker.ViewAcquiredAchievements(new GameData(GAMEMODE.Multiplayer, DIFFICULTY.Easy, gameWon, playerStats.Accuracy, -1, -1));
     }
 }

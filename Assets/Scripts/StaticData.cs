@@ -38,6 +38,7 @@ public class StaticData : MonoBehaviour
         else
         {
             LoadProfileData();
+            Input.multiTouchEnabled = false; // Disable multi-touch
             _instance = this;
         }
     }

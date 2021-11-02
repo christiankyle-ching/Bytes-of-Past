@@ -11,7 +11,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     // Reference to the dropzone's card container
     private Transform cardContainer;
 
-    
+
     private bool IsTimeline
     {
         get => tag == "Timeline";
@@ -24,7 +24,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         // if the dropzone is the timeline,
         // disable dragging of cards inside
-        if (IsTimeline) DisableAllCardsDrag(); 
+        if (IsTimeline) DisableAllCardsDrag();
     }
 
     void DisableAllCardsDrag()
@@ -69,6 +69,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         // if OnDrop object is not a card, return
         if (card == null) return;
+
+        if (card.PlaceholderPos < 0) return;
 
         // drop only if dropped to timeline
         if (IsTimeline && card.canDrag)

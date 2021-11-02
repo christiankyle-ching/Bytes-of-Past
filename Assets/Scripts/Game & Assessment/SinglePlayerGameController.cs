@@ -12,8 +12,7 @@ public class SinglePlayerGameController : MonoBehaviour
     int startingCardsCount = 8;
     int turnSeconds = 45;
     int quizSeconds = 15;
-
-    int quizIntervalRounds = 2;
+    int quizIntervalRounds = 5;
     int turns = 0;
 
     private QuestionData randQuestion;
@@ -105,8 +104,8 @@ public class SinglePlayerGameController : MonoBehaviour
         InitLives();
         PlaceCardsInTimeline();
         DrawCards();
-        
-        InitTimer();
+
+        InitGame();
     }
 
     void LoadQuestions()
@@ -114,16 +113,25 @@ public class SinglePlayerGameController : MonoBehaviour
         questions = ResourceParser.Instance.ParseCSVToQuestions(_topic).ToList();
     }
 
-    void InitTimer()
+    void InitGame()
     {
-        if (_difficulty == DIFFICULTY.Hard)
+        switch (_difficulty)
         {
-            timer.InitTimer(turnSeconds, quizSeconds);
-            timer.StartTimer();
-        }
-        else
-        {
-            timer.gameObject.SetActive(false);
+            case DIFFICULTY.Easy:
+                timer.gameObject.SetActive(false);
+                questionManager.gameObject.SetActive(false);
+                break;
+            case DIFFICULTY.Medium:
+                timer.gameObject.SetActive(false);
+                break;
+            case DIFFICULTY.Hard:
+                timer.InitTimer(turnSeconds, quizSeconds);
+                timer.StartTimer();
+                break;
+            default:
+                timer.gameObject.SetActive(false);
+                questionManager.gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -211,8 +219,11 @@ public class SinglePlayerGameController : MonoBehaviour
                 , MPGameMessageType.WRONG);
         }
 
-        timer.StartTimer();
-        questionManager.SetVisibility(false);
+        if (_difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard)
+        {
+            questionManager.SetVisibility(false);
+            timer.StartTimer();
+        }
     }
 
     public void HandleDropInTimeline(Card droppedCard, int dropPos)
@@ -238,16 +249,20 @@ public class SinglePlayerGameController : MonoBehaviour
             playerStats.IncorrectDrop();
         }
 
-        if (turns % quizIntervalRounds == 0)
+        if (_difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard)
         {
-            timer.StartQuizTimer();
-            randQuestion = questions[UnityEngine.Random.Range(0, questions.Count - 1)];
-            questionManager.ShowQuestion(randQuestion);
+            if (turns % quizIntervalRounds == 0)
+            {
+                timer.StartQuizTimer();
+                randQuestion = questions[UnityEngine.Random.Range(0, questions.Count - 1)];
+                questionManager.ShowQuestion(randQuestion);
+            }
+            else
+            {
+                timer.StartTimer();
+            }
         }
-        else
-        {
-            timer.StartTimer();
-        }
+
     }
 
     private bool IsHandEmpty()

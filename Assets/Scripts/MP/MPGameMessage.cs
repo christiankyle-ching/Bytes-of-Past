@@ -44,6 +44,16 @@ public class MPGameMessage : MonoBehaviour
 
     private void SetImage(MPGameMessageType type)
     {
+        if (type == MPGameMessageType.NONE)
+        {
+            _image.sprite = null;
+            _image.color = Color.clear;
+            PlayDefaultSFX();
+            return;
+        }
+
+        _image.color = Color.white;
+
         switch (type)
         {
             case MPGameMessageType.CORRECT:
@@ -72,6 +82,7 @@ public class MPGameMessage : MonoBehaviour
                 break;
             default:
                 _image.sprite = null;
+                _image.color = Color.clear;
                 PlayDefaultSFX();
                 break;
         }

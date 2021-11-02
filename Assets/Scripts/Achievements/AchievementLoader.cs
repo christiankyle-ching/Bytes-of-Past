@@ -6,12 +6,14 @@ using UnityEngine.UI;
 
 public class AchievementLoader : MonoBehaviour
 {
-    public GameObject achievementsContainer;
+    public Transform achievementsContainer;
     public GameObject achievementItemPrefab;
 
     void Start()
     {
         LoadAchievements();
+        GetComponent<CanvasGroup>().interactable = true;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
 
 
@@ -21,21 +23,30 @@ public class AchievementLoader : MonoBehaviour
 
         foreach (AchievementData data in achievements)
         {
-            AddItem(data, achievementsContainer.transform, achievementItemPrefab);
+            AddItem(data, achievementsContainer, achievementItemPrefab);
         }
+
+        // Set scroll to beginning
+        GetComponent<ScrollRect>().verticalNormalizedPosition = 1f;
     }
 
     public static void AddItem(AchievementData data, Transform parent, GameObject prefab)
     {
         GameObject item = Instantiate(prefab, parent);
 
-        Transform content = item.transform.GetChild(0);
-        content.Find("TextCol").Find("Title").GetComponent<TextMeshProUGUI>().text = data.title;
-        content.Find("TextCol").Find("Description").GetComponent<TextMeshProUGUI>().text = data.description;
+        Debug.Log(item.transform.Find("TextCol").Find("Title") == null);
+        Debug.Log(item.transform.Find("TextCol").Find("Description") == null);
+
+        Debug.Log(item.transform.Find("ImageCol").Find("Image") == null);
+
+        Debug.Log(data == null);
+
+        item.transform.Find("TextCol").Find("Title").GetComponent<TextMeshProUGUI>().text = data.title;
+        item.transform.Find("TextCol").Find("Description").GetComponent<TextMeshProUGUI>().text = data.description;
 
         if (!data.isDone)
         {
-            content.Find("ImageCol").Find("Image").GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            item.transform.Find("ImageCol").Find("Image").GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
         }
     }
 }

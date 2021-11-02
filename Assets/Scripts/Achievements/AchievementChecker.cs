@@ -34,19 +34,20 @@ public static class AchievementChecker
         switch (achievementID)
         {
             case 0:
-                acquired = gameData.remainingLife == gameData.initialLife;
+                acquired = gameData.gameMode == GAMEMODE.SinglePlayer &&
+                    gameData.remainingLife == gameData.initialLife;
                 break;
             case 1:
                 acquired = gameData.accuracy == 0.5f;
                 break;
             case 2:
-                acquired = gameData.gameWon && !IsAchievementDone(2);
+                acquired = gameData.gameWon;
                 break;
             case 3:
                 acquired = gameData.accuracy >= 0.8f;
                 break;
             case 4:
-                acquired = gameData.gameMode == GAMEMODE.Multiplayer && gameData.gameWon && !IsAchievementDone(4);
+                acquired = gameData.gameMode == GAMEMODE.Multiplayer && gameData.gameWon;
                 break;
             case 5:
                 bool t1 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Computer), 0));

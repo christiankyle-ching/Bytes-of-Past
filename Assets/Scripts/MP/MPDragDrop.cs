@@ -135,6 +135,7 @@ public class MPDragDrop : NetworkBehaviour
     public void DisableDrag()
     {
         isDraggable = false;
+        isDragging = false;
 
         try
         {
@@ -142,11 +143,13 @@ public class MPDragDrop : NetworkBehaviour
 
             if (startParent != null)
             {
-                transform.SetParent(startParent);
+                transform.SetParent(startParent, false);
                 transform.position = startPos;
             }
         }
         catch { }
+
+        RemovePlaceholder();
     }
 
     public void EnableDrag()
