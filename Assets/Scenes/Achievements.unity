@@ -386,6 +386,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1454410938}
     m_Modifications:
+    - target: {fileID: 2778055284843262880, guid: 5f7c15bf4a10b214bac4ab794704b729,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 2778055284843262880, guid: 5f7c15bf4a10b214bac4ab794704b729,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
     - target: {fileID: 6981266419628532020, guid: 5f7c15bf4a10b214bac4ab794704b729,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -508,6 +520,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f7c15bf4a10b214bac4ab794704b729, type: 3}
+--- !u!114 &672110346 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6981266419628532020, guid: 5f7c15bf4a10b214bac4ab794704b729,
+    type: 3}
+  m_PrefabInstance: {fileID: 672110345}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &672110347 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6981266419628532021, guid: 5f7c15bf4a10b214bac4ab794704b729,
@@ -1125,6 +1149,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scene Loader
       objectReference: {fileID: 0}
+    - target: {fileID: 4203800807348896174, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
+        type: 3}
+      propertyPath: backBtn
+      value: 
+      objectReference: {fileID: 672110346}
     - target: {fileID: 4203800807348896175, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
         type: 3}
       propertyPath: m_RootOrder
@@ -1189,6 +1218,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 829852839}
     m_Modifications:
+    - target: {fileID: 3030668904470338997, guid: 2ad4bead1575c3547a548079e34110f5,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3030668904789778648, guid: 2ad4bead1575c3547a548079e34110f5,
         type: 3}
       propertyPath: m_Pivot.x

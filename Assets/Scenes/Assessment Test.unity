@@ -179,8 +179,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Question: X/Y'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3, type: 2}
+  m_sharedMaterial: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -204,7 +205,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64.75
+  m_fontSize: 60.3
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -377,6 +378,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1657808183}
     m_Modifications:
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7421139156470566024, guid: 52c2c6d14c70e524e90f0263669fba9c,
         type: 3}
       propertyPath: m_Name
@@ -995,8 +1018,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Topic: [TOPIC]'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3, type: 2}
+  m_sharedMaterial: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1020,7 +1044,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.6
+  m_fontSize: 39.65
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1353,7 +1377,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1882,6 +1906,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1657808183}
     m_Modifications:
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7421139156470566024, guid: 52c2c6d14c70e524e90f0263669fba9c,
         type: 3}
       propertyPath: m_Name
@@ -2109,8 +2155,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Post Assessment Test
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e272a0fbb9c971840a60495beeac97c1, type: 2}
-  m_sharedMaterial: {fileID: -4042960776285581738, guid: e272a0fbb9c971840a60495beeac97c1,
+  m_fontAsset: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3, type: 2}
+  m_sharedMaterial: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2135,7 +2181,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
+  m_fontSize: 77.3
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2856,8 +2902,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: What is a sample question that I can put here?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3, type: 2}
+  m_sharedMaterial: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2938,6 +2985,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1657808183}
     m_Modifications:
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7421139156470566024, guid: 52c2c6d14c70e524e90f0263669fba9c,
         type: 3}
       propertyPath: m_Name
@@ -3114,6 +3183,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1657808183}
     m_Modifications:
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
+        type: 2}
+    - target: {fileID: 7421139155209494267, guid: 52c2c6d14c70e524e90f0263669fba9c,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7421139156470566024, guid: 52c2c6d14c70e524e90f0263669fba9c,
         type: 3}
       propertyPath: m_Name

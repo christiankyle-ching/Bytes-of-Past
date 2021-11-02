@@ -217,6 +217,7 @@ GameObject:
   - component: {fileID: 8448364}
   - component: {fileID: 8448363}
   - component: {fileID: 8448362}
+  - component: {fileID: 8448366}
   m_Layer: 5
   m_Name: Nornal level btn
   m_TagString: Untagged
@@ -353,6 +354,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8448360}
   m_CullTransparentMesh: 0
+--- !u!225 &8448366
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448360}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &51969193
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,6 +379,7 @@ GameObject:
   - component: {fileID: 51969196}
   - component: {fileID: 51969195}
   - component: {fileID: 51969198}
+  - component: {fileID: 51969199}
   m_Layer: 5
   m_Name: Easy level btn
   m_TagString: Untagged
@@ -502,6 +516,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &51969199
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51969193}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &106508516
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -519,6 +545,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4203800807348896174, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
+        type: 3}
+      propertyPath: backBtn
+      value: 
+      objectReference: {fileID: 236502389}
     - target: {fileID: 4203800807348896175, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
         type: 3}
       propertyPath: m_RootOrder
@@ -604,6 +635,7 @@ GameObject:
   m_Component:
   - component: {fileID: 197609929}
   - component: {fileID: 197609930}
+  - component: {fileID: 197609931}
   m_Layer: 5
   m_Name: Difficulty Group
   m_TagString: Untagged
@@ -658,6 +690,25 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!95 &197609931
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197609928}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1acb543c0250d8f42b2848889db5f9e5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &236502387
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -823,6 +874,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 236502387}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &236502389 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6981266419628532020, guid: 5f7c15bf4a10b214bac4ab794704b729,
+    type: 3}
+  m_PrefabInstance: {fileID: 236502387}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &273137320
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,6 +1383,7 @@ GameObject:
   - component: {fileID: 844126389}
   - component: {fileID: 844126388}
   - component: {fileID: 844126387}
+  - component: {fileID: 844126391}
   m_Layer: 5
   m_Name: Hard level btn
   m_TagString: Untagged
@@ -1456,6 +1520,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844126385}
   m_CullTransparentMesh: 0
+--- !u!225 &844126391
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844126385}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &849983939
 GameObject:
   m_ObjectHideFlags: 0
