@@ -111,17 +111,23 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
         int totalAccuracyCount = 0;
         float totalAccuracy = 0;
+
         foreach (float accuracy in spGameAccuracy)
         {
-            if (accuracy != 0f)
+            Debug.Log($"SP ACC: {accuracy}");
+
+            if (accuracy > 0f && accuracy != float.NaN)
             {
                 totalAccuracy += accuracy;
                 totalAccuracyCount++;
             }
         }
+
         foreach (float accuracy in mpGameAccuracy)
         {
-            if (accuracy != 0f)
+            Debug.Log($"MP ACC: {accuracy}");
+
+            if (accuracy > 0f && accuracy != float.NaN)
             {
                 totalAccuracy += accuracy;
                 totalAccuracyCount++;
@@ -131,6 +137,8 @@ public class ProfileStatisticsLoader : MonoBehaviour
         // If there aren't accuracies to be averaged, return 0f immediately to avoid division by 0 / 0
         float avgAccuracy =
             (totalAccuracyCount > 0) ? totalAccuracy / totalAccuracyCount : 0f;
+
+        Debug.Log($"Total: {totalAccuracyCount}, TotalAcc: {totalAccuracy}, Avg: {avgAccuracy}");
 
         double avgAccuracyText = System.Math.Round((avgAccuracy * 100), 2);
         txtAccuracy.GetComponent<TextMeshProUGUI>().text = $"{avgAccuracyText}%";
