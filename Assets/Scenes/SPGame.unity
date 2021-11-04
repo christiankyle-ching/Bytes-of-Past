@@ -1243,6 +1243,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471264397588783808, guid: a492ebb35525ec441b5b6836f82276e8,
         type: 3}
+      propertyPath: m_Spacing.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2471264397588783808, guid: a492ebb35525ec441b5b6836f82276e8,
+        type: 3}
       propertyPath: m_CellSize.x
       value: 250
       objectReference: {fileID: 0}
@@ -1392,6 +1397,11 @@ PrefabInstance:
         type: 3}
       propertyPath: sceneId
       value: 1451810557
+      objectReference: {fileID: 0}
+    - target: {fileID: 6032486999459402168, guid: ee18a099ff16e7842a458049f00a93fa,
+        type: 3}
+      propertyPath: m_Spacing.x
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6032486999459402168, guid: ee18a099ff16e7842a458049f00a93fa,
         type: 3}

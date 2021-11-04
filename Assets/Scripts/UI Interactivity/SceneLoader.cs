@@ -48,7 +48,7 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToSinglePlayerGame()
     {
-        StartCoroutine(LoadScene("SPGame2"));
+        StartCoroutine(LoadScene("SPGame"));
     }
 
     public void GoToMultiplayerLobby()

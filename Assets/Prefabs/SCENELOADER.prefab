@@ -163,8 +163,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2832dc8011a041f4198245ef8bf6e5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorial: {fileID: 102900000, guid: ae27ff756251e61418e46b550bf71c7f, type: 3}
+  MPTutorial: {fileID: 102900000, guid: 6eee065c577ab0d4aa80809adc0db5e1, type: 3}
+  credits: {fileID: 102900000, guid: 207103a1826671847b3eeb2b1ae9d41d, type: 3}
+  mainMenu: {fileID: 102900000, guid: e7e5eecc270dae94e8fc6e10c31c5174, type: 3}
+  topicSelect: {fileID: 102900000, guid: df238b5e8e9b2984485df7bdc0d1832f, type: 3}
+  difficultySelect: {fileID: 102900000, guid: 664514f57b636a74ca228ca5880569ad, type: 3}
+  SPGame: {fileID: 102900000, guid: 86807f84bdef8674c97d602d883bb667, type: 3}
+  assessmentTest: {fileID: 102900000, guid: 6a71d9e1c6f1b2640b2d1293d9f30ee0, type: 3}
+  profile: {fileID: 102900000, guid: 9ccf0cb0e1e4e6547b40647e4cc0df54, type: 3}
+  achievements: {fileID: 102900000, guid: 7bf157ebc5994794991276fd3ad57e8c, type: 3}
+  MPOffline: {fileID: 102900000, guid: eb3eea6c7be61f046b1be5ac14f1c771, type: 3}
+  MPGame: {fileID: 102900000, guid: d6b776ba53b2e0048b7dcb83ca1a1dcf, type: 3}
   transition: {fileID: 4203800806659118971}
-  backBtn: {fileID: 0}
 --- !u!1 &4203800807579061468
 GameObject:
   m_ObjectHideFlags: 0
