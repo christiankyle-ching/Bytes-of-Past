@@ -16,14 +16,7 @@ public class Life : MonoBehaviour
         // Play Animation
         _animationController.Play("enlarge_fade");
 
-        StartCoroutine(DestroyGameObject());
-    }
-
-    private IEnumerator DestroyGameObject()
-    {
-        // Delay to play animation
-        yield return new WaitForSeconds(1);
-
-        Destroy(this.gameObject);
+        transform.SetParent(transform.parent.parent); // Move parent one level up to handle spam events
+        Destroy(this.gameObject, 1f);
     }
 }

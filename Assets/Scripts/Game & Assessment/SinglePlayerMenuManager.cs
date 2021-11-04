@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SinglePlayerMenuManager : MonoBehaviour
 {
@@ -8,39 +9,62 @@ public class SinglePlayerMenuManager : MonoBehaviour
 
     StaticData staticData;
 
-    // END GAME
+    [Header("Menus")]
+    public GameObject pauseGameMenu;
     public GameObject endGameMenu;
 
+    [Header("Texts")]
     public GameObject
-
             winOrLossText,
             accuracyText;
-
     public GameObject[] topicTexts;
-
     public GameObject[] difficultyTexts;
 
-    // PAUSE GAME
-    public GameObject pauseGameMenu;
+    [Header("Buttons")]
+    public Button btnPause;
+    public Button btnResume;
+    public Button[] restartButtons;
+    public Button[] mainMenuButtons;
 
-    void Awake()
+    private void Start()
     {
         staticData = StaticData.Instance;
 
         SetTopicTexts($"Topic: {TopicUtils.GetName(staticData.SelectedTopic)}");
         SetDifficultyTexts($"{DifficultyUtils.GetName(staticData.SelectedDifficulty)} Difficulty");
+
+        pauseGameMenu.SetActive(false);
+        endGameMenu.SetActive(false);
+        btnPause.gameObject.SetActive(true);
+
+        btnPause.onClick.AddListener(PauseGame);
+        btnResume.onClick.AddListener(ResumeGame);
+        foreach (Button btn in restartButtons) btn.onClick.AddListener(RestartGame);
+        foreach (Button btn in mainMenuButtons) btn.onClick.AddListener(GoToMainMenu);
     }
 
     public void ResumeGame()
     {
         SoundManager.Instance.PlayClickedSFX();
         pauseGameMenu.SetActive(false);
+        btnPause.gameObject.SetActive(true);
     }
 
     public void PauseGame()
     {
         SoundManager.Instance.PlayClickedSFX();
         pauseGameMenu.SetActive(true);
+        btnPause.gameObject.SetActive(false);
+    }
+
+    public void RestartGame()
+    {
+        sceneLoader.GoToSinglePlayerGame();
+    }
+
+    public void GoToMainMenu()
+    {
+        sceneLoader.GoToMainMenu();
     }
 
     public void EndGame(bool isGameWon, PlayerStats playerStats)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SPTimer : MonoBehaviour
 {
-    public SinglePlayerGameController gameController;
+    public SPGameController gameController;
     private AudioSource audioSource;
     public AudioClip tickSFX;
 

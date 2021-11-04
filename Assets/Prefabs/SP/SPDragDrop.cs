@@ -1,19 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using Mirror;
-using System;
-using UnityEngine.UI;
 
-public class MPDragDrop : NetworkBehaviour
+public class SPDragDrop : MonoBehaviour
 {
+    private SPGameController gameController;
     public GameObject placeholderPrefab;
-    private GameObject canvas; // GameCanvas
-    public PlayerManager playerManager;
+    public GameObject canvas;
 
     private bool isDragging = false;
-    private bool isDraggable = false;
+    private bool isDraggable = true;
     private Transform startParent;
     private Vector2 startPos;
 
@@ -22,6 +19,7 @@ public class MPDragDrop : NetworkBehaviour
     private void Start()
     {
         canvas = GameObject.Find("GameCanvas");
+        gameController = GameObject.Find("SPGameController").GetComponent<SPGameController>();
     }
 
     private void Update()
@@ -82,9 +80,8 @@ public class MPDragDrop : NetworkBehaviour
 
         if (placeholder.transform.parent.tag == "Timeline")
         {
-            NetworkIdentity ni = NetworkClient.connection.identity;
-            playerManager = ni.GetComponent<PlayerManager>();
-            playerManager.PlayCard(gameObject, GetComponent<MPCardInfo>().infoIndex, placeholder.transform.GetSiblingIndex());
+            // TODO: HandleDropInTimeline
+            gameController.HandleDropInTimeline(this.gameObject, placeholder.transform.GetSiblingIndex());
 
             isDraggable = false;
 
@@ -115,7 +112,7 @@ public class MPDragDrop : NetworkBehaviour
         placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
     }
 
-    private void ReplacePlaceholder()
+    public void ReplacePlaceholder()
     {
         int placeholderIndex = placeholder.transform.GetSiblingIndex();
 
@@ -133,6 +130,12 @@ public class MPDragDrop : NetworkBehaviour
     public void OnDiscard()
     {
         GetComponent<Animator>().SetTrigger("Wrong");
+        Destroy(this.gameObject, 1);
+    }
+
+    public void OnPlaceCorrect()
+    {
+        GetComponent<Animator>().SetTrigger("Correct");
     }
 
     public void DisableDrag()
@@ -142,7 +145,7 @@ public class MPDragDrop : NetworkBehaviour
 
         try
         {
-            GetComponent<MPCardZoom>().UnzoomCard();
+            GetComponent<SPCardZoom>().UnzoomCard();
 
             if (startParent != null)
             {

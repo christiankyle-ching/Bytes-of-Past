@@ -87,8 +87,6 @@ public class Deck : MonoBehaviour
         }
 
         this.cards = shuffledCards;
-
-        // throw new System.NotImplementedException();
     }
 
     public CardData[] PopCards(int count)
@@ -137,21 +135,6 @@ public class Deck : MonoBehaviour
                 card.CardData = cardData;
                 card.initCardData();
             }
-
-            //for (int i = 0; i < count; i++)
-            //{
-            //    // Pop first in Stack before anything else, to catch errors immediately
-            //    // Prevents instantiation of blank cards
-            //    CardData cardData = cards.Pop();
-
-            //    Card card = Instantiate(cardPrefab, receivingCardContainer);
-            //    card.CardData = cardData;
-            //    card.initCardData();
-
-            //    // if cards is empty after giving a card,
-            //    // only break the loop, deck should still be in game
-            //    if (cards.Count <= 0) break;
-            //}
         }
         catch (Exception ex)
         {

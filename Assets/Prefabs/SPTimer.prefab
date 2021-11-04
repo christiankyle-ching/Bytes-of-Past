@@ -91,9 +91,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameController: {fileID: 0}
   tickSFX: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
-  seconds: 15
   runningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   dangerColor: {r: 1, g: 0, b: 0, a: 1}
+  textObj: {fileID: 8795010828976875217}
 --- !u!82 &2977559732741719354
 AudioSource:
   m_ObjectHideFlags: 0

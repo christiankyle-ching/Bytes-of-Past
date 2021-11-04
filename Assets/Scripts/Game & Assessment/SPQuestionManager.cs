@@ -10,7 +10,7 @@ public class SPQuestionManager : MonoBehaviour
     private CanvasGroup canvasGroup;
 
     [Header("GameObject References")]
-    public SinglePlayerGameController gameController;
+    public SPGameController gameController;
     public Transform buttonsContainer;
     public TextMeshProUGUI questionText;
 
