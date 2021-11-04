@@ -22,6 +22,6 @@ public class Graveyard : MonoBehaviour
 
     public void PlayTrashSound()
     {
-        audioSource.Play();
+        SoundManager.Instance.PlayDiscardSFX();
     }
 }

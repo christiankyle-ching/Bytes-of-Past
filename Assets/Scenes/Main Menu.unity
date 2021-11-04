@@ -1053,17 +1053,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 429369359}
-        m_MethodName: playClickedSFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ButtonClick
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1873141073}
         m_MethodName: GoToTutorial
         m_Mode: 1
@@ -2388,18 +2377,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385670815}
   m_CullTransparentMesh: 0
---- !u!114 &429369359 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8022404344122550833, guid: dc1503a2c2fda4f4498739aab9afa89a,
-    type: 3}
-  m_PrefabInstance: {fileID: 8022404343962403390}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eba7da98416dc8a4c909e369ed6d7ebc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &436443061
 GameObject:
   m_ObjectHideFlags: 0
@@ -2605,7 +2582,7 @@ PrefabInstance:
     - target: {fileID: 1915062174487620590, guid: e530fd6779e4df64689b2f8ff6d5fac8,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1915062174487620590, guid: e530fd6779e4df64689b2f8ff6d5fac8,
         type: 3}
@@ -2965,24 +2942,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 10, y: -10}
   m_UseGraphicAlpha: 1
---- !u!1 &539176056 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5738370449724456005, guid: 4dfda5713932edb4882e1c8ff3a58561,
-    type: 3}
-  m_PrefabInstance: {fileID: 5738370448434754411}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &539176057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539176056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09949524dea15bf4a9f5830e9f0e0455, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &542013840
 GameObject:
   m_ObjectHideFlags: 0
@@ -3892,17 +3851,6 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 429369359}
-        m_MethodName: playClickedSFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ButtonClick
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &790508988
@@ -5405,7 +5353,6 @@ MonoBehaviour:
   switchBtn: {fileID: 1003878419}
   volumeSlider: {fileID: 1328286987}
   qualityDropdown: {fileID: 496420922}
-  sfxAudioMixer: {fileID: 24100000, guid: 978a9f57d786f124181e2521bdb384a1, type: 2}
 --- !u!1 &1111866648
 GameObject:
   m_ObjectHideFlags: 0
@@ -6286,17 +6233,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 429369359}
-        m_MethodName: playClickedSFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ButtonClick
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1265835083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7121,7 +7057,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1328286986}
   - component: {fileID: 1328286987}
-  - component: {fileID: 1328286988}
   m_Layer: 5
   m_Name: Volume Slider
   m_TagString: Untagged
@@ -7200,31 +7135,7 @@ MonoBehaviour:
   m_Value: 0.001
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1328286988}
-        m_MethodName: SetLevel
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &1328286988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1328286985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 611d69601347bb54e8bf38a534288dfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mixer: {fileID: 24100000, guid: 80ea0ac4d8e83e148972fb5b41765555, type: 2}
+      m_Calls: []
 --- !u!1 &1336508516
 GameObject:
   m_ObjectHideFlags: 0
@@ -7311,17 +7222,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 429369359}
-        m_MethodName: playClickedSFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ButtonClick
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1873141073}
         m_MethodName: GoToCredits
         m_Mode: 1
@@ -7569,17 +7469,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 429369359}
-        m_MethodName: playClickedSFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ButtonClick
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 436443062}
         m_MethodName: onSelectGameSettings
         m_Mode: 1
@@ -7951,17 +7840,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 429369359}
-        m_MethodName: playClickedSFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ButtonClick
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1873141073}
         m_MethodName: GoToMultiplayerLobby
         m_Mode: 1
@@ -8093,7 +7971,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1536903596
 GameObject:
@@ -9327,7 +9205,7 @@ PrefabInstance:
     - target: {fileID: 4203800807348896175, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4203800807348896175, guid: 893b1a4eb8ac6d942a7ce9945b973ef4,
         type: 3}
@@ -9696,17 +9574,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 429369359}
-        m_MethodName: playClickedSFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ButtonClick
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 436443062}
         m_MethodName: OnSelectPostAssessment
         m_Mode: 1
@@ -10319,96 +10186,6 @@ PrefabInstance:
       objectReference: {fileID: 1873141072}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 141d64d7b8c1db24b89e0e1b3bd44194, type: 3}
---- !u!1001 &5738370448434754411
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456004, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456005, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_Name
-      value: _BGMAudioSource
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456005, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_TagString
-      value: BGMAudioSource
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456027, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_Volume
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456027, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5738370449724456027, guid: 4dfda5713932edb4882e1c8ff3a58561,
-        type: 3}
-      propertyPath: OutputAudioMixerGroup
-      value: 
-      objectReference: {fileID: 24300002, guid: 80ea0ac4d8e83e148972fb5b41765555,
-        type: 2}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4dfda5713932edb4882e1c8ff3a58561, type: 3}
 --- !u!1001 &6442826002303746780
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10424,7 +10201,7 @@ PrefabInstance:
     - target: {fileID: 6442826002653687515, guid: 60ee28581b37a06458439fee0dc0db34,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6442826002653687515, guid: 60ee28581b37a06458439fee0dc0db34,
         type: 3}
@@ -10488,7 +10265,7 @@ PrefabInstance:
     - target: {fileID: 8022404344122550831, guid: dc1503a2c2fda4f4498739aab9afa89a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8022404344122550831, guid: dc1503a2c2fda4f4498739aab9afa89a,
         type: 3}

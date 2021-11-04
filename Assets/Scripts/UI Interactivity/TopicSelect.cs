@@ -87,6 +87,8 @@ public class TopicSelect : MonoBehaviour
 
     void OnTopicSelect(TOPIC topic)
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         staticData.SetTopic(topic);
 
         GAMEMODE gameMode = staticData.SelectedGameMode;

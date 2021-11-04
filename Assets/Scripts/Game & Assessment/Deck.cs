@@ -162,27 +162,15 @@ public class Deck : MonoBehaviour
 
         if (count > 0)
         {
-            if (count == 1)
+            if (count > 1)
             {
-                PlaySingleDrawSFX();
+                SoundManager.Instance.PlayMultipleDrawSFX();
             }
             else
             {
-                PlayMultipleDrawSFX();
+                SoundManager.Instance.PlayDrawSFX();
             }
         }
-    }
-
-    private void PlaySingleDrawSFX()
-    {
-        audioSource.clip = singleDrawSFX;
-        audioSource.Play();
-    }
-
-    private void PlayMultipleDrawSFX()
-    {
-        audioSource.clip = multipleDrawSFX;
-        audioSource.Play();
     }
 
     public void AddCard(CardData cardData)

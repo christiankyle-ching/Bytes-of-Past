@@ -449,6 +449,8 @@ public class PlayerManager : NetworkBehaviour
         uint opponentId, string opponentName, int[] opponentHand,
         int tradesLeft)
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         tradingSystem.ShowTrade(
             playerId, playerName, playerHand,
             opponentId, opponentName, opponentHand,

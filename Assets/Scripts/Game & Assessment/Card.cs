@@ -125,15 +125,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         AdjustPlaceholderPos();
     }
 
-    void PlayDropSound()
-    {
-        audioSource.clip = dropSFX;
-        audioSource.Play();
-    }
-
     public void OnEndDrag(PointerEventData eventData)
     {
-        PlayDropSound();
+        SoundManager.Instance.PlayDrawSFX();
 
         try
         {

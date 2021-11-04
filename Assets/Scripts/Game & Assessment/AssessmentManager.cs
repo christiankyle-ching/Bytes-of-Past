@@ -180,6 +180,8 @@ public class AssessmentManager : MonoBehaviour
 
     void SelectAnswer(int index)
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         if (currentQuestion.isAnswerCorrect(currentChoices[index]))
         {
             currentScore++;

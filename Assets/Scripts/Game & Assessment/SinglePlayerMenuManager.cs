@@ -33,11 +33,13 @@ public class SinglePlayerMenuManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        SoundManager.Instance.PlayClickedSFX();
         pauseGameMenu.SetActive(false);
     }
 
     public void PauseGame()
     {
+        SoundManager.Instance.PlayClickedSFX();
         pauseGameMenu.SetActive(true);
     }
 

@@ -12,24 +12,21 @@ public class SettingsScript : MonoBehaviour
     private int switchState = 1;
 
     public GameObject switchBtn;
-
     public Slider volumeSlider;
-
     public TMP_Dropdown qualityDropdown;
-
-    public AudioMixer sfxAudioMixer;
 
     void Start()
     {
         // Load last saved settings
-        switchState = PlayerPrefs.GetInt("Settings_EnableSFX", 1);
+        switchState = PlayerPrefs.GetInt(SoundManager.SFXPREFKEY, 1);
         if (switchState < 0) OnSFXSwitchButtonClicked();
 
-        float existingVolume = PlayerPrefs.GetFloat("Settings_BGMVolume", 0.5f);
-        volumeSlider.value = existingVolume;
+        float existingVolume = PlayerPrefs.GetFloat(SoundManager.BGMVOLPREFKEY, 0.5f);
+        SetVolume(existingVolume);
+        volumeSlider.onValueChanged.AddListener(SetVolume);
 
         int existingQualityLevel = PlayerPrefs.GetInt("Settings_Quality", 1);
-        QualitySettings.SetQualityLevel (existingQualityLevel);
+        QualitySettings.SetQualityLevel(existingQualityLevel);
         qualityDropdown.value = existingQualityLevel;
     }
 
@@ -40,20 +37,26 @@ public class SettingsScript : MonoBehaviour
             .DOLocalMoveX(-switchBtn.transform.localPosition.x, 0.2f);
         switchState = Math.Sign(-switchBtn.transform.localPosition.x);
 
+        bool enabled = switchState > 0;
+
         switchBtn.GetComponent<Image>().color =
-            switchState == -1
+            !enabled
                 ? Color.HSVToRGB(0f, 0f, 0.5f)
                 : Color.HSVToRGB(0f, 0f, 1f);
 
-        PlayerPrefs.SetInt("Settings_EnableSFX", switchState);
-
-        sfxAudioMixer.SetFloat("SFXVolume", (switchState < 0) ? -80.0f : 0.0f);
+        SoundManager.Instance.SetSFXEnabled(enabled);
     }
 
     public void setQuality(int qualityIndex)
     {
-        QualitySettings.SetQualityLevel (qualityIndex);
+        QualitySettings.SetQualityLevel(qualityIndex);
 
         PlayerPrefs.SetInt("Settings_Quality", qualityIndex);
+    }
+
+    public void SetVolume(float value)
+    {
+        volumeSlider.value = value;
+        SoundManager.Instance.SetBGMVolume(value);
     }
 }

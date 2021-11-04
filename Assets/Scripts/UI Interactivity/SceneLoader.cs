@@ -48,7 +48,7 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToSinglePlayerGame()
     {
-        StartCoroutine(LoadScene("Single Player Game"));
+        StartCoroutine(LoadScene("SPGame"));
     }
 
     public void GoToMultiplayerLobby()
@@ -77,6 +77,7 @@ public class SceneLoader : MonoBehaviour
 
     IEnumerator LoadScene(string sceneName, bool isGoingBack = false)
     {
+        SoundManager.Instance.PlayClickedSFX();
         transition.SetTrigger("Start");
 
         yield return new WaitForSeconds(transitionTime);

@@ -119,6 +119,8 @@ public class TradingSystem : MonoBehaviour
 
     void OnCardClick(GameObject card)
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         Transform parent = card.transform.parent;
         ClearHighlightedCard(parent);
 
@@ -153,6 +155,8 @@ public class TradingSystem : MonoBehaviour
 
     void TradeCards()
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         int player0Card = player0CardsGO.GetChild(selectedCard_player0).GetComponent<MPCardInfo>().infoIndex;
         int player1Card = player1CardsGO.GetChild(selectedCard_player1).GetComponent<MPCardInfo>().infoIndex;
 

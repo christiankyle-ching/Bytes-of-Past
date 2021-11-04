@@ -40,18 +40,24 @@ public class CanvasHUD : MonoBehaviour
 
     private void HostGame()
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         NetworkManager.singleton.StartHost();
         SetupCanvas();
     }
 
     private void JoinGame()
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         NetworkManager.singleton.StartClient();
         SetupCanvas();
     }
 
     private void CancelConnect()
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         // stop host if host mode
         if (NetworkServer.active && NetworkClient.isConnected)
         {

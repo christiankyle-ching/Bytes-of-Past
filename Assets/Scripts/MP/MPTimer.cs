@@ -82,7 +82,7 @@ public class MPTimer : MonoBehaviour
             if (inDanger)
             {
                 textObj.color = dangerColor;
-                audioSource.Play();
+                SoundManager.Instance.PlayTimerTickSFX();
             }
             else
             {

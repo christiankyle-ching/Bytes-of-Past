@@ -100,7 +100,7 @@ public class MPDragDrop : NetworkBehaviour
 
         startParent = null;
 
-        GetComponent<AudioSource>().Play();
+        SoundManager.Instance.PlayDrawSFX();
     }
 
     private void CreatePlaceholder()

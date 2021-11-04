@@ -17,21 +17,23 @@ public class DifficultySelect : MonoBehaviour
         btnEasy
             .GetComponent<Button>()
             .onClick
-            .AddListener(() => OnTopicSelect(DIFFICULTY.Easy));
+            .AddListener(() => OnDifficultySelect(DIFFICULTY.Easy));
 
         btnMedium
             .GetComponent<Button>()
             .onClick
-            .AddListener(() => OnTopicSelect(DIFFICULTY.Medium));
+            .AddListener(() => OnDifficultySelect(DIFFICULTY.Medium));
 
         btnHard
             .GetComponent<Button>()
             .onClick
-            .AddListener(() => OnTopicSelect(DIFFICULTY.Hard));
+            .AddListener(() => OnDifficultySelect(DIFFICULTY.Hard));
     }
 
-    void OnTopicSelect(DIFFICULTY difficulty)
+    void OnDifficultySelect(DIFFICULTY difficulty)
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         StaticData staticData = StaticData.Instance;
 
         // Set Difficulty
@@ -43,9 +45,6 @@ public class DifficultySelect : MonoBehaviour
         {
             case GAMEMODE.SinglePlayer:
                 sceneLoader.GetComponent<SceneLoader>().GoToSinglePlayerGame();
-                break;
-            case GAMEMODE.Multiplayer:
-                sceneLoader.GetComponent<SceneLoader>().GoToMultiplayerLobby();
                 break;
         }
     }

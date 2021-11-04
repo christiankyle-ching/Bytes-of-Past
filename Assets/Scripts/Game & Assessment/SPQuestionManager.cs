@@ -35,6 +35,8 @@ public class SPQuestionManager : MonoBehaviour
 
     private void SelectAnswer(int index)
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         gameController.AnswerQuiz(choices[index]);
         SetVisibility(false);
     }
