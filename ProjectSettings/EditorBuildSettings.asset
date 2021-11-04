@@ -24,8 +24,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Difficulty Select.unity
     guid: 664514f57b636a74ca228ca5880569ad
   - enabled: 1
-    path: Assets/Scenes/SPGame.unity
-    guid: 814650453b4cbe146b4e9cfc1ce77a88
+    path: Assets/Scenes/SPGame2.unity
+    guid: 86807f84bdef8674c97d602d883bb667
   - enabled: 1
     path: Assets/Scenes/Assessment Test.unity
     guid: 6a71d9e1c6f1b2640b2d1293d9f30ee0
