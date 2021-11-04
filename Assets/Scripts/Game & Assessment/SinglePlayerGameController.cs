@@ -339,4 +339,6 @@ public class SinglePlayerGameController : MonoBehaviour
             card.TempDisable();
         }
     }
+
+
 }

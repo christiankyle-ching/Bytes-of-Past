@@ -8,6 +8,7 @@ public class SPGameController : MonoBehaviour
 {
     int playerLives = 0;
     int playerLivesLeft = 0;
+    bool gameEnded = false;
 
     // TODO: Set in Prod
     int startingCardsCount = 8;
@@ -37,6 +38,9 @@ public class SPGameController : MonoBehaviour
     private List<CardData> deck = new List<CardData>();
     private List<QuestionData> questions = new List<QuestionData>();
     private QuestionData randQuestion;
+
+    public bool gameModeHasQuiz { get => _difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard; }
+    public bool gameModeHasTimer { get => _difficulty == DIFFICULTY.Hard; }
 
     // GAME: Start
     private void Awake()
@@ -149,7 +153,7 @@ public class SPGameController : MonoBehaviour
             {
                 GameObject cardGO = Instantiate(cardPrefab, dropzone);
                 SPCardInfo card = cardGO.GetComponent<SPCardInfo>();
-                
+
                 card.cardData = data;
                 card.InitCardData(data);
 
@@ -173,8 +177,7 @@ public class SPGameController : MonoBehaviour
         // End the Game
         if (playerLivesLeft <= 0)
         {
-            timer.StopTimer();
-            menuManager.EndGame(false, playerStats);
+            EndGame(false);
         }
     }
 
@@ -194,10 +197,32 @@ public class SPGameController : MonoBehaviour
                 , MPGameMessageType.WRONG);
         }
 
-        if (_difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard)
+        questionManager.SetVisibility(false);
+        RestartTimer();
+    }
+
+    private void RestartTimer(bool isQuiz = false)
+    {
+        if (!gameEnded)
         {
-            questionManager.SetVisibility(false);
-            timer.StartTimer();
+            if (gameModeHasTimer)
+            {
+                if (gameModeHasQuiz)
+                {
+                    if (!isQuiz)
+                    {
+                        timer.StartTimer();
+                    }
+                    else
+                    {
+                        timer.StartQuizTimer();
+                    }
+                }
+                else
+                {
+                    timer.StartTimer();
+                }
+            }
         }
     }
 
@@ -205,40 +230,49 @@ public class SPGameController : MonoBehaviour
     {
         turns++;
 
-        //DisableCardDragTemp();
-
-        if (IsDropValid(droppedCard.GetComponent<SPCardInfo>().cardData, dropPos))
+        if (droppedCard != null)
         {
-            droppedCard.GetComponent<SPDragDrop>().ReplacePlaceholder();
-            droppedCard.GetComponent<SPDragDrop>().OnPlaceCorrect();
-            playerStats.CorrectDrop();
-
-            messenger.ShowMessage("Good Job! That's correct.", MPGameMessageType.CORRECT);
-
-            if (IsHandEmpty()) menuManager.EndGame(true, playerStats);
-        }
-        else
-        {
-            messenger.ShowMessage("Oops! That's wrong.", MPGameMessageType.WRONG);
-
-            HandleInvalidDrop(droppedCard);
-            playerStats.IncorrectDrop();
-        }
-
-        if (_difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard)
-        {
-            if (turns % quizIntervalRounds == 0)
+            if (IsDropValid(droppedCard.GetComponent<SPCardInfo>().cardData, dropPos))
             {
-                timer.StartQuizTimer();
-                randQuestion = questions[UnityEngine.Random.Range(0, questions.Count - 1)];
-                questionManager.ShowQuestion(randQuestion);
+                droppedCard.GetComponent<SPDragDrop>().ReplacePlaceholder();
+                droppedCard.GetComponent<SPDragDrop>().OnPlaceCorrect();
+                playerStats.CorrectDrop();
+
+                messenger.ShowMessage("Good Job! That's correct.", MPGameMessageType.CORRECT);
+
+                if (IsHandEmpty()) EndGame(true);
             }
             else
             {
-                timer.StartTimer();
+                messenger.ShowMessage("Oops! That's wrong.", MPGameMessageType.WRONG);
+                HandleInvalidDrop(droppedCard);
+                playerStats.IncorrectDrop();
             }
         }
+        else
+        {
+            DecreaseLife();
+            messenger.ShowMessage("Oops! You ran out of time.", MPGameMessageType.WRONG);
+        }
 
+        if (gameModeHasQuiz)
+        {
+            if (turns % quizIntervalRounds == 0)
+            {
+                PlayQuiz();
+            }
+            else
+            {
+                RestartTimer();
+            }
+        }
+    }
+
+    private void PlayQuiz()
+    {
+        randQuestion = questions[UnityEngine.Random.Range(0, questions.Count - 1)];
+        questionManager.ShowQuestion(randQuestion);
+        RestartTimer(true);
     }
 
     private bool IsHandEmpty()
@@ -263,7 +297,7 @@ public class SPGameController : MonoBehaviour
         }
         catch (InvalidOperationException)
         {
-            menuManager.EndGame(false, playerStats);
+            // No cards left?
         }
     }
 
@@ -371,6 +405,13 @@ public class SPGameController : MonoBehaviour
                 SoundManager.Instance.PlayDrawSFX();
             }
         }
+    }
+
+    private void EndGame(bool isGameWon)
+    {
+        gameEnded = true;
+        timer.StopTimer();
+        menuManager.EndGame(isGameWon, playerStats);
     }
 
 }
