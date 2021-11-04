@@ -23,7 +23,7 @@ public class Deck : MonoBehaviour
     private Card cardPrefab;
 
     // Cards
-    private Stack<CardData> cards;
+    private List<CardData> cards;
     public int CardsCount { get => this.cards.Count; }
 
     // Game
@@ -33,7 +33,7 @@ public class Deck : MonoBehaviour
     {
         staticData = StaticData.Instance;
 
-        this.cards = new Stack<CardData>();
+        this.cards = new List<CardData>();
         this.gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<SinglePlayerGameController>();
         this.audioSource = GetComponent<AudioSource>();
 
@@ -71,7 +71,7 @@ public class Deck : MonoBehaviour
 
         foreach (CardData cardData in cardAssets)
         {
-            this.cards.Push(cardData);
+            this.cards.Add(cardData);
         }
 
         ShuffleCards();
@@ -79,11 +79,11 @@ public class Deck : MonoBehaviour
 
     void ShuffleCards()
     {
-        Stack<CardData> shuffledCards = new Stack<CardData>();
+        List<CardData> shuffledCards = new List<CardData>();
 
         foreach (CardData cardData in this.cards.OrderBy(x => UnityEngine.Random.Range(0f, 1f)))
         {
-            shuffledCards.Push(cardData);
+            shuffledCards.Add(cardData);
         }
 
         this.cards = shuffledCards;
@@ -100,8 +100,11 @@ public class Deck : MonoBehaviour
             {
                 // Pop first in Stack before anything else, to catch errors immediately
                 // Prevents instantiation of blank cards
-                CardData cardData = cards.Pop();
+                //CardData cardData = cards.Pop();
+                CardData cardData = cards.ElementAt(0);
                 _cards.Add(cardData);
+
+                cards.RemoveAt(0);
 
                 // if cards is empty after giving a card,
                 // only break the loop, deck should still be in game
@@ -126,20 +129,29 @@ public class Deck : MonoBehaviour
 
         try
         {
-            for (int i = 0; i < count; i++)
-            {
-                // Pop first in Stack before anything else, to catch errors immediately
-                // Prevents instantiation of blank cards
-                CardData cardData = cards.Pop();
+            CardData[] _cards = PopCards(count);
 
+            foreach (CardData cardData in _cards)
+            {
                 Card card = Instantiate(cardPrefab, receivingCardContainer);
                 card.CardData = cardData;
                 card.initCardData();
-
-                // if cards is empty after giving a card,
-                // only break the loop, deck should still be in game
-                if (cards.Count <= 0) break;
             }
+
+            //for (int i = 0; i < count; i++)
+            //{
+            //    // Pop first in Stack before anything else, to catch errors immediately
+            //    // Prevents instantiation of blank cards
+            //    CardData cardData = cards.Pop();
+
+            //    Card card = Instantiate(cardPrefab, receivingCardContainer);
+            //    card.CardData = cardData;
+            //    card.initCardData();
+
+            //    // if cards is empty after giving a card,
+            //    // only break the loop, deck should still be in game
+            //    if (cards.Count <= 0) break;
+            //}
         }
         catch (Exception ex)
         {
@@ -175,7 +187,7 @@ public class Deck : MonoBehaviour
 
     public void AddCard(CardData cardData)
     {
-        cards.Push(cardData);
+        cards.Add(cardData);
     }
 
 }
