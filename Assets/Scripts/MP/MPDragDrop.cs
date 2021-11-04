@@ -105,13 +105,9 @@ public class MPDragDrop : NetworkBehaviour
 
     private void CreatePlaceholder()
     {
-        placeholder = Instantiate(placeholderPrefab);
+        placeholder = Instantiate(placeholderPrefab, transform.parent, false);
         placeholder.name = "PLACEHOLDER";
 
-        placeholder.GetComponent<RectTransform>().sizeDelta =
-            GetComponent<RectTransform>().sizeDelta;
-
-        placeholder.transform.SetParent(transform.parent);
         placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
     }
 

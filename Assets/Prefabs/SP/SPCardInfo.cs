@@ -28,6 +28,9 @@ public class SPCardInfo : MonoBehaviour
         Image = transform.Find("Container").Find("Image").GetComponent<Image>();
         CardBGImage = GetComponent<Image>();
 
+        transform.Find("SpecialAction").GetComponentInChildren<TextMeshProUGUI>().enabled = false;
+        transform.Find("SpecialAction").GetComponentInChildren<Image>().enabled = false;
+
         // Set GO values
         Year.text = cardData.Year.ToString();
         Title.text = cardData.Title.ToString();

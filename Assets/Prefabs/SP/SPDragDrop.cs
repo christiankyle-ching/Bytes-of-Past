@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SPDragDrop : MonoBehaviour
 {
@@ -102,13 +103,9 @@ public class SPDragDrop : MonoBehaviour
 
     private void CreatePlaceholder()
     {
-        placeholder = Instantiate(placeholderPrefab);
+        placeholder = Instantiate(placeholderPrefab, transform.parent, false);
         placeholder.name = "PLACEHOLDER";
 
-        placeholder.GetComponent<RectTransform>().sizeDelta =
-            GetComponent<RectTransform>().sizeDelta;
-
-        placeholder.transform.SetParent(transform.parent);
         placeholder.transform.SetSiblingIndex(transform.GetSiblingIndex());
     }
 

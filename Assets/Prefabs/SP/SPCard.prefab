@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdTime: 0.5
-  zoomCardPrefab: {fileID: 3546060735738498305, guid: da5bc468a9ee25b4daf73d607a96e586,
+  zoomCardPrefab: {fileID: 1515553165767588561, guid: 081af514253833b479da488c60ef39e5,
     type: 3}
   zoomCard: {fileID: 0}
 --- !u!114 &7210139205005099240

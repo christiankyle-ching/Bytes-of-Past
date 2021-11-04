@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 8732318628722396657}
   - component: {fileID: 8732318628722396659}
   - component: {fileID: 8732318628722396656}
-  - component: {fileID: 8732318628722396641}
   m_Layer: 8
-  m_Name: Placeholder
+  m_Name: MPPlaceholder
   m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,18 +74,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.75
---- !u!114 &8732318628722396641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8732318628722396670}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.3749372, g: 1, b: 0.3160377, a: 0.50980395}
-  m_EffectDistance: {x: 3, y: -3}
-  m_UseGraphicAlpha: 0
