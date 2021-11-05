@@ -35,7 +35,7 @@ public class AssessmentManager : MonoBehaviour
     private int currentScore = 0;
 
     // STATIC DATA
-    private TOPIC selectedTopic;
+    private HistoryTopic selectedTopic;
     private bool isPostAssessment;
     StaticData staticData;
 
@@ -139,7 +139,7 @@ public class AssessmentManager : MonoBehaviour
             $"Score: {currentScore}/{questions.Count}";
 
         txtTopic.GetComponent<TextMeshProUGUI>().text =
-            "Topic: " + TopicUtils.GetName((TOPIC)selectedTopic);
+            "Topic: " + TopicUtils.GetName((HistoryTopic)selectedTopic);
 
         endGameMenu.SetActive(true);
 
@@ -149,8 +149,8 @@ public class AssessmentManager : MonoBehaviour
             staticData
                 .profileStatisticsData
                 .UpdateAssessmentScore(isPostAssessment
-                    ? GAMEMODE.PostAssessment
-                    : GAMEMODE.PreAssessment,
+                    ? GameMode.POST_TEST
+                    : GameMode.PRE_TEST,
                 selectedTopic,
                 currentScore);
         }

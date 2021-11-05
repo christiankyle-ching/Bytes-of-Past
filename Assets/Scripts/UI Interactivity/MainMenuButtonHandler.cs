@@ -18,28 +18,28 @@ public class MainMenuButtonHandler : MonoBehaviour
     public void OnSelectSinglePlayer()
     {
         
-        staticData.SetGameMode(GAMEMODE.SinglePlayer);
+        staticData.SetGameMode(GameMode.SP);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 
     public void OnSelectMultiplayer()
     {
         
-        staticData.SetGameMode(GAMEMODE.Multiplayer);
+        staticData.SetGameMode(GameMode.MP);
         sceneLoader.GetComponent<SceneLoader>().GoToMultiplayerLobby();
     }
 
     public void OnSelectPreAssessment()
     {
         
-        staticData.SetGameMode(GAMEMODE.PreAssessment);
+        staticData.SetGameMode(GameMode.PRE_TEST);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 
     public void OnSelectPostAssessment()
     {
         
-        staticData.SetGameMode(GAMEMODE.PostAssessment);
+        staticData.SetGameMode(GameMode.POST_TEST);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 

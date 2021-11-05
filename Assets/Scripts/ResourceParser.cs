@@ -21,7 +21,7 @@ public class ResourceParser : MonoBehaviour
         }
     }
 
-    public CardData[] ParseCSVToCards(TOPIC topic)
+    public CardData[] ParseCSVToCards(HistoryTopic topic)
     {
         /* 
         IMPORTANT: Download from Google Sheets in .tsv. Then RENAME format to .csv.
@@ -34,21 +34,21 @@ public class ResourceParser : MonoBehaviour
 
         switch (topic)
         {
-            case TOPIC.Computer:
+            case HistoryTopic.COMPUTER:
                 rawData =
                     Resources
                         .Load
                         <TextAsset
                         >("Cards/Cards - Computer");
                 break;
-            case TOPIC.Networking:
+            case HistoryTopic.NETWORKING:
                 rawData =
                     Resources
                         .Load
                         <TextAsset
                         >("Cards/Cards - Networking");
                 break;
-            case TOPIC.Software:
+            case HistoryTopic.SOFTWARE:
                 rawData =
                     Resources
                         .Load
@@ -87,7 +87,7 @@ public class ResourceParser : MonoBehaviour
         return cards.ToArray();
     }
 
-    public QuestionData[] ParseCSVToQuestions(TOPIC topic)
+    public QuestionData[] ParseCSVToQuestions(HistoryTopic topic)
     {
         /* 
         IMPORTANT: Download from Google Sheets in .tsv. Then RENAME format to .csv.
@@ -100,21 +100,21 @@ public class ResourceParser : MonoBehaviour
 
         switch (topic)
         {
-            case TOPIC.Computer:
+            case HistoryTopic.COMPUTER:
                 rawData =
                     Resources
                         .Load
                         <TextAsset
                         >("AssessmentTests/Assessment Questions - Computers");
                 break;
-            case TOPIC.Networking:
+            case HistoryTopic.NETWORKING:
                 rawData =
                     Resources
                         .Load
                         <TextAsset
                         >("AssessmentTests/Assessment Questions - Networking");
                 break;
-            case TOPIC.Software:
+            case HistoryTopic.SOFTWARE:
                 rawData =
                     Resources
                         .Load

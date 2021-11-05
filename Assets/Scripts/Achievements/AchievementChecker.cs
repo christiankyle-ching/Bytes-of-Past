@@ -34,7 +34,7 @@ public static class AchievementChecker
         switch (achievementID)
         {
             case 0:
-                acquired = gameData.gameMode == GAMEMODE.SinglePlayer &&
+                acquired = gameData.gameMode == GameMode.SP &&
                     gameData.remainingLife == gameData.initialLife;
                 break;
             case 1:
@@ -47,29 +47,29 @@ public static class AchievementChecker
                 acquired = gameData.accuracy >= 0.8f;
                 break;
             case 4:
-                acquired = gameData.gameMode == GAMEMODE.Multiplayer && gameData.gameWon;
+                acquired = gameData.gameMode == GameMode.MP && gameData.gameWon;
                 break;
             case 5:
-                bool t1 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Computer), 0));
-                bool t2 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Networking), 0));
-                bool t3 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(TOPIC.Software), 0));
+                bool t1 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(HistoryTopic.COMPUTER), 0));
+                bool t2 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(HistoryTopic.NETWORKING), 0));
+                bool t3 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(HistoryTopic.SOFTWARE), 0));
 
                 acquired = t1 && t2 && t3;
                 break;
             case 6:
-                acquired = gameData.gameMode == GAMEMODE.SinglePlayer && gameData.difficulty == DIFFICULTY.Easy && gameData.gameWon;
+                acquired = gameData.gameMode == GameMode.SP && gameData.difficulty == GameDifficulty.EASY && gameData.gameWon;
                 break;
             case 7:
-                acquired = gameData.gameMode == GAMEMODE.SinglePlayer && gameData.difficulty == DIFFICULTY.Medium && gameData.gameWon;
+                acquired = gameData.gameMode == GameMode.SP && gameData.difficulty == GameDifficulty.MEDIUM && gameData.gameWon;
                 break;
             case 8:
-                acquired = gameData.gameMode == GAMEMODE.SinglePlayer && gameData.difficulty == DIFFICULTY.Hard && gameData.gameWon;
+                acquired = gameData.gameMode == GameMode.SP && gameData.difficulty == GameDifficulty.HARD && gameData.gameWon;
                 break;
             case 9:
                 string prefKey = "ACH09_CurrentWins";
                 bool isRightGameParams =
-                    gameData.gameMode == GAMEMODE.SinglePlayer &&
-                    gameData.difficulty == DIFFICULTY.Hard &&
+                    gameData.gameMode == GameMode.SP &&
+                    gameData.difficulty == GameDifficulty.HARD &&
                     gameData.gameWon &&
                     gameData.remainingLife == gameData.initialLife;
                 if (isRightGameParams)

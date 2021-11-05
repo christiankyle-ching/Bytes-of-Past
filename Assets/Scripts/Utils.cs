@@ -1,31 +1,31 @@
 ﻿public static class TopicUtils
 {
-    public static string GetName(TOPIC topic)
+    public static string GetName(HistoryTopic topic)
     {
         switch (topic)
         {
-            case TOPIC.Computer:
+            case HistoryTopic.COMPUTER:
                 return "Computer";
-            case TOPIC.Networking:
+            case HistoryTopic.NETWORKING:
                 return "Networking and Web";
-            case TOPIC.Software:
+            case HistoryTopic.SOFTWARE:
                 return "Software and Languages";
             default:
                 return "NO TOPIC";
         }
     }
 
-    public static string GetPrefKey_IsPlayed(TOPIC topic)
+    public static string GetPrefKey_IsPlayed(HistoryTopic topic)
     {
         return $"TopicPlayed_{(int)topic}";
     }
 
-    public static string GetPrefKey_IsPreAssessmentDone(TOPIC topic)
+    public static string GetPrefKey_IsPreAssessmentDone(HistoryTopic topic)
     {
         return $"TopicPreAssessmentDone_{(int)topic}";
     }
 
-    public static string GetPrefKey_IsPostAssessmentDone(TOPIC topic)
+    public static string GetPrefKey_IsPostAssessmentDone(HistoryTopic topic)
     {
         return $"TopicPostAssessmentDone_{(int)topic}";
     }
@@ -33,15 +33,15 @@
 
 public static class DifficultyUtils
 {
-    public static string GetName(DIFFICULTY difficulty)
+    public static string GetName(GameDifficulty difficulty)
     {
         switch (difficulty)
         {
-            case DIFFICULTY.Easy:
+            case GameDifficulty.EASY:
                 return "Easy";
-            case DIFFICULTY.Medium:
+            case GameDifficulty.MEDIUM:
                 return "Medium";
-            case DIFFICULTY.Hard:
+            case GameDifficulty.HARD:
                 return "Hard";
             default:
                 return "NO DIFFICULTY";

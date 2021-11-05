@@ -65,7 +65,7 @@ public class Deck : MonoBehaviour
         }
     }
 
-    void LoadCards(TOPIC topic)
+    void LoadCards(HistoryTopic topic)
     {
         CardData[] cardAssets = ResourceParser.Instance.ParseCSVToCards(topic);
 

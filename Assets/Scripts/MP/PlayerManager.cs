@@ -19,7 +19,7 @@ public enum CARDACTION
 
 public class PlayerManager : NetworkBehaviour
 {
-    private static TOPIC _topic = TOPIC.Computer;
+    private static HistoryTopic _topic = HistoryTopic.COMPUTER;
 
     public GameObject cardPrefab;
 
@@ -69,7 +69,7 @@ public class PlayerManager : NetworkBehaviour
     #region ------------------------------ LOCAL LOAD CARDS ------------------------------
 
     [ClientRpc]
-    public void RpcSetTopic(TOPIC topic)
+    public void RpcSetTopic(HistoryTopic topic)
     {
         _topic = topic;
         tradingSystem.SetTopic(topic);
@@ -77,20 +77,20 @@ public class PlayerManager : NetworkBehaviour
 
     public void LoadCards()
     {
-        computerCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Computer).ToList();
-        networkingCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Networking).ToList();
-        softwareCards = ResourceParser.Instance.ParseCSVToCards(TOPIC.Software).ToList();
+        computerCards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.COMPUTER).ToList();
+        networkingCards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.NETWORKING).ToList();
+        softwareCards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.SOFTWARE).ToList();
     }
 
     public static CardData GetCard(int index)
     {
         switch (_topic)
         {
-            case TOPIC.Computer:
+            case HistoryTopic.COMPUTER:
                 return computerCards[index];
-            case TOPIC.Networking:
+            case HistoryTopic.NETWORKING:
                 return networkingCards[index];
-            case TOPIC.Software:
+            case HistoryTopic.SOFTWARE:
                 return softwareCards[index];
         }
 
@@ -589,6 +589,6 @@ public class PlayerManager : NetworkBehaviour
                     _topic, playerStats.Accuracy, gameWon);
 #endif
 
-        achievementChecker.ViewAcquiredAchievements(new GameData(GAMEMODE.Multiplayer, DIFFICULTY.Easy, gameWon, playerStats.Accuracy, -1, -1));
+        achievementChecker.ViewAcquiredAchievements(new GameData(GameMode.MP, GameDifficulty.EASY, gameWon, playerStats.Accuracy, -1, -1));
     }
 }

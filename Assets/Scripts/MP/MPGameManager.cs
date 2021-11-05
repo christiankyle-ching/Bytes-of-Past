@@ -46,7 +46,7 @@ public class MPGameManager : NetworkBehaviour
     public Dictionary<uint, int> playerTrades = new Dictionary<uint, int>();
     public Dictionary<uint, List<int>> playerHands = new Dictionary<uint, List<int>>();
 
-    public TOPIC _topic = TOPIC.Computer;
+    public HistoryTopic _topic = HistoryTopic.COMPUTER;
     private StaticData _staticData;
 
     #region ------------------------------ Init ------------------------------
@@ -75,7 +75,7 @@ public class MPGameManager : NetworkBehaviour
         GenerateDeck();
     }
 
-    private void LoadCards(TOPIC topic)
+    private void LoadCards(HistoryTopic topic)
     {
         CardData[] cards = ResourceParser.Instance.ParseCSVToCards(topic);
 
@@ -125,7 +125,7 @@ public class MPGameManager : NetworkBehaviour
         }
     }
 
-    private void LoadQuestions(TOPIC topic)
+    private void LoadQuestions(HistoryTopic topic)
     {
         QuestionData[] questions = ResourceParser.Instance.ParseCSVToQuestions(topic);
 

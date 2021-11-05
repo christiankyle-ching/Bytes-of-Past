@@ -11,7 +11,6 @@ public class SPGameController : MonoBehaviour
     bool gameEnded = false;
 
     // TODO: Set in Prod
-    int startingCardsCount = 8;
     int turnSeconds = 45;
     int quizSeconds = 15;
     int quizIntervalRounds = 5;
@@ -32,15 +31,15 @@ public class SPGameController : MonoBehaviour
     public GameObject cardPrefab;
 
     private StaticData staticData;
-    DIFFICULTY _difficulty = DIFFICULTY.Medium;
-    TOPIC _topic = TOPIC.Computer;
+    GameDifficulty _difficulty = GameDifficulty.MEDIUM;
+    HistoryTopic _topic = HistoryTopic.COMPUTER;
 
     private List<CardData> deck = new List<CardData>();
     private List<QuestionData> questions = new List<QuestionData>();
     private QuestionData randQuestion;
 
-    public bool gameModeHasQuiz { get => _difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard; }
-    public bool gameModeHasTimer { get => _difficulty == DIFFICULTY.Hard; }
+    public bool gameModeHasQuiz { get => _difficulty == GameDifficulty.MEDIUM || _difficulty == GameDifficulty.HARD; }
+    public bool gameModeHasTimer { get => _difficulty == GameDifficulty.HARD; }
 
     // GAME: Start
     private void Awake()
@@ -54,33 +53,27 @@ public class SPGameController : MonoBehaviour
 
     void Start()
     {
-        switch (_difficulty)
-        {
-            case DIFFICULTY.Easy:
-                playerLives = 0;
-                startingCardsCount = 8;
-                break;
-            case DIFFICULTY.Medium:
-                playerLives = 5;
-                startingCardsCount = 8;
-                break;
-            case DIFFICULTY.Hard:
-                playerLives = 3;
-                startingCardsCount = 8;
-                break;
-        }
-
-        playerLivesLeft = playerLives;
-
-        playerStats.initialLife = playerLives;
-        playerStats.remainingLife = playerLivesLeft;
-
         LoadCards();
         LoadQuestions();
 
-        InitLives();
-        PlaceCardsInTimeline();
-        DrawCards();
+        switch (_difficulty)
+        {
+            case GameDifficulty.EASY:
+                InitLives(0);
+                PlaceCardsInTimeline(1);
+                DrawCards(8);
+                break;
+            case GameDifficulty.MEDIUM:
+                InitLives(5);
+                PlaceCardsInTimeline(1);
+                DrawCards(8);
+                break;
+            case GameDifficulty.HARD:
+                InitLives(3);
+                PlaceCardsInTimeline(3);
+                DrawCards(9);
+                break;
+        }
 
         InitUI();
     }
@@ -94,14 +87,14 @@ public class SPGameController : MonoBehaviour
     {
         switch (_difficulty)
         {
-            case DIFFICULTY.Easy:
+            case GameDifficulty.EASY:
                 timer.gameObject.SetActive(false);
                 questionManager.gameObject.SetActive(false);
                 break;
-            case DIFFICULTY.Medium:
+            case GameDifficulty.MEDIUM:
                 timer.gameObject.SetActive(false);
                 break;
-            case DIFFICULTY.Hard:
+            case GameDifficulty.HARD:
                 timer.InitTimer(turnSeconds, quizSeconds);
                 timer.StartTimer();
                 break;
@@ -112,9 +105,16 @@ public class SPGameController : MonoBehaviour
         }
     }
 
-    void InitLives()
+    void InitLives(int count)
     {
-        for (int i = 0; i < playerLives; i++) { AddLife(); }
+        for (int i = 0; i < count; i++) { AddLife(); }
+
+        playerLives = count;
+
+        playerLivesLeft = playerLives;
+
+        playerStats.initialLife = playerLives;
+        playerStats.remainingLife = playerLivesLeft;
     }
 
     void AddLife()
@@ -123,27 +123,16 @@ public class SPGameController : MonoBehaviour
         Instantiate(lifePrefab, playerLivesContainer);
     }
 
-    void DrawCards()
+    void DrawCards(int count)
     {
-        GiveCard(startingCardsCount);
+        GiveCard(count);
     }
 
-    void PlaceCardsInTimeline()
+    void PlaceCardsInTimeline(int count)
     {
         List<CardData> _cards = new List<CardData>();
 
-        switch (_difficulty)
-        {
-            case DIFFICULTY.Easy:
-                _cards.AddRange(PopCards(1));
-                break;
-            case DIFFICULTY.Medium:
-                _cards.AddRange(PopCards(1));
-                break;
-            case DIFFICULTY.Hard:
-                _cards.AddRange(PopCards(3));
-                break;
-        }
+        _cards.AddRange(PopCards(count));
 
         if (_cards.Count > 0)
         {
@@ -166,7 +155,7 @@ public class SPGameController : MonoBehaviour
     public void DecreaseLife()
     {
         // If Easy Mode, do not check for decreasing life.
-        if (_difficulty == DIFFICULTY.Easy) return;
+        if (_difficulty == GameDifficulty.EASY) return;
 
         playerLivesContainer.GetChild(0).GetComponent<Life>().Discard(); // TODO: Problematic
 

@@ -6,11 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(TMP_Dropdown))]
 public class DropdownTopicSelect : MonoBehaviour
 {
-    private TOPIC[] topics =
+    private HistoryTopic[] topics =
     {
-        TOPIC.Computer,
-        TOPIC.Networking,
-        TOPIC.Software
+        HistoryTopic.COMPUTER,
+        HistoryTopic.NETWORKING,
+        HistoryTopic.SOFTWARE
     };
 
     private TMP_Dropdown dropdown;
@@ -38,7 +38,7 @@ public class DropdownTopicSelect : MonoBehaviour
         dropdown.ClearOptions();
 
         List<string> topicNames = new List<string>();
-        foreach (TOPIC topic in topics)
+        foreach (HistoryTopic topic in topics)
         {
             topicNames.Add(TopicUtils.GetName(topic));
         }
@@ -50,13 +50,13 @@ public class DropdownTopicSelect : MonoBehaviour
     {
         switch (staticData.SelectedTopic)
         {
-            case TOPIC.Computer:
+            case HistoryTopic.COMPUTER:
                 dropdown.value = 0;
                 break;
-            case TOPIC.Networking:
+            case HistoryTopic.NETWORKING:
                 dropdown.value = 1;
                 break;
-            case TOPIC.Software:
+            case HistoryTopic.SOFTWARE:
                 dropdown.value = 2;
                 break;
             default:

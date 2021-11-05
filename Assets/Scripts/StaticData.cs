@@ -2,26 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GAMEMODE
+public enum GameMode
 {
-    SinglePlayer = 0,
-    Multiplayer = 1,
-    PreAssessment = 3,
-    PostAssessment = 4
+    SP = 0,
+    MP = 1,
+    PRE_TEST = 3,
+    POST_TEST = 4,
+    TUTORIAL = 5,
 }
 
-public enum TOPIC
+public enum HistoryTopic
 {
-    Computer = 0,
-    Networking = 1,
-    Software = 2
+    COMPUTER = 0,
+    NETWORKING = 1,
+    SOFTWARE = 2
 }
 
-public enum DIFFICULTY
+public enum GameDifficulty
 {
-    Easy = 0,
-    Medium = 1,
-    Hard = 2
+    EASY = 0,
+    MEDIUM = 1,
+    HARD = 2
 }
 
 public class StaticData : MonoBehaviour
@@ -44,9 +45,9 @@ public class StaticData : MonoBehaviour
     }
 
     // These variables are exposed to all Scenes to pass data between them by DontDestroyOnLoad
-    public GAMEMODE SelectedGameMode;
-    public TOPIC SelectedTopic;
-    public DIFFICULTY SelectedDifficulty;
+    public GameMode SelectedGameMode;
+    public HistoryTopic SelectedTopic;
+    public GameDifficulty SelectedDifficulty;
     public bool IsPostAssessment;
 
     public Stack<int> SceneIndexHistory = new Stack<int>();
@@ -68,19 +69,19 @@ public class StaticData : MonoBehaviour
         }
     }
 
-    public void SetTopic(TOPIC topic)
+    public void SetTopic(HistoryTopic topic)
     {
         SelectedTopic = topic;
         Debug.Log("Changed Topic: " + TopicUtils.GetName(SelectedTopic));
     }
 
-    public void SetDifficulty(DIFFICULTY diff)
+    public void SetDifficulty(GameDifficulty diff)
     {
         SelectedDifficulty = diff;
         Debug.Log("Changed Difficulty: " + diff);
     }
 
-    public void SetGameMode(GAMEMODE gm)
+    public void SetGameMode(GameMode gm)
     {
         SelectedGameMode = gm;
         Debug.Log("Changed GameMode: " + gm);

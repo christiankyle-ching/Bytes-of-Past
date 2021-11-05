@@ -13,14 +13,14 @@ public class AchievementData : ScriptableObject
 
 public class GameData
 {
-    public GAMEMODE gameMode;
-    public DIFFICULTY difficulty;
+    public GameMode gameMode;
+    public GameDifficulty difficulty;
     public bool gameWon;
     public float accuracy;
     public int remainingLife;
     public int initialLife;
 
-    public GameData(GAMEMODE gm, DIFFICULTY diff, bool gameWon, float accuracy, int remainingLife, int initialLife)
+    public GameData(GameMode gm, GameDifficulty diff, bool gameWon, float accuracy, int remainingLife, int initialLife)
     {
         this.gameMode = gm;
         this.difficulty = diff;

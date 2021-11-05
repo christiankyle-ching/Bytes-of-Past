@@ -24,8 +24,8 @@ public class ProfileStatisticsData
     public int[,] assessmentScores = new int[2, 3];
 
     public void UpdateSPGameAccuracy(
-        TOPIC topic,
-        DIFFICULTY difficulty,
+        HistoryTopic topic,
+        GameDifficulty difficulty,
         float newAccuracy,
         bool gameWon
     )
@@ -55,9 +55,9 @@ public class ProfileStatisticsData
     }
 
 
-    public void UpdateAssessmentScore(GAMEMODE gameMode, TOPIC topic, int score)
+    public void UpdateAssessmentScore(GameMode gameMode, HistoryTopic topic, int score)
     {
-        int preOrPostIndex = gameMode == GAMEMODE.PreAssessment ? 0 : 1;
+        int preOrPostIndex = gameMode == GameMode.PRE_TEST ? 0 : 1;
         int topicIndex = (int)topic;
 
         // Update Score in Array
@@ -83,7 +83,7 @@ public class ProfileStatisticsData
 
 
     public void UpdateMPGameAccuracy(
-        TOPIC topic,
+        HistoryTopic topic,
         float newAccuracy,
         bool gameWon
     )

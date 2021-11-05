@@ -22,25 +22,25 @@ public class TopicSelect : MonoBehaviour
         btnComputer
             .GetComponent<Button>()
             .onClick
-            .AddListener(() => OnTopicSelect(TOPIC.Computer));
+            .AddListener(() => OnTopicSelect(HistoryTopic.COMPUTER));
 
         btnNetworking
             .GetComponent<Button>()
             .onClick
-            .AddListener(() => OnTopicSelect(TOPIC.Networking));
+            .AddListener(() => OnTopicSelect(HistoryTopic.NETWORKING));
 
         btnSoftware
             .GetComponent<Button>()
             .onClick
-            .AddListener(() => OnTopicSelect(TOPIC.Software));
+            .AddListener(() => OnTopicSelect(HistoryTopic.SOFTWARE));
 
-        SetTopicDisabled(btnComputer.GetComponent<Button>(), TOPIC.Computer);
+        SetTopicDisabled(btnComputer.GetComponent<Button>(), HistoryTopic.COMPUTER);
         SetTopicDisabled(btnNetworking.GetComponent<Button>(),
-        TOPIC.Networking);
-        SetTopicDisabled(btnSoftware.GetComponent<Button>(), TOPIC.Software);
+        HistoryTopic.NETWORKING);
+        SetTopicDisabled(btnSoftware.GetComponent<Button>(), HistoryTopic.SOFTWARE);
     }
 
-    void SetTopicDisabled(Button button, TOPIC topic)
+    void SetTopicDisabled(Button button, HistoryTopic topic)
     {
         bool isPreAssessmentDone = PrefsConverter.IntToBoolean(PlayerPrefs
                 .GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(topic), 0));
@@ -59,7 +59,7 @@ public class TopicSelect : MonoBehaviour
                 .Find("Button")
                 .GetComponentInChildren<TextMeshProUGUI>();
 
-        if (staticData.SelectedGameMode == GAMEMODE.PostAssessment)
+        if (staticData.SelectedGameMode == GameMode.POST_TEST)
         {
             bool postAssessmentAllowed =
                 isPreAssessmentDone && !isPostAssessmentDone && isPlayed;
@@ -70,7 +70,7 @@ public class TopicSelect : MonoBehaviour
                 buttonText.text =
                     isPostAssessmentDone ? "Already Taken" : "Locked";
         }
-        else if (staticData.SelectedGameMode == GAMEMODE.SinglePlayer)
+        else if (staticData.SelectedGameMode == GameMode.SP)
         {
             if (!isPreAssessmentDone)
             {
@@ -85,13 +85,13 @@ public class TopicSelect : MonoBehaviour
             $"\nPOST-Assessment Done? {isPostAssessmentDone}");
     }
 
-    void OnTopicSelect(TOPIC topic)
+    void OnTopicSelect(HistoryTopic topic)
     {
         SoundManager.Instance.PlayClickedSFX();
 
         staticData.SetTopic(topic);
 
-        GAMEMODE gameMode = staticData.SelectedGameMode;
+        GameMode gameMode = staticData.SelectedGameMode;
 
         bool isPreAssessmentDone =
             PlayerPrefs
@@ -100,7 +100,7 @@ public class TopicSelect : MonoBehaviour
 
         switch (gameMode)
         {
-            case GAMEMODE.SinglePlayer:
+            case GameMode.SP:
                 if (isPreAssessmentDone)
                 {
                     sceneLoader
@@ -113,7 +113,7 @@ public class TopicSelect : MonoBehaviour
                     LoadPreAssessment();
                 }
                 break;
-            case GAMEMODE.PostAssessment:
+            case GameMode.POST_TEST:
                 staticData.IsPostAssessment = true;
                 sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();
                 break;
@@ -128,7 +128,7 @@ public class TopicSelect : MonoBehaviour
     {
         Debug.Log("LoadPreAssessment");
 
-        staticData.SetGameMode(GAMEMODE.PreAssessment);
+        staticData.SetGameMode(GameMode.PRE_TEST);
         staticData.IsPostAssessment = false;
         sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();
     }

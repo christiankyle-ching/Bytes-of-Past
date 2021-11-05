@@ -64,25 +64,25 @@ public class ProfileStatisticsLoader : MonoBehaviour
             if (loadingPreAssessment)
             {
                 assessDone1 = PrefsConverter.IntToBoolean(
-                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(TOPIC.Computer), 0)
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(HistoryTopic.COMPUTER), 0)
                 );
                 assessDone2 = PrefsConverter.IntToBoolean(
-                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(TOPIC.Networking), 0)
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(HistoryTopic.NETWORKING), 0)
                 );
                 assessDone3 = PrefsConverter.IntToBoolean(
-                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(TOPIC.Software), 0)
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPreAssessmentDone(HistoryTopic.SOFTWARE), 0)
                 );
             }
             else
             {
                 assessDone1 = PrefsConverter.IntToBoolean(
-                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(TOPIC.Computer), 0)
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(HistoryTopic.COMPUTER), 0)
                 );
                 assessDone2 = PrefsConverter.IntToBoolean(
-                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(TOPIC.Networking), 0)
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(HistoryTopic.NETWORKING), 0)
                 );
                 assessDone3 = PrefsConverter.IntToBoolean(
-                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(TOPIC.Software), 0)
+                    PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPostAssessmentDone(HistoryTopic.SOFTWARE), 0)
                 );
             }
 
@@ -91,15 +91,15 @@ public class ProfileStatisticsLoader : MonoBehaviour
             TextMeshProUGUI txtSoftware = txtAssessment_Software_Score[i].GetComponent<TextMeshProUGUI>();
 
             txtComputer.text = assessDone1 ?
-                $"{assessmentScores[i, (int)TOPIC.Computer]} / {totalQuestions}" :
+                $"{assessmentScores[i, (int)HistoryTopic.COMPUTER]} / {totalQuestions}" :
                 notDoneScore;
 
             txtNetworking.text = assessDone2 ?
-                $"{assessmentScores[i, (int)TOPIC.Networking]} / {totalQuestions}" :
+                $"{assessmentScores[i, (int)HistoryTopic.NETWORKING]} / {totalQuestions}" :
                 notDoneScore;
 
             txtSoftware.text = assessDone3 ?
-                $"{assessmentScores[i, (int)TOPIC.Software]} / {totalQuestions}" :
+                $"{assessmentScores[i, (int)HistoryTopic.SOFTWARE]} / {totalQuestions}" :
                 notDoneScore;
         }
     }

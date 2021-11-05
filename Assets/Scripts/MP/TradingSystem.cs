@@ -36,7 +36,7 @@ public class TradingSystem : MonoBehaviour
     private uint player1NetId;
     private int selectedCard_player1 = -1;
 
-    public TOPIC topic;
+    public HistoryTopic topic;
 
     void Start()
     {
@@ -45,7 +45,7 @@ public class TradingSystem : MonoBehaviour
         closeButton.onClick.AddListener(() => SetupCanvas(false));
     }
 
-    public void SetTopic(TOPIC _topic)
+    public void SetTopic(HistoryTopic _topic)
     {
         topic = _topic;
     }

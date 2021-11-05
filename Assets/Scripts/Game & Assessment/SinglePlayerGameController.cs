@@ -40,8 +40,8 @@ public class SinglePlayerGameController : MonoBehaviour
     private SinglePlayerMenuManager menuManager;
     StaticData staticData;
 
-    DIFFICULTY _difficulty = DIFFICULTY.Easy;
-    TOPIC _topic = TOPIC.Computer;
+    GameDifficulty _difficulty = GameDifficulty.EASY;
+    HistoryTopic _topic = HistoryTopic.COMPUTER;
 
     private List<QuestionData> questions = new List<QuestionData>();
 
@@ -83,15 +83,15 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         switch (_difficulty)
         {
-            case DIFFICULTY.Easy:
+            case GameDifficulty.EASY:
                 playerLives = 0;
                 startingCardsCount = 8;
                 break;
-            case DIFFICULTY.Medium:
+            case GameDifficulty.MEDIUM:
                 playerLives = 5;
                 startingCardsCount = 8;
                 break;
-            case DIFFICULTY.Hard:
+            case GameDifficulty.HARD:
                 playerLives = 3;
                 startingCardsCount = 8;
                 break;
@@ -117,14 +117,14 @@ public class SinglePlayerGameController : MonoBehaviour
     {
         switch (_difficulty)
         {
-            case DIFFICULTY.Easy:
+            case GameDifficulty.EASY:
                 timer.gameObject.SetActive(false);
                 questionManager.gameObject.SetActive(false);
                 break;
-            case DIFFICULTY.Medium:
+            case GameDifficulty.MEDIUM:
                 timer.gameObject.SetActive(false);
                 break;
-            case DIFFICULTY.Hard:
+            case GameDifficulty.HARD:
                 timer.InitTimer(turnSeconds, quizSeconds);
                 timer.StartTimer();
                 break;
@@ -159,13 +159,13 @@ public class SinglePlayerGameController : MonoBehaviour
 
         switch (_difficulty)
         {
-            case DIFFICULTY.Easy:
+            case GameDifficulty.EASY:
                 cards = deck.PopCards(1);
                 break;
-            case DIFFICULTY.Medium:
+            case GameDifficulty.MEDIUM:
                 cards = deck.PopCards(1);
                 break;
-            case DIFFICULTY.Hard:
+            case GameDifficulty.HARD:
                 cards = deck.PopCards(3);
                 break;
         }
@@ -187,7 +187,7 @@ public class SinglePlayerGameController : MonoBehaviour
     public void DecreaseLife()
     {
         // If Easy Mode, do not check for decreasing life.
-        if (_difficulty == DIFFICULTY.Easy) return;
+        if (_difficulty == GameDifficulty.EASY) return;
 
         int lastIndex = livesContainer.transform.childCount - 1;
         livesContainer.transform.GetChild(lastIndex).GetComponent<Life>().Discard(); // destroy last life
@@ -219,7 +219,7 @@ public class SinglePlayerGameController : MonoBehaviour
                 , MPGameMessageType.WRONG);
         }
 
-        if (_difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard)
+        if (_difficulty == GameDifficulty.MEDIUM || _difficulty == GameDifficulty.HARD)
         {
             questionManager.SetVisibility(false);
             timer.StartTimer();
@@ -249,7 +249,7 @@ public class SinglePlayerGameController : MonoBehaviour
             playerStats.IncorrectDrop();
         }
 
-        if (_difficulty == DIFFICULTY.Medium || _difficulty == DIFFICULTY.Hard)
+        if (_difficulty == GameDifficulty.MEDIUM || _difficulty == GameDifficulty.HARD)
         {
             if (turns % quizIntervalRounds == 0)
             {
