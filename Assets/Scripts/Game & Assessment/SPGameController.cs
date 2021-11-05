@@ -6,6 +6,14 @@ using UnityEngine;
 
 public class SPGameController : MonoBehaviour
 {
+    #region
+    [Header("Tutorial Mode")]
+    bool tutorialMode = false;
+    public TutorialManager tutorialManager;
+    int tutorialDropPos;
+
+    #endregion
+
     int playerLives = 0;
     int playerLivesLeft = 0;
     bool gameEnded = false;
@@ -45,6 +53,9 @@ public class SPGameController : MonoBehaviour
     private void Awake()
     {
         staticData = StaticData.Instance;
+
+        tutorialMode = staticData.SelectedGameMode == GameMode.TUTORIAL;
+
         _difficulty = StaticData.Instance.SelectedDifficulty;
         _topic = StaticData.Instance.SelectedTopic;
 
@@ -56,26 +67,45 @@ public class SPGameController : MonoBehaviour
         LoadCards();
         LoadQuestions();
 
-        switch (_difficulty)
+        if (!tutorialMode)
         {
-            case GameDifficulty.EASY:
-                InitLives(0);
-                PlaceCardsInTimeline(1);
-                DrawCards(8);
-                break;
-            case GameDifficulty.MEDIUM:
-                InitLives(5);
-                PlaceCardsInTimeline(1);
-                DrawCards(8);
-                break;
-            case GameDifficulty.HARD:
-                InitLives(3);
-                PlaceCardsInTimeline(3);
-                DrawCards(9);
-                break;
-        }
+            tutorialManager.gameObject.SetActive(false);
 
-        InitUI();
+            switch (_difficulty)
+            {
+                case GameDifficulty.EASY:
+                    InitLives(0);
+                    PlaceCardsInTimeline(1);
+                    DrawCards(8);
+                    break;
+                case GameDifficulty.MEDIUM:
+                    InitLives(5);
+                    PlaceCardsInTimeline(1);
+                    DrawCards(8);
+                    break;
+                case GameDifficulty.HARD:
+                    InitLives(3);
+                    PlaceCardsInTimeline(3);
+                    DrawCards(9);
+                    break;
+            }
+
+            InitUI();
+        }
+        else
+        {
+            _difficulty = GameDifficulty.MEDIUM; // This enables life
+
+            InitLives(5);
+            TutorialSetupCards();
+
+            quizIntervalRounds = 3;
+
+            timer.gameObject.SetActive(false);
+            questionManager.gameObject.SetActive(true);
+
+            tutorialManager.gameObject.SetActive(true);
+        }
     }
 
     void LoadQuestions()
@@ -140,13 +170,7 @@ public class SPGameController : MonoBehaviour
 
             foreach (CardData data in _cards)
             {
-                GameObject cardGO = Instantiate(cardPrefab, dropzone);
-                SPCardInfo card = cardGO.GetComponent<SPCardInfo>();
-
-                card.cardData = data;
-                card.InitCardData(data);
-
-                cardGO.GetComponent<SPDragDrop>().OnPlaceCorrect();
+                SpawnCard(data, dropzone, true);
             }
         }
     }
@@ -188,6 +212,8 @@ public class SPGameController : MonoBehaviour
 
         questionManager.SetVisibility(false);
         RestartTimer();
+
+        if (tutorialMode) tutorialManager.NextStep();
     }
 
     private void RestartTimer(bool isQuiz = false)
@@ -217,6 +243,20 @@ public class SPGameController : MonoBehaviour
 
     public void HandleDropInTimeline(GameObject droppedCard, int dropPos)
     {
+        if (tutorialMode)
+        {
+            if (tutorialManager.IsRightDrop(droppedCard.GetComponent<SPCardInfo>().cardData, dropPos))
+            {
+                tutorialManager.NextStep();
+            }
+            else
+            {
+                // Try again
+                droppedCard.GetComponent<SPDragDrop>().CancelDrag();
+                return;
+            }
+        }
+
         turns++;
 
         if (droppedCard != null)
@@ -259,9 +299,19 @@ public class SPGameController : MonoBehaviour
 
     private void PlayQuiz()
     {
-        randQuestion = questions[UnityEngine.Random.Range(0, questions.Count - 1)];
-        questionManager.ShowQuestion(randQuestion);
-        RestartTimer(true);
+        if (!tutorialMode)
+        {
+            randQuestion = questions[UnityEngine.Random.Range(0, questions.Count - 1)];
+            questionManager.ShowQuestion(randQuestion);
+            RestartTimer(true);
+        }
+        else
+        {
+            // Easy Question about Apple Watch
+            randQuestion = questions[5];
+            questionManager.ShowQuestion(randQuestion);
+        }
+
     }
 
     private bool IsHandEmpty()
@@ -369,19 +419,13 @@ public class SPGameController : MonoBehaviour
 
             foreach (CardData cardData in _cards)
             {
-                GameObject card = Instantiate(cardPrefab);
-                card.GetComponent<SPCardInfo>().cardData = cardData;
-                card.GetComponent<SPCardInfo>().InitCardData(cardData);
-
-                card.transform.SetParent(playerArea, false);
+                SpawnCard(cardData, playerArea);
             }
         }
         catch (Exception ex)
         {
             throw ex;
         }
-
-        //SetRemainingCards(); TODO? 
 
         if (count > 0)
         {
@@ -396,11 +440,40 @@ public class SPGameController : MonoBehaviour
         }
     }
 
+    private void SpawnCard(CardData data, Transform container, bool showYear = false)
+    {
+        GameObject card = Instantiate(cardPrefab);
+
+        card.GetComponent<SPCardInfo>().cardData = data;
+        card.GetComponent<SPCardInfo>().InitCardData(data);
+
+        if (showYear) card.GetComponent<SPDragDrop>().OnPlaceCorrect();
+
+        card.transform.SetParent(container, false);
+    }
+
     private void EndGame(bool isGameWon)
     {
         gameEnded = true;
         timer.StopTimer();
         menuManager.EndGame(isGameWon, playerStats);
     }
+
+    #region Tutorial Methods
+
+    private void TutorialSetupCards()
+    {
+        CardData[] _cards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.COMPUTER);
+
+        // Timeline : ENIAC and iPhone
+        CardData[] timelineCards = { _cards[6], _cards[37] };
+        foreach (CardData card in timelineCards) SpawnCard(card, dropzone, true);
+
+        // Hand Cards : Apple Watch, TV Typewriter, HP 200A Oscillator 
+        CardData[] handCard = { _cards[39], _cards[0], _cards[24] };
+        foreach (CardData card in handCard) SpawnCard(card, playerArea);
+    }
+
+    #endregion
 
 }

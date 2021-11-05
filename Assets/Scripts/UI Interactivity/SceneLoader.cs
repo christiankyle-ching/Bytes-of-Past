@@ -116,10 +116,16 @@ public class SceneLoader : MonoBehaviour
         Application.Quit();
     }
 
+    public void GoToInteractiveTutorial()
+    {
+        StaticData.Instance.SetGameMode(GameMode.TUTORIAL);
+        StartCoroutine(LoadScene("SPGame"));
+    }
+
     public void GoToTutorial()
     {
         StaticData.Instance.showTutorial = true;
-        SceneManager.LoadScene("Tutorial");
+        StartCoroutine(LoadScene("Tutorial"));
     }
 
     public void GoToMPTutorial()

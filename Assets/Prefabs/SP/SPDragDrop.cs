@@ -63,6 +63,8 @@ public class SPDragDrop : MonoBehaviour
     {
         if (!isDraggable) return;
 
+        Debug.Log("BeginDrag");
+
         isDragging = true;
 
         startParent = transform.parent;
@@ -83,8 +85,6 @@ public class SPDragDrop : MonoBehaviour
         {
             // TODO: HandleDropInTimeline
             gameController.HandleDropInTimeline(this.gameObject, placeholder.transform.GetSiblingIndex());
-
-            isDraggable = false;
 
             RemovePlaceholder();
         }
@@ -133,6 +133,7 @@ public class SPDragDrop : MonoBehaviour
     public void OnPlaceCorrect()
     {
         GetComponent<Animator>().SetTrigger("Correct");
+        DisableDrag();
     }
 
     public void DisableDrag()
@@ -140,6 +141,16 @@ public class SPDragDrop : MonoBehaviour
         isDraggable = false;
         isDragging = false;
 
+        RemovePlaceholder();
+    }
+
+    public void EnableDrag()
+    {
+        isDraggable = true;
+    }
+
+    public void CancelDrag()
+    {
         try
         {
             GetComponent<SPCardZoom>().UnzoomCard();
@@ -149,14 +160,11 @@ public class SPDragDrop : MonoBehaviour
                 transform.SetParent(startParent, false);
                 transform.position = startPos;
             }
+
+            isDragging = false;
+
+            RemovePlaceholder();
         }
         catch { }
-
-        RemovePlaceholder();
-    }
-
-    public void EnableDrag()
-    {
-        isDraggable = true;
     }
 }
