@@ -117,6 +117,23 @@ public class StaticData : MonoBehaviour
         PlayerPrefs.SetInt(PREFKEY_PROFILESECTION, index);
     }
 
+    public string GetPlayerSectionString()
+    {
+        int index = GetPlayerSection();
+
+        switch (index)
+        {
+            case 0:
+                return "Grade 9-1";
+            case 1:
+                return "Grade 9-2";
+            case 2:
+                return "Grade 9-3";
+            default:
+                return "";
+        }
+    }
+
     // ------------------------------ AVATAR ------------------------------
     public Avatar GetPlayerAvatar()
     {

@@ -38,8 +38,6 @@ public class AvatarLoader : MonoBehaviour
         return Resources.Load<Sprite>($"{folderPath}{_av}");
     }
 
-    
-
     public static List<Sprite> GetAllAvatars()
     {
         List<Sprite> _avatars = new List<Sprite>();

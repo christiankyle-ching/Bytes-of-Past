@@ -5,27 +5,24 @@ using UnityEngine;
 
 public class ProfileStatisticsLoader : MonoBehaviour
 {
+    [Header("UI References")]
     public GameObject txtAccuracy;
-
     public GameObject txtTotalGames;
-
     public GameObject txtSPWinOrLoss;
-
     public GameObject txtMPWinOrLoss;
 
     // ASSESSMENT SCORES
     // Size of [2]
     // 2 for Pre & Post Assessment
     public GameObject[] txtAssessment_Computer_Score;
-
     public GameObject[] txtAssessment_Networking_Score;
-
     public GameObject[] txtAssessment_Software_Score;
+
+    public TextMeshProUGUI txtProfile;
 
     StaticData staticData;
 
     int preAssessmentTotalQuestions = 15;
-
     int postAssessmentTotalQuestions = 20;
 
     void Awake()
@@ -36,9 +33,15 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
     void ShowStatisticsData()
     {
+        LoadProfileInfo();
         LoadAssessmentScores();
         LoadGameAccuracy();
         LoadSPGameWinLoss();
+    }
+
+    void LoadProfileInfo()
+    {
+        txtProfile.text = $"{StaticData.Instance.GetPlayerName()} ({StaticData.Instance.GetPlayerSectionString()})";
     }
 
     void LoadAssessmentScores()
