@@ -116,10 +116,11 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdReady(string playerName)
+    public void CmdReady(string playerName, int avatarIndex)
     {
         NetworkIdentity ni = connectionToClient.identity;
         MPGameManager.Instance.SetPlayerName(ni, playerName);
+        MPGameManager.Instance.SetPlayerAvatar(ni, avatarIndex);
         MPGameManager.Instance.ReadyPlayer(ni);
     }
 
@@ -245,12 +246,14 @@ public class PlayerManager : NetworkBehaviour
         uint currentPlayerId,
         int deckCount,
         byte[] _winners,
-        byte[] _playerTrades)
+        byte[] _playerTrades,
+        byte[] _playerAvatars)
     {
         Dictionary<uint, string> players = CustomSerializer.DeserializePlayers(_players) ?? new Dictionary<uint, string>();
         Dictionary<uint, List<int>> playerHands = CustomSerializer.DeserializePlayerHands(_playerHands) ?? new Dictionary<uint, List<int>>();
         Dictionary<uint, string> winners = CustomSerializer.DeserializePlayers(_winners) ?? new Dictionary<uint, string>();
         Dictionary<uint, int> playerTrades = CustomSerializer.DeserializePlayerTrades(_playerTrades) ?? new Dictionary<uint, int>();
+        Dictionary<uint, int> playerAvatars = CustomSerializer.DeserializePlayerTrades(_playerAvatars) ?? new Dictionary<uint, int>();
 
         winners.TryGetValue(NetworkClient.localPlayer.netId, out string _playerName);
         bool gameWon = _playerName != null;
@@ -277,7 +280,8 @@ public class PlayerManager : NetworkBehaviour
                 currentPlayerId,
                 players,
                 playerHands,
-                playerTrades);
+                playerTrades,
+                playerAvatars);
             UpdateDeckCount(deckCount);
         }
 
@@ -362,7 +366,8 @@ public class PlayerManager : NetworkBehaviour
         uint currentPlayerId,
         Dictionary<uint, string> players,
         Dictionary<uint, List<int>> playerHands,
-        Dictionary<uint, int> playerTrades)
+        Dictionary<uint, int> playerTrades,
+        Dictionary<uint, int> playerAvatars)
     {
         // Get Self
         uint _playerId = NetworkClient.localPlayer.netId;
@@ -378,20 +383,23 @@ public class PlayerManager : NetworkBehaviour
         {
             Transform enemyGO = enemyAreas.transform.GetChild(i);
 
-            TextMeshProUGUI cardCountGO = enemyGO.GetChild(0).Find("CARDS").GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI playerNameGO = enemyGO.GetChild(0).Find("NAME").GetComponent<TextMeshProUGUI>();
-            Button btnTrade = enemyGO.GetChild(1).GetChild(0).GetComponent<Button>();
+            AvatarLoader avatarGO = enemyGO.GetChild(0).GetChild(0).GetComponent<AvatarLoader>();
+            TextMeshProUGUI cardCountGO = enemyGO.GetChild(1).Find("CARDS").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI playerNameGO = enemyGO.GetChild(1).Find("NAME").GetComponent<TextMeshProUGUI>();
+            Button btnTrade = enemyGO.GetChild(2).GetChild(0).GetComponent<Button>();
 
             try
             {
                 uint _opponentId = opponents.ElementAt(i).Key;
                 string _opponentName = players[_opponentId];
                 int[] _opponentHand = playerHands[_opponentId].ToArray();
+                Avatar _opponentAvatar = (Avatar)playerAvatars[_opponentId];
 
                 int handCount = _opponentHand.Length;
                 string cardMsg = $"{handCount} Cards";
 
                 playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
+                avatarGO.SetPreview(_opponentAvatar);
 
                 if (gmState == GameState.STARTED)
                 {

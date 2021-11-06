@@ -43,6 +43,7 @@ public class MPGameManager : NetworkBehaviour
 
     public Dictionary<uint, string> winners = new Dictionary<uint, string>();
     public Dictionary<uint, string> players = new Dictionary<uint, string>();
+    public Dictionary<uint, int> playerAvatars = new Dictionary<uint, int>();
     public Dictionary<uint, int> playerTrades = new Dictionary<uint, int>();
     public Dictionary<uint, List<int>> playerHands = new Dictionary<uint, List<int>>();
 
@@ -182,6 +183,11 @@ public class MPGameManager : NetworkBehaviour
     public void SetPlayerName(NetworkIdentity iden, string name)
     {
         players[iden.netId] = (name != string.Empty) ? name : $"Player#{iden.netId}";
+    }
+
+    public void SetPlayerAvatar(NetworkIdentity iden, int avatarIndex)
+    {
+        playerAvatars[iden.netId] = avatarIndex;
     }
 
     #endregion
@@ -568,7 +574,8 @@ public class MPGameManager : NetworkBehaviour
                 players.ElementAt(currentPlayerIndex).Key,
                 deck.Count,
                 CustomSerializer.SerializePlayers(winners),
-                CustomSerializer.SerializePlayerTrades(playerTrades));
+                CustomSerializer.SerializePlayerTrades(playerTrades),
+                CustomSerializer.SerializePlayerTrades(playerAvatars));
         }
         catch (ArgumentOutOfRangeException)
         {

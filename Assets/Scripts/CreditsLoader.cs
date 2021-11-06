@@ -24,6 +24,8 @@ public class CreditsLoader : MonoBehaviour
     private TextAsset imagesSoftware;
     private TextAsset imagesNetworking;
 
+    bool isScrolling = false;
+
     private void Awake()
     {
         chm = Resources.Load<TextAsset>("Licenses/license_chm");
@@ -41,7 +43,6 @@ public class CreditsLoader : MonoBehaviour
 
     private void Start()
     {
-        // TODO: FIXME Not accurate
         LayoutRebuilder.ForceRebuildLayoutImmediate(panel.GetComponent<RectTransform>());
 
         txtCHM.ForceMeshUpdate();
@@ -49,13 +50,26 @@ public class CreditsLoader : MonoBehaviour
         txtImagesComputer.ForceMeshUpdate();
         txtImagesSoftware.ForceMeshUpdate();
         txtImagesNetworking.ForceMeshUpdate();
+
+        Invoke(nameof(StartScrolling), 1f);
+    }
+
+    void StartScrolling()
+    {
+        isScrolling = true;
     }
 
     private void Update()
     {
-        if (container.verticalNormalizedPosition >= 0.15f)
+        if (isScrolling)
         {
-            container.velocity = new Vector2(0f, scrollSensitivity);
+            if (container.verticalNormalizedPosition >= 0.01f)
+            {
+                container.velocity = new Vector2(0f, scrollSensitivity);
+            } else
+            {
+                isScrolling = false;
+            }
         }
     }
 }

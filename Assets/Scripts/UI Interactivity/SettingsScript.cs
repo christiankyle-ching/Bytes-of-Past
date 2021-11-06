@@ -21,8 +21,7 @@ public class SettingsScript : MonoBehaviour
         switchState = PlayerPrefs.GetInt(SoundManager.SFXPREFKEY, 1);
         if (switchState < 0) OnSFXSwitchButtonClicked();
 
-        float existingVolume = PlayerPrefs.GetFloat(SoundManager.BGMVOLPREFKEY, 0.5f);
-        SetVolume(existingVolume);
+        volumeSlider.value = SoundManager.Instance.GetBGMVolume(); // Just set the slider, let the SoundManager apply current volume
         volumeSlider.onValueChanged.AddListener(SetVolume);
 
         int existingQualityLevel = PlayerPrefs.GetInt("Settings_Quality", 1);
@@ -45,6 +44,7 @@ public class SettingsScript : MonoBehaviour
                 : Color.HSVToRGB(0f, 0f, 1f);
 
         SoundManager.Instance.SetSFXEnabled(enabled);
+        SoundManager.Instance.PlayClickedSFX();
     }
 
     public void setQuality(int qualityIndex)

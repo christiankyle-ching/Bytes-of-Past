@@ -13,7 +13,6 @@ public class SceneLoader : MonoBehaviour
 
     public void GoBack()
     {
-        Debug.Log("GoBack");
         try
         {
             int lastSceneIndex = StaticData.Instance.SceneIndexHistory.Pop();
@@ -92,6 +91,8 @@ public class SceneLoader : MonoBehaviour
 
     IEnumerator LoadScene(int buildIndex, bool isGoingBack = false)
     {
+        SoundManager.Instance.PlayClickedSFX();
+
         transition.SetTrigger("Start");
 
         yield return new WaitForSeconds(transitionTime);

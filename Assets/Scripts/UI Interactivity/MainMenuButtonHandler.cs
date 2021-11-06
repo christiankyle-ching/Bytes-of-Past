@@ -17,7 +17,6 @@ public class MainMenuButtonHandler : MonoBehaviour
 
     public void OnSelectSinglePlayer()
     {
-        
         staticData.SetGameMode(GameMode.SP);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
@@ -45,25 +44,23 @@ public class MainMenuButtonHandler : MonoBehaviour
 
     public void OnSelectTutorial()
     {
-        
         sceneLoader.GetComponent<SceneLoader>().GoToTutorial();
     }
 
     public void onSelectGameSettings()
     {
-        
+        SoundManager.Instance.PlayClickedSFX();
         settingsCanvas.SetActive(true);
     }
 
     public void onSelectCredits()
     {
-        
         sceneLoader.GetComponent<SceneLoader>().GoToCredits();
     }
 
     public void onClose()
     {
-        
+        SoundManager.Instance.PlayClickedSFX();
         settingsCanvas.SetActive(false);
     }
 }

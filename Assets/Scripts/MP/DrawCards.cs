@@ -14,16 +14,16 @@ public class DrawCards : MonoBehaviour
     {
         PlayerManager playerManager = NetworkClient.localPlayer.GetComponent<PlayerManager>();
 
-        string playerName = PlayerPrefs.GetString("Profile_Name", "");
+        string playerName = StaticData.Instance.GetPlayerName();
 
 #if UNITY_EDITOR
         //TODO: Comment on Build (including ParallelSync)
         playerName = ClonesManager.IsClone() ?
             $"Clone {Random.Range(100, 999)}" :
-            PlayerPrefs.GetString("Profile_Name", "");
+            StaticData.Instance.GetPlayerName();
 #endif
 
-        playerManager.CmdReady(playerName);
+        playerManager.CmdReady(playerName, (int)StaticData.Instance.GetPlayerAvatar());
 
         gameObject.SetActive(false);
     }

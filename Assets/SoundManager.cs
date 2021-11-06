@@ -19,7 +19,6 @@ public class SoundManager : MonoBehaviour
     public AudioClip discardSFX;
 
     [Header("AudioSources")]
-    public AudioSource CardSFXAudioSource; // needed separate SFX Audio Source to play other SFX concurrently
     public AudioSource SFXAudioSource;
     public AudioSource BGMAudioSource;
     public AudioMixerGroup BGMAudioMixer;
@@ -46,11 +45,13 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        CardSFXAudioSource.playOnAwake = false;
+        SFXAudioSource.loop = false;
         SFXAudioSource.playOnAwake = false;
 
+        BGMAudioSource.loop = true;
         BGMAudioSource.clip = backgroundMusic;
         BGMAudioSource.outputAudioMixerGroup = BGMAudioMixer;
+        SetBGMVolume(GetBGMVolume());
         BGMAudioSource.Play();
     }
 
@@ -68,11 +69,11 @@ public class SoundManager : MonoBehaviour
 
     // ------------------------------ CARD SFX ------------------------------
 
-    public void PlayMultipleDrawSFX() => PlayCardSFX(multipleDrawSFX);
+    public void PlayMultipleDrawSFX() => PlaySFX(multipleDrawSFX);
 
-    public void PlayDrawSFX() => PlayCardSFX(drawSFX);
+    public void PlayDrawSFX() => PlaySFX(drawSFX);
 
-    public void PlayDiscardSFX() => PlayCardSFX(discardSFX);
+    public void PlayDiscardSFX() => PlaySFX(discardSFX);
 
     #endregion
 
@@ -82,17 +83,7 @@ public class SoundManager : MonoBehaviour
     {
         if (isSFXEnabled)
         {
-            SFXAudioSource.clip = _clip;
-            SFXAudioSource.Play();
-        }
-    }
-
-    private void PlayCardSFX(AudioClip _clip)
-    {
-        if (isSFXEnabled)
-        {
-            CardSFXAudioSource.clip = _clip;
-            CardSFXAudioSource.Play();
+            SFXAudioSource.PlayOneShot(_clip);
         }
     }
 
@@ -105,9 +96,13 @@ public class SoundManager : MonoBehaviour
 
     public void SetBGMVolume(float sliderValue)
     {
-        Debug.Log(sliderValue);
         BGMAudioMixer.audioMixer.SetFloat("BGMVolume", Mathf.Log10(sliderValue) * 20);
         PlayerPrefs.SetFloat(BGMVOLPREFKEY, sliderValue);
+    }
+
+    public float GetBGMVolume()
+    {
+        return PlayerPrefs.GetFloat(SoundManager.BGMVOLPREFKEY, 0.5f);
     }
 
     #endregion

@@ -34,6 +34,10 @@ public class TutorialManager : MonoBehaviour
     [Header("UI References")]
     public SceneLoader sceneLoader;
     public Transform playerArea;
+    public Sprite borderSprite;
+
+    GameObject correctCard;
+    GameObject wrongCard;
 
     private void Start()
     {
@@ -58,6 +62,7 @@ public class TutorialManager : MonoBehaviour
                 {
                     SoundManager.Instance.PlayDefaultSFX();
                     NextStep();
+                    GetCardReferences();
                 }
                 break;
             case 1:
@@ -88,6 +93,8 @@ public class TutorialManager : MonoBehaviour
         {
             popup.SetActive(popup == popups[currentPopupIndex]);
         }
+
+        HighlightCard();
     }
 
     public bool IsRightDrop(CardData card, int dropPos)
@@ -115,6 +122,59 @@ public class TutorialManager : MonoBehaviour
         }
 
         UpdateCanvas();
+    }
+
+    void GetCardReferences()
+    {
+        correctCard = playerArea.GetChild(0).gameObject;
+        wrongCard = playerArea.GetChild(1).gameObject;
+    }
+
+    void HighlightCard()
+    {
+        GameObject cardToHighlight = null;
+
+        switch (currentPopupIndex)
+        {
+            case 3:
+                cardToHighlight = correctCard;
+                break;
+            case 4:
+                cardToHighlight = wrongCard;
+                break;
+        }
+
+        string HIGHLIGHTNAME = "CARDHIGHLIGHT";
+
+        if (cardToHighlight != null)
+        {
+            foreach (SPCardInfo _card in FindObjectsOfType<SPCardInfo>())
+            {
+                GameObject card = _card.gameObject;
+
+                if (card.gameObject == cardToHighlight)
+                {
+                    GameObject highlighter = new GameObject();
+                    highlighter.name = HIGHLIGHTNAME;
+
+                    Image hImage = highlighter.AddComponent<Image>();
+                    RectTransform hRect = highlighter.GetComponent<RectTransform>();
+                    highlighter.AddComponent<LayoutElement>().ignoreLayout = true;
+
+                    highlighter.transform.SetParent(card.transform, false);
+
+                    hRect.sizeDelta = card.GetComponent<RectTransform>().sizeDelta;
+                    hImage.color = new Color(0, 1, 0, 0.5f);
+                    hImage.type = Image.Type.Sliced;
+                    hImage.sprite = borderSprite;
+                }
+                else
+                {
+                    Transform existingHighlighter = card.transform.Find(HIGHLIGHTNAME);
+                    if (existingHighlighter != null) Destroy(existingHighlighter.gameObject);
+                }
+            }
+        }
     }
 
     public void EndTutorial()

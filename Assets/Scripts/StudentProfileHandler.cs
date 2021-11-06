@@ -23,9 +23,9 @@ public class StudentProfileHandler : MonoBehaviour
     void Start()
     {
         txtStudentName.GetComponent<TMP_InputField>().text =
-            PlayerPrefs.GetString("Profile_Name", "");
+            StaticData.Instance.GetPlayerName();
 
         dropdownStudentSection.GetComponent<TMP_Dropdown>().value =
-            PlayerPrefs.GetInt("Profile_Section", 0);
+            StaticData.Instance.GetPlayerSection();
     }
 }

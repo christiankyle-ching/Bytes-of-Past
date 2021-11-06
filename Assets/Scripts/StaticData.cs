@@ -86,4 +86,47 @@ public class StaticData : MonoBehaviour
         SelectedGameMode = gm;
         Debug.Log("Changed GameMode: " + gm);
     }
+
+    #region ------------------------------ Student Profile ------------------------------
+
+    static readonly string PREFKEY_PROFILENAME = "Profile_Name";
+    static readonly string PREFKEY_PROFILESECTION = "Profile_Section";
+    static readonly string PREFKEY_PLAYERAVATAR = "Profile_Avatar";
+
+    // ------------------------------ STUDENT NAME ------------------------------
+
+    public string GetPlayerName()
+    {
+        return PlayerPrefs.GetString(PREFKEY_PROFILENAME, "");
+    }
+
+    public void SetPlayerName(string playerName)
+    {
+        PlayerPrefs.SetString(PREFKEY_PROFILENAME, playerName);
+    }
+
+    // ------------------------------ SECTION ------------------------------
+
+    public int GetPlayerSection()
+    {
+        return PlayerPrefs.GetInt(PREFKEY_PROFILESECTION, 0);
+    }
+
+    public void SetPlayerSection(int index)
+    {
+        PlayerPrefs.SetInt(PREFKEY_PROFILESECTION, index);
+    }
+
+    // ------------------------------ AVATAR ------------------------------
+    public Avatar GetPlayerAvatar()
+    {
+        return (Avatar)PlayerPrefs.GetInt(PREFKEY_PLAYERAVATAR, (int)Avatar.MALE_0);
+    }
+
+    public void SetPlayerAvatar(Avatar _av)
+    {
+        PlayerPrefs.SetInt(PREFKEY_PLAYERAVATAR, (int)_av);
+    }
+
+    #endregion
 }
