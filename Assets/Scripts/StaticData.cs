@@ -55,6 +55,12 @@ public class StaticData : MonoBehaviour
     public ProfileStatisticsData profileStatisticsData;
     public bool showTutorial = false;
 
+    public void Start()
+    {
+        // Prevents screen from sleeping to avoid MP problems
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
+
     public void LoadProfileData()
     {
         if (PlayerPrefs.GetInt("GameHasData", 0) == 0)
