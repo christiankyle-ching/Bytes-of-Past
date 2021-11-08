@@ -78,7 +78,7 @@ public class MPGameManager : NetworkBehaviour
 
     private void LoadCards(HistoryTopic topic)
     {
-        CardData[] cards = ResourceParser.Instance.ParseCSVToCards(topic);
+        CardData[] cards = ResourceParser.Instance.GetCards(topic);
 
         // Load Card Infos
         foreach (CardData data in cards) { cardInfos.Add(data); }

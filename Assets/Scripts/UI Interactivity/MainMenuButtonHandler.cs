@@ -4,41 +4,32 @@ using UnityEngine;
 
 public class MainMenuButtonHandler : MonoBehaviour
 {
-    StaticData staticData;
-
     public SceneLoader sceneLoader;
-
     public GameObject settingsCanvas;
-
-    void Start()
-    {
-        staticData = StaticData.Instance;
-    }
 
     public void OnSelectSinglePlayer()
     {
-        staticData.SetGameMode(GameMode.SP);
+        StaticData.Instance.SetGameMode(GameMode.SP);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 
     public void OnSelectMultiplayer()
     {
-        
-        staticData.SetGameMode(GameMode.MP);
+        StaticData.Instance.SetGameMode(GameMode.MP);
         sceneLoader.GetComponent<SceneLoader>().GoToMultiplayerLobby();
     }
 
     public void OnSelectPreAssessment()
     {
         
-        staticData.SetGameMode(GameMode.PRE_TEST);
+        StaticData.Instance.SetGameMode(GameMode.PRE_TEST);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 
     public void OnSelectPostAssessment()
     {
         
-        staticData.SetGameMode(GameMode.POST_TEST);
+        StaticData.Instance.SetGameMode(GameMode.POST_TEST);
         sceneLoader.GetComponent<SceneLoader>().GoToTopicSelect();
     }
 

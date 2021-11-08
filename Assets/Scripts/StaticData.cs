@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum GameMode
@@ -38,10 +39,21 @@ public class StaticData : MonoBehaviour
         }
         else
         {
-            LoadProfileData();
-            Input.multiTouchEnabled = false; // Disable multi-touch
             _instance = this;
         }
+    }
+
+    private void Start()
+    {
+        Invoke(nameof(InitGame), 1f); // Call this at start instead of Awake to finish ResourceParser
+    }
+
+    void InitGame()
+    {
+        Input.multiTouchEnabled = false;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+        LoadProfileData();
     }
 
     // These variables are exposed to all Scenes to pass data between them by DontDestroyOnLoad
@@ -53,13 +65,7 @@ public class StaticData : MonoBehaviour
     public Stack<int> SceneIndexHistory = new Stack<int>();
 
     public ProfileStatisticsData profileStatisticsData;
-    public bool showTutorial = false;
-
-    public void Start()
-    {
-        // Prevents screen from sleeping to avoid MP problems
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-    }
+    public bool reachedMainMenuScene = false;
 
     public void LoadProfileData()
     {
@@ -152,4 +158,5 @@ public class StaticData : MonoBehaviour
     }
 
     #endregion
+
 }

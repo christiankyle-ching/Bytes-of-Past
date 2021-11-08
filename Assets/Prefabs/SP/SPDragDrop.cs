@@ -136,34 +136,34 @@ public class SPDragDrop : MonoBehaviour
         DisableDrag();
     }
 
-    public void DisableDrag()
-    {
-        isDraggable = false;
-        isDragging = false;
-
-        RemovePlaceholder();
-    }
-
     public void EnableDrag()
     {
         isDraggable = true;
     }
 
+    public void DisableDrag()
+    {
+        isDraggable = false;
+        isDragging = false;
+    }
+
     public void CancelDrag()
+    {
+        isDragging = false;
+        GetComponent<SPCardZoom>().UnzoomCard();
+        ResetToOriginalPos();
+        RemovePlaceholder();
+    }
+
+    public void ResetToOriginalPos()
     {
         try
         {
-            GetComponent<SPCardZoom>().UnzoomCard();
-
             if (startParent != null)
             {
                 transform.SetParent(startParent, false);
                 transform.position = startPos;
             }
-
-            isDragging = false;
-
-            RemovePlaceholder();
         }
         catch { }
     }

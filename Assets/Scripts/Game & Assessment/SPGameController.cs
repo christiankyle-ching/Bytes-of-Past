@@ -10,7 +10,6 @@ public class SPGameController : MonoBehaviour
     [Header("Tutorial Mode")]
     bool tutorialMode = false;
     public TutorialManager tutorialManager;
-    int tutorialDropPos;
 
     #endregion
 
@@ -18,11 +17,20 @@ public class SPGameController : MonoBehaviour
     int playerLivesLeft = 0;
     bool gameEnded = false;
 
+#if UNITY_EDITOR
+    int turnSeconds = 5;
+    int quizSeconds = 5;
+    int quizIntervalRounds = 5;
+    int turns = 0;
+#else
     // TODO: Set in Prod
+
     int turnSeconds = 45;
     int quizSeconds = 15;
     int quizIntervalRounds = 5;
     int turns = 0;
+#endif
+
 
     [Header("UI References")]
     public Transform playerArea;
@@ -38,7 +46,6 @@ public class SPGameController : MonoBehaviour
     public GameObject lifePrefab;
     public GameObject cardPrefab;
 
-    private StaticData staticData;
     GameDifficulty _difficulty = GameDifficulty.MEDIUM;
     HistoryTopic _topic = HistoryTopic.COMPUTER;
 
@@ -52,9 +59,8 @@ public class SPGameController : MonoBehaviour
     // GAME: Start
     private void Awake()
     {
-        staticData = StaticData.Instance;
-
-        tutorialMode = staticData.SelectedGameMode == GameMode.TUTORIAL;
+        tutorialMode = StaticData.Instance.SelectedGameMode == GameMode.TUTORIAL;
+        Debug.Log("TUTORIALMODE? " + tutorialMode);
 
         _difficulty = StaticData.Instance.SelectedDifficulty;
         _topic = StaticData.Instance.SelectedTopic;
@@ -252,7 +258,7 @@ public class SPGameController : MonoBehaviour
             else
             {
                 // Try again
-                droppedCard.GetComponent<SPDragDrop>().CancelDrag();
+                droppedCard.GetComponent<SPDragDrop>().ResetToOriginalPos();
                 return;
             }
         }
@@ -378,7 +384,7 @@ public class SPGameController : MonoBehaviour
 
     void LoadCards()
     {
-        CardData[] _cards = ResourceParser.Instance.ParseCSVToCards(_topic);
+        CardData[] _cards = ResourceParser.Instance.GetCards(_topic);
 
         // Shuffle
         IEnumerable shuffledDeck = _cards.OrderBy(x => UnityEngine.Random.Range(0f, 1f));
@@ -463,7 +469,7 @@ public class SPGameController : MonoBehaviour
 
     private void TutorialSetupCards()
     {
-        CardData[] _cards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.COMPUTER);
+        CardData[] _cards = ResourceParser.Instance.GetCards(HistoryTopic.COMPUTER);
 
         // Timeline : ENIAC and iPhone
         CardData[] timelineCards = { _cards[6], _cards[37] };

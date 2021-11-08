@@ -10,8 +10,13 @@ public class MPTimer : MonoBehaviour
     public AudioClip tickSFX;
 
     // TODO: Set in Prod
+#if UNITY_EDITOR
+    private int seconds = 5;
+    private int quizSeconds = 5;
+#else
     private int seconds = 30;
     private int quizSeconds = 30;
+#endif
 
     private bool isRunningQuiz = false;
     public Color runningColor = Color.yellow;

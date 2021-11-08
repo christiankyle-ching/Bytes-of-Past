@@ -128,6 +128,7 @@ public class MPDragDrop : NetworkBehaviour
 
     public void OnDiscard()
     {
+        CancelDrag();
         GetComponent<Animator>().SetTrigger("Wrong");
     }
 
@@ -136,10 +137,26 @@ public class MPDragDrop : NetworkBehaviour
         isDraggable = false;
         isDragging = false;
 
+        CancelDrag();
+    }
+
+    public void EnableDrag()
+    {
+        isDraggable = true;
+    }
+
+    public void CancelDrag()
+    {
+        isDragging = false;
+        GetComponent<MPCardZoom>().UnzoomCard();
+        ResetToOriginalPos();
+        RemovePlaceholder();
+    }
+
+    public void ResetToOriginalPos()
+    {
         try
         {
-            GetComponent<MPCardZoom>().UnzoomCard();
-
             if (startParent != null)
             {
                 transform.SetParent(startParent, false);
@@ -147,12 +164,5 @@ public class MPDragDrop : NetworkBehaviour
             }
         }
         catch { }
-
-        RemovePlaceholder();
-    }
-
-    public void EnableDrag()
-    {
-        isDraggable = true;
     }
 }

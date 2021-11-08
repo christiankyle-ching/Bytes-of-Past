@@ -29,6 +29,8 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToMainMenu(bool loadImmediately = false)
     {
+        StaticData.Instance.reachedMainMenuScene = true;
+
         if (loadImmediately)
             SceneManager.LoadScene("Main Menu");
         else
@@ -125,7 +127,6 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToTutorial()
     {
-        StaticData.Instance.showTutorial = true;
         StartCoroutine(LoadScene("Tutorial"));
     }
 

@@ -3,11 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ResourceParser : MonoBehaviour
 {
     private static ResourceParser _instance;
     public static ResourceParser Instance { get { return _instance; } }
+
+    public CardData[] _computerCards;
+    public CardData[] _networkingCards;
+    public CardData[] _softwareCards;
+
+    public bool resourcesLoaded = false;
 
     private void Awake()
     {
@@ -18,44 +25,36 @@ public class ResourceParser : MonoBehaviour
         else
         {
             _instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 
-    public CardData[] ParseCSVToCards(HistoryTopic topic)
+    private void Start()
     {
-        /* 
-        IMPORTANT: Download from Google Sheets in .tsv. Then RENAME format to .csv.
-        Then drag it to Unity (to be recognized as a TextAsset with tabs as delimiters).
-        */
-        List<CardData> cards = new List<CardData>();
+        SceneManager.activeSceneChanged += ChangedActiveScene;
+    }
 
-        // Parse a CSV file containing the questions and answers
-        TextAsset rawData = null;
-
-        switch (topic)
+    private void ChangedActiveScene(Scene current, Scene next)
+    {
+        if (_computerCards == null || _networkingCards == null || _softwareCards == null)
         {
-            case HistoryTopic.COMPUTER:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Computer");
-                break;
-            case HistoryTopic.NETWORKING:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Networking");
-                break;
-            case HistoryTopic.SOFTWARE:
-                rawData =
-                    Resources
-                        .Load
-                        <TextAsset
-                        >("Cards/Cards - Software");
-                break;
+            Debug.Log("CARDS NOT LOADED. PLAY FROM SPLASH SCREEN.");
+
+            TextAsset r0 = Resources.Load<TextAsset>("Cards/Cards - Computer");
+            SetCards(r0, HistoryTopic.COMPUTER);
+
+            TextAsset r1 = Resources.Load<TextAsset>("Cards/Cards - Networking");
+            SetCards(r1, HistoryTopic.NETWORKING);
+
+            TextAsset r2 = Resources.Load<TextAsset>("Cards/Cards - Software");
+            SetCards(r2, HistoryTopic.SOFTWARE);
+
         }
+    }
+
+    public void SetCards(TextAsset rawData, HistoryTopic topic)
+    {
+        List<CardData> cards = new List<CardData>();
 
         if (rawData != null)
         {
@@ -84,7 +83,23 @@ public class ResourceParser : MonoBehaviour
             }
         }
 
-        return cards.ToArray();
+        switch (topic)
+        {
+            case HistoryTopic.COMPUTER:
+                _computerCards = cards.ToArray();
+                Debug.Log($"SetCards: {topic}[{_computerCards.Length}]");
+                break;
+            case HistoryTopic.NETWORKING:
+                _networkingCards = cards.ToArray();
+                Debug.Log($"SetCards: {topic}[{_networkingCards.Length}]");
+                break;
+            case HistoryTopic.SOFTWARE:
+                _softwareCards = cards.ToArray();
+                Debug.Log($"SetCards: {topic}[{_softwareCards.Length}]");
+                break;
+            default:
+                break;
+        }
     }
 
     public QuestionData[] ParseCSVToQuestions(HistoryTopic topic)
@@ -147,4 +162,37 @@ public class ResourceParser : MonoBehaviour
         return questions.ToArray();
     }
 
+    #region Cards
+
+    public CardData GetCard(int index, HistoryTopic _topic)
+    {
+        switch (_topic)
+        {
+            case HistoryTopic.COMPUTER:
+                return _computerCards[index];
+            case HistoryTopic.NETWORKING:
+                return _networkingCards[index];
+            case HistoryTopic.SOFTWARE:
+                return _softwareCards[index];
+        }
+
+        return null;
+    }
+
+    public CardData[] GetCards(HistoryTopic _topic)
+    {
+        switch (_topic)
+        {
+            case HistoryTopic.COMPUTER:
+                return _computerCards;
+            case HistoryTopic.NETWORKING:
+                return _networkingCards;
+            case HistoryTopic.SOFTWARE:
+                return _softwareCards;
+        }
+
+        return null;
+    }
+
+    #endregion
 }

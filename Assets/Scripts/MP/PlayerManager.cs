@@ -41,10 +41,6 @@ public class PlayerManager : NetworkBehaviour
     public Color normalTextColor = Color.white;
     public Color dangerTextColor = Color.red;
 
-    public static List<CardData> computerCards = new List<CardData>();
-    public static List<CardData> networkingCards = new List<CardData>();
-    public static List<CardData> softwareCards = new List<CardData>();
-
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -62,8 +58,6 @@ public class PlayerManager : NetworkBehaviour
         tradingSystem = GameObject.Find("TRADING").GetComponent<TradingSystem>();
         playerStats = GetComponent<PlayerStats>();
         achievementChecker = GameObject.Find("ENDGAMEACH").GetComponentInChildren<EndGameAchievementChecker>();
-
-        LoadCards();
     }
 
     #region ------------------------------ LOCAL LOAD CARDS ------------------------------
@@ -73,28 +67,6 @@ public class PlayerManager : NetworkBehaviour
     {
         _topic = topic;
         tradingSystem.SetTopic(topic);
-    }
-
-    public void LoadCards()
-    {
-        computerCards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.COMPUTER).ToList();
-        networkingCards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.NETWORKING).ToList();
-        softwareCards = ResourceParser.Instance.ParseCSVToCards(HistoryTopic.SOFTWARE).ToList();
-    }
-
-    public static CardData GetCard(int index)
-    {
-        switch (_topic)
-        {
-            case HistoryTopic.COMPUTER:
-                return computerCards[index];
-            case HistoryTopic.NETWORKING:
-                return networkingCards[index];
-            case HistoryTopic.SOFTWARE:
-                return softwareCards[index];
-        }
-
-        return null;
     }
 
     #endregion
@@ -435,7 +407,7 @@ public class PlayerManager : NetworkBehaviour
             }
             catch
             {
-                if (gmState == GameState.STARTED)
+                if (gmState != GameState.WAITING)
                 {
                     playerNameGO.gameObject.GetComponent<TextEllipsisAnimation>().enabled = false;
                     playerNameGO.text = "";
@@ -473,7 +445,7 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcShowCard(GameObject card, int infoIndex, int pos, CARDACTION type, SPECIALACTION special)
     {
-        card.GetComponent<MPCardInfo>().InitCardData(GetCard(infoIndex), special);
+        card.GetComponent<MPCardInfo>().InitCardData(ResourceParser.Instance.GetCard(infoIndex, _topic), special);
         card.GetComponent<MPCardInfo>().infoIndex = infoIndex;
         card.GetComponent<MPDragDrop>().DisableDrag();
 
@@ -515,7 +487,7 @@ public class PlayerManager : NetworkBehaviour
     [TargetRpc]
     public void TargetDiscardRandomHand(NetworkConnection conn, int infoIndex)
     {
-        string cardIdToRemove = GetCard(infoIndex).ID;
+        string cardIdToRemove = ResourceParser.Instance.GetCard(infoIndex, _topic).ID;
 
         for (int i = 0; i < playerArea.transform.childCount; i++)
         {

@@ -8,9 +8,9 @@ public class FirstRunSceneLoader : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("FirstRun: " + StaticData.Instance.showTutorial);
+        Debug.Log("FirstRun: " + StaticData.Instance.reachedMainMenuScene);
 
-        if (!StaticData.Instance.showTutorial)
+        if (!StaticData.Instance.reachedMainMenuScene)
         {
             Debug.Log("Not from Main Menu");
 

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class DifficultySelect : MonoBehaviour
 {
     public GameObject
-
             sceneLoader,
             btnEasy,
             btnMedium,

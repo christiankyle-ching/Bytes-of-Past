@@ -36,7 +36,7 @@ public class TradingSystem : MonoBehaviour
     private uint player1NetId;
     private int selectedCard_player1 = -1;
 
-    public HistoryTopic topic;
+    public HistoryTopic _topic;
 
     void Start()
     {
@@ -47,7 +47,7 @@ public class TradingSystem : MonoBehaviour
 
     public void SetTopic(HistoryTopic _topic)
     {
-        topic = _topic;
+        this._topic = _topic;
     }
 
     public void SetupCanvas(bool _enabled)
@@ -102,7 +102,7 @@ public class TradingSystem : MonoBehaviour
         outline.effectDistance = effectDistance;
 
         // Load Info
-        card.GetComponent<MPCardInfo>().InitCardData(PlayerManager.GetCard(infoIndex));
+        card.GetComponent<MPCardInfo>().InitCardData(ResourceParser.Instance.GetCard(infoIndex, _topic));
         card.GetComponent<MPCardInfo>().infoIndex = infoIndex;
         card.transform.SetParent(parent, false);
 
