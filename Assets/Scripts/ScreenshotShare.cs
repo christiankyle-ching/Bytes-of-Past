@@ -5,8 +5,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Button))]
 public class ScreenshotShare : MonoBehaviour
 {
+    Button _button;
+    TextMeshProUGUI _buttonText;
+
+    private void Start()
+    {
+        _button = GetComponent<Button>();
+        _buttonText = _button.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+
+        string playerName = StaticData.Instance.GetPlayerName();
+
+        _button.interactable = playerName != string.Empty;
+        _buttonText.text = playerName == string.Empty ? "Set your name first!" : "Share";
+
+        _button.onClick.AddListener(Share);
+    }
 
     public void Share()
     {

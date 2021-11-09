@@ -44,4 +44,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MPGame.unity
     guid: d6b776ba53b2e0048b7dcb83ca1a1dcf
+  - enabled: 1
+    path: Assets/Scenes/Developers.unity
+    guid: 6b8ea14a092914048944a5530db55eeb
   m_configObjects: {}

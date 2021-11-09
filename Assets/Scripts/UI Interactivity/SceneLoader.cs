@@ -134,4 +134,9 @@ public class SceneLoader : MonoBehaviour
     {
         StartCoroutine(LoadScene("MPTutorial"));
     }
+
+    public void GoToDevelopers()
+    {
+        StartCoroutine(LoadScene("Developers"));
+    }
 }
