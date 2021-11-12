@@ -20,7 +20,7 @@ public static class CustomSerializer
         }
     }
 
-    public static Dictionary<uint, string> DeserializePlayers(byte[] dataStream)
+    public static Dictionary<uint, string> DeserializeDict_uint_string(byte[] dataStream)
     {
         if (dataStream == null) return null;
 
@@ -49,7 +49,7 @@ public static class CustomSerializer
         }
     }
 
-    public static Dictionary<uint, List<int>> DeserializePlayerHands(byte[] dataStream)
+    public static Dictionary<uint, List<int>> DeserializeDict_uint_listInt(byte[] dataStream)
     {
         if (dataStream == null) return null;
 
@@ -78,7 +78,7 @@ public static class CustomSerializer
         }
     }
 
-    public static Dictionary<uint, int> DeserializePlayerTrades(byte[] dataStream)
+    public static Dictionary<uint, int> DeserializeDict_uint_int(byte[] dataStream)
     {
         if (dataStream == null) return null;
 

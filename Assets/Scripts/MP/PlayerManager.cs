@@ -60,6 +60,13 @@ public class PlayerManager : NetworkBehaviour
         achievementChecker = GameObject.Find("ENDGAMEACH").GetComponentInChildren<EndGameAchievementChecker>();
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        SetScrollButtonsActive(false);
+    }
+
     #region ------------------------------ LOCAL LOAD CARDS ------------------------------
 
     [ClientRpc]
@@ -221,14 +228,16 @@ public class PlayerManager : NetworkBehaviour
         byte[] _playerTrades,
         byte[] _playerAvatars)
     {
-        Dictionary<uint, string> players = CustomSerializer.DeserializePlayers(_players) ?? new Dictionary<uint, string>();
-        Dictionary<uint, List<int>> playerHands = CustomSerializer.DeserializePlayerHands(_playerHands) ?? new Dictionary<uint, List<int>>();
-        Dictionary<uint, string> winners = CustomSerializer.DeserializePlayers(_winners) ?? new Dictionary<uint, string>();
-        Dictionary<uint, int> playerTrades = CustomSerializer.DeserializePlayerTrades(_playerTrades) ?? new Dictionary<uint, int>();
-        Dictionary<uint, int> playerAvatars = CustomSerializer.DeserializePlayerTrades(_playerAvatars) ?? new Dictionary<uint, int>();
+        Dictionary<uint, string> players = CustomSerializer.DeserializeDict_uint_string(_players) ?? new Dictionary<uint, string>();
+        Dictionary<uint, List<int>> playerHands = CustomSerializer.DeserializeDict_uint_listInt(_playerHands) ?? new Dictionary<uint, List<int>>();
+        Dictionary<uint, string> winners = CustomSerializer.DeserializeDict_uint_string(_winners) ?? new Dictionary<uint, string>();
+        Dictionary<uint, int> playerTrades = CustomSerializer.DeserializeDict_uint_int(_playerTrades) ?? new Dictionary<uint, int>();
+        Dictionary<uint, int> playerAvatars = CustomSerializer.DeserializeDict_uint_int(_playerAvatars) ?? new Dictionary<uint, int>();
 
         winners.TryGetValue(NetworkClient.localPlayer.netId, out string _playerName);
         bool gameWon = _playerName != null;
+
+        SetScrollButtonsActive(gmState != GameState.WAITING);
 
         if (gmState == GameState.FINISHED)
         {
@@ -524,6 +533,18 @@ public class PlayerManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(1f);
         NetworkServer.Destroy(obj);
+    }
+
+    public void SetScrollButtonsActive(bool isActive)
+    {
+        Transform playerScroll = playerArea.transform.parent.parent;
+        Transform timelineScroll = dropzone.transform.parent.parent;
+
+        // Left and Right buttons are [1] and [2]
+        playerScroll.GetChild(1).gameObject.SetActive(isActive);
+        playerScroll.GetChild(2).gameObject.SetActive(isActive);
+        timelineScroll.GetChild(1).gameObject.SetActive(isActive);
+        timelineScroll.GetChild(2).gameObject.SetActive(isActive);
     }
 
     #endregion
