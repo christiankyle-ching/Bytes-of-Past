@@ -10,6 +10,9 @@ TagManager:
   - Graveyard
   - PlayerLives
   - Menu
+  - Static Data
+  - BGMAudioSource
+  - DropZone
   layers:
   - Default
   - TransparentFX
@@ -19,8 +22,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Cards
+  - DropZones
   - 
   - 
   - 
