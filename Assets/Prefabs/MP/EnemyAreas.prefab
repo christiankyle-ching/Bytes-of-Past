@@ -918,6 +918,7 @@ GameObject:
   - component: {fileID: 2058545237891155501}
   - component: {fileID: 4758769818848818088}
   - component: {fileID: 414010822263575208}
+  - component: {fileID: 2115100533984547164}
   m_Layer: 5
   m_Name: AVATAR
   m_TagString: Untagged
@@ -993,6 +994,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07fa6f0b04fe9b74fa0c6c3cd8c57ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2115100533984547164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3377318333919826457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &3620441628204440911
 GameObject:
   m_ObjectHideFlags: 0
@@ -2200,6 +2216,7 @@ GameObject:
   - component: {fileID: 6825224484766097255}
   - component: {fileID: 1404721541877544273}
   - component: {fileID: 2402968608296935260}
+  - component: {fileID: 6884043117511728033}
   m_Layer: 5
   m_Name: AVATAR
   m_TagString: Untagged
@@ -2275,6 +2292,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07fa6f0b04fe9b74fa0c6c3cd8c57ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6884043117511728033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5629969697679005124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &5794698977018677963
 GameObject:
   m_ObjectHideFlags: 0
@@ -2383,6 +2415,7 @@ GameObject:
   - component: {fileID: 2107684416000640157}
   - component: {fileID: 7018636373447549050}
   - component: {fileID: 349428014189488711}
+  - component: {fileID: 3698275933746699652}
   m_Layer: 5
   m_Name: AVATAR
   m_TagString: Untagged
@@ -2458,6 +2491,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07fa6f0b04fe9b74fa0c6c3cd8c57ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3698275933746699652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5859631086363531269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &6375710162959003007
 GameObject:
   m_ObjectHideFlags: 0
