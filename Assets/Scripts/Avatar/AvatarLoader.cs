@@ -11,7 +11,12 @@ public enum Avatar
 {
     MALE_0,
     MALE_1,
+    MALE_2,
+    MALE_3,
     FEMALE_0,
+    FEMALE_1,
+    FEMALE_2,
+    FEMALE_3,
 }
 
 [RequireComponent(typeof(Image))]
