@@ -11,12 +11,17 @@ public class SettingsScript : MonoBehaviour
 {
     private int switchState = 1;
 
+    public GameObject settingsCanvas;
     public GameObject switchBtn;
     public Slider volumeSlider;
     public TMP_Dropdown qualityDropdown;
+    public Button btnUpdate;
 
     void Start()
     {
+        settingsCanvas.SetActive(false);
+        btnUpdate.GetComponentInChildren<TextMeshProUGUI>().text = $"Check for Updates (Current: v{Application.version})";
+
         // Load last saved settings
         switchState = PlayerPrefs.GetInt(SoundManager.SFXPREFKEY, 1);
         if (switchState < 0) OnSFXSwitchButtonClicked();

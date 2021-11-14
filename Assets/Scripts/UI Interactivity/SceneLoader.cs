@@ -9,7 +9,6 @@ public class SceneLoader : MonoBehaviour
 {
     public Animator transition;
     private float transitionTime = 0.5f;
-    public Button backBtn;
 
     public void GoBack()
     {
@@ -17,8 +16,6 @@ public class SceneLoader : MonoBehaviour
         {
             int lastSceneIndex = StaticData.Instance.SceneIndexHistory.Pop();
             StartCoroutine(LoadScene(lastSceneIndex, true));
-            backBtn.transform.localScale = new Vector2(.9f, .9f);
-
         }
         catch (InvalidOperationException)
         {

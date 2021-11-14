@@ -1,4 +1,11 @@
-﻿public static class TopicUtils
+﻿using System;
+using System.Collections;
+using System.Linq;
+using System.Text.RegularExpressions;
+using UnityEngine;
+using UnityEngine.Networking;
+
+public static class TopicUtils
 {
     public static string GetName(HistoryTopic topic)
     {
