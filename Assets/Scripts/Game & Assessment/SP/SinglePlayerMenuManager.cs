@@ -101,8 +101,8 @@ public class SinglePlayerMenuManager : MonoBehaviour
             staticData.SelectedDifficulty,
             isGameWon,
             playerStats.Accuracy,
-            playerStats.remainingLife,
-            playerStats.initialLife);
+            playerStats.remainingLives,
+            playerStats.totalLives);
 
         achievementSystem.ViewAcquiredAchievements(gameData);
     }

@@ -49,7 +49,7 @@ public class PlayerManager : NetworkBehaviour
         enemyAreas = GameObject.Find("EnemyAreas");
         gameStateText = GameObject.Find("RoundText");
         activeSpecialAction = GameObject.Find("ActiveSpecialAction");
-        deck = GameObject.Find("Deck");
+        deck = GameObject.Find("MPDeck");
         timer = GameObject.Find("MPTimer").GetComponent<MPTimer>();
         dropzone = GameObject.FindGameObjectWithTag("Timeline");
         menuCanvas = GameObject.Find("MenuCanvas").GetComponent<MPCanvasHUD>();

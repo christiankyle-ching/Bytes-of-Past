@@ -6,12 +6,14 @@ using UnityEngine;
 
 public class SPGameController : MonoBehaviour
 {
-    #region
+    #region Tutorial
+
     [Header("Tutorial Mode")]
     bool tutorialMode = false;
     public TutorialManager tutorialManager;
 
     #endregion
+
     bool gameEnded = false;
 
 #if UNITY_EDITOR

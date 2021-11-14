@@ -40,6 +40,7 @@ public class StaticData : MonoBehaviour
         else
         {
             _instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 

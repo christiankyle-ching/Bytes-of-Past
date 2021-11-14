@@ -38,9 +38,8 @@ public class SoundManager : MonoBehaviour
         else
         {
             _instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
-
-        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Start()

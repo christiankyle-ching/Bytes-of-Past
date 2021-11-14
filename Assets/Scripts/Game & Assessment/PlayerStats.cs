@@ -8,8 +8,8 @@ public class PlayerStats : MonoBehaviour
     private int attemptCount;
     private int correctAttempts;
 
-    public int remainingLife;
-    public int initialLife;
+    public int remainingLives;
+    public int totalLives;
 
     public float Accuracy
     {
@@ -31,8 +31,8 @@ public class PlayerStats : MonoBehaviour
     {
         this.correctAttempts = 0;
         this.attemptCount = 0;
-        this.remainingLife = 0;
-        this.initialLife = 0;
+        this.remainingLives = 0;
+        this.totalLives = 0;
     }
 
     public void CorrectDrop()
@@ -44,6 +44,5 @@ public class PlayerStats : MonoBehaviour
     public void IncorrectDrop()
     {
         attemptCount++;
-        remainingLife--;
     }
 }

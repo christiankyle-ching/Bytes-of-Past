@@ -31,13 +31,11 @@ public class ButtonScroller : MonoBehaviour
         // Flip the sign again, because it's actually the other way around
 
         scroller.velocity = new Vector2(realDirection * scrollSensitivity * 100f, 0);
-
-        Debug.Log(realDirection * 1000f);
     }
 
     public void OnScrollerPositionChanged(Vector2 position)
     {
-        btnLeft.interactable = scroller.horizontalNormalizedPosition > 0.25f;
-        btnRight.interactable = scroller.horizontalNormalizedPosition < 0.75f;
+        btnLeft.interactable = scroller.horizontalNormalizedPosition > 0.1f;
+        btnRight.interactable = scroller.horizontalNormalizedPosition < 0.9f;
     }
 }
