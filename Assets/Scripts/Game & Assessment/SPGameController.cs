@@ -12,9 +12,6 @@ public class SPGameController : MonoBehaviour
     public TutorialManager tutorialManager;
 
     #endregion
-
-    int playerLives = 0;
-    int playerLivesLeft = 0;
     bool gameEnded = false;
 
 #if UNITY_EDITOR
@@ -24,7 +21,6 @@ public class SPGameController : MonoBehaviour
     int turns = 0;
 #else
     // TODO: Set in Prod
-
     int turnSeconds = 45;
     int quizSeconds = 15;
     int quizIntervalRounds = 5;
@@ -145,17 +141,12 @@ public class SPGameController : MonoBehaviour
     {
         for (int i = 0; i < count; i++) { AddLife(); }
 
-        playerLives = count;
-
-        playerLivesLeft = playerLives;
-
-        playerStats.initialLife = playerLives;
-        playerStats.remainingLife = playerLivesLeft;
+        playerStats.totalLives = count;
     }
 
     void AddLife()
     {
-        playerStats.remainingLife++;
+        playerStats.remainingLives++;
         Instantiate(lifePrefab, playerLivesContainer);
     }
 
@@ -189,12 +180,10 @@ public class SPGameController : MonoBehaviour
 
         playerLivesContainer.GetChild(0).GetComponent<Life>().Discard(); // TODO: Problematic
 
-        playerLivesLeft--;
-        playerStats.remainingLife = playerLivesLeft;
+        playerStats.remainingLives--;
 
-        // If the index is 0 (which means that the destroyed life is the last one)
         // End the Game
-        if (playerLivesLeft <= 0)
+        if (playerStats.remainingLives <= 0)
         {
             EndGame(false);
         }
