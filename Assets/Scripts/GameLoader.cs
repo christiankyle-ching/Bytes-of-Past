@@ -23,31 +23,20 @@ public class GameLoader : MonoBehaviour
         ResourceRequest req1 = Resources.LoadAsync<TextAsset>("Cards/Cards - Networking");
         ResourceRequest req2 = Resources.LoadAsync<TextAsset>("Cards/Cards - Software");
 
-        // COMPUTER
-        while (!req0.isDone)
+        while (!req0.isDone || !req1.isDone || !req2.isDone)
         {
-            //UpdateProgress(req0.progress, req1.progress, req2.progress);
+#if UNITY_EDITOR
+            UpdateProgress(req0.progress, req1.progress, req2.progress);
+#endif
             yield return null;
         }
+
         ResourceParser.Instance.SetCards(req0.asset as TextAsset, HistoryTopic.COMPUTER);
-
-        // NETWORKING
-        while (!req1.isDone)
-        {
-            //UpdateProgress(req0.progress, req1.progress, req2.progress);
-            yield return null;
-        }
         ResourceParser.Instance.SetCards(req1.asset as TextAsset, HistoryTopic.NETWORKING);
-
-        // SOFTWARE
-        while (!req2.isDone)
-        {
-            //UpdateProgress(req0.progress, req1.progress, req2.progress);
-            yield return null;
-        }
         ResourceParser.Instance.SetCards(req2.asset as TextAsset, HistoryTopic.SOFTWARE);
 
-        // Artificial Loading
+#if !UNITY_EDITOR
+        // Artificial Loading for Release
         float j = 0;
         while (j < 1f)
         {
@@ -55,15 +44,26 @@ public class GameLoader : MonoBehaviour
             UpdateProgress(Mathf.Clamp01(j));
             yield return new WaitForSecondsRealtime(.01f);
         }
-
+#endif
 
         //UpdateProgress(req0.progress, req1.progress, req2.progress);
         Debug.Log($"Finished Loading Resources... {req0.isDone}, {req1.isDone}, {req2.isDone}");
         Debug.Log($"Finished Loading Resources... {req0.progress}, {req1.progress}, {req2.progress}");
 
-        sceneLoader.GoToTutorial();
+        // If GameHasRun, go to main menu, else, show tutorial first
+        if (PlayerPrefs.GetInt("GameHasRun", 0) == 1)
+        {
+            sceneLoader.GoToMainMenu();
+        }
+        else
+        {
+            sceneLoader.GoToTutorial();
+            PlayerPrefs.SetInt("GameHasRun", 1);
+        }
+
     }
 
+    // Method can still be used when we want to use real progress
     void UpdateProgress(params float[] progresses)
     {
         float overallProgress = progresses.Sum() / progresses.Length;

@@ -65,7 +65,6 @@ public class StaticData : MonoBehaviour
     public Stack<int> SceneIndexHistory = new Stack<int>();
 
     public ProfileStatisticsData profileStatisticsData;
-    public bool reachedMainMenuScene = false;
 
     public void LoadProfileData()
     {

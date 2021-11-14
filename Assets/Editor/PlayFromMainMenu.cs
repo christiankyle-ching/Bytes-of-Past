@@ -13,7 +13,7 @@ public class PlayFromMainMenu
     static PlayFromMainMenu()
     {
         // Comment out to debug a specific scene easily
-        string path = "Assets/Scenes/Tutorial.unity";
+        string path = "Assets/Scenes/SplashScreen.unity";
         EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
     }
 }

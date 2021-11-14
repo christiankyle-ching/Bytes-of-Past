@@ -26,8 +26,6 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToMainMenu(bool loadImmediately = false)
     {
-        StaticData.Instance.reachedMainMenuScene = true;
-
         if (loadImmediately)
             SceneManager.LoadScene("Main Menu");
         else
