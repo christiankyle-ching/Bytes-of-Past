@@ -59,10 +59,17 @@ public class SPCardZoom : MonoBehaviour
         zoomCard = Instantiate(zoomCardPrefab);
         zoomCard.transform.SetParent(canvas, false);
         zoomCard.transform.localPosition = new Vector2(0f, 0f);
-        
+
         CardData data = GetComponent<SPCardInfo>().cardData;
         zoomCard.GetComponent<SPCardInfo>().InitCardData(data);
-        zoomCard.GetComponent<Animator>().SetTrigger("Zoom");
+        if (GetComponent<SPCardInfo>().isRevealed)
+        {
+            zoomCard.GetComponent<Animator>().SetTrigger("ZoomWithYear");
+        }
+        else
+        {
+            zoomCard.GetComponent<Animator>().SetTrigger("Zoom");
+        }
     }
 
     public void UnzoomCard()

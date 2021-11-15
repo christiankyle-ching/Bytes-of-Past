@@ -598,7 +598,7 @@ public class MPGameManager : NetworkBehaviour
 
     // TODO: Set in Prod
     [Range(0f, 1f)]
-    private float specialActionRate = 0.15f; // 0.0 to 1.0 = Percentage of special action
+    private float specialActionRate = 0.3f; // 0.0 to 1.0 = Percentage of special action
 
     public SPECIALACTION GetRandomSpecialAction()
     {

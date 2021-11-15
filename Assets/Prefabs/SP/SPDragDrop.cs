@@ -148,7 +148,6 @@ public class SPDragDrop : MonoBehaviour
 
     public void OnPlaceCorrect()
     {
-        GetComponent<Animator>().SetTrigger("Correct");
         DisableDrag();
     }
 

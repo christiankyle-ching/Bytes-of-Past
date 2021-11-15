@@ -264,6 +264,8 @@ public class SPGameController : MonoBehaviour
             {
                 droppedCard.GetComponent<SPDragDrop>().ReplacePlaceholder();
                 droppedCard.GetComponent<SPDragDrop>().OnPlaceCorrect();
+                droppedCard.GetComponent<SPCardInfo>().RevealCard();
+
                 playerStats.CorrectDrop();
 
                 messenger.ShowMessage("Good Job! That's correct.", MPGameMessageType.CORRECT);
@@ -446,7 +448,11 @@ public class SPGameController : MonoBehaviour
         card.GetComponent<SPCardInfo>().cardData = data;
         card.GetComponent<SPCardInfo>().InitCardData(data);
 
-        if (showYear) card.GetComponent<SPDragDrop>().OnPlaceCorrect();
+        if (showYear)
+        {
+            card.GetComponent<SPDragDrop>().OnPlaceCorrect();
+            card.GetComponent<SPCardInfo>().RevealCard();
+        }
 
         card.transform.SetParent(container, false);
     }

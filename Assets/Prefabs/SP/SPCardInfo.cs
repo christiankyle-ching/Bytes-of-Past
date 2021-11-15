@@ -60,4 +60,10 @@ public class SPCardInfo : MonoBehaviour
                 return Resources.Load<Sprite>("Cards/Templates/Orange");
         }
     }
+
+    public void RevealCard()
+    {
+        isRevealed = true;
+        GetComponent<Animator>().SetTrigger("Correct");
+    }
 }

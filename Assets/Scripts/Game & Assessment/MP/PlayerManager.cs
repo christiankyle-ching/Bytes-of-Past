@@ -488,7 +488,7 @@ public class PlayerManager : NetworkBehaviour
 
         if (cardCount > 0)
         {
-            int randIndex = UnityEngine.Random.Range(0, cardCount);
+            int randIndex = UnityEngine.Random.Range(0, cardCount - 1);
             playerArea.transform.GetChild(randIndex).GetComponent<MPCardInfo>().RevealCard();
         }
     }
