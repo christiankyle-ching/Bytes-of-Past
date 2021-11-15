@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using LogicUI.FancyTextRendering;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,17 +10,21 @@ public class CreditsLoader : MonoBehaviour
     [Header("Child References")]
     public ScrollRect container;
     public GameObject panel;
-    public TextMeshProUGUI txtCHM;
-    public TextMeshProUGUI txtMusic;
-    public TextMeshProUGUI txtImagesComputer;
-    public TextMeshProUGUI txtImagesSoftware;
-    public TextMeshProUGUI txtImagesNetworking;
+    public MarkdownRenderer txtCHM;
+    public MarkdownRenderer txtMusic;
+    public MarkdownRenderer txtSFX;
+    public MarkdownRenderer txtUI;
+    public MarkdownRenderer txtImagesComputer;
+    public MarkdownRenderer txtImagesSoftware;
+    public MarkdownRenderer txtImagesNetworking;
 
     [Header("Auto-Scroll")]
     public float scrollSensitivity = 1000f;
 
     private TextAsset chm;
     private TextAsset music;
+    private TextAsset sfx;
+    private TextAsset ui;
     private TextAsset imagesComputer;
     private TextAsset imagesSoftware;
     private TextAsset imagesNetworking;
@@ -28,28 +33,26 @@ public class CreditsLoader : MonoBehaviour
 
     private void Awake()
     {
-        chm = Resources.Load<TextAsset>("Licenses/license_chm");
-        music = Resources.Load<TextAsset>("Licenses/license_music");
-        imagesComputer = Resources.Load<TextAsset>("Licenses/license_images_computer");
-        imagesSoftware = Resources.Load<TextAsset>("Licenses/license_images_networking");
-        imagesNetworking = Resources.Load<TextAsset>("Licenses/license_images_software");
+        chm = Resources.Load<TextAsset>("Licenses/chm");
+        music = Resources.Load<TextAsset>("Licenses/bgm");
+        sfx = Resources.Load<TextAsset>("Licenses/sfx");
+        ui = Resources.Load<TextAsset>("Licenses/ui");
+        imagesComputer = Resources.Load<TextAsset>("Licenses/computer_images");
+        imagesSoftware = Resources.Load<TextAsset>("Licenses/networking_images");
+        imagesNetworking = Resources.Load<TextAsset>("Licenses/software_images");
 
-        txtCHM.text = chm.text;
-        txtMusic.text = music.text;
-        txtImagesComputer.text = imagesComputer.text;
-        txtImagesSoftware.text = imagesSoftware.text;
-        txtImagesNetworking.text = imagesNetworking.text;
+        txtCHM.Source = chm.text;
+        txtMusic.Source = music.text;
+        txtSFX.Source = sfx.text;
+        txtUI.Source = ui.text;
+        txtImagesComputer.Source = imagesComputer.text;
+        txtImagesSoftware.Source = imagesSoftware.text;
+        txtImagesNetworking.Source = imagesNetworking.text;
     }
 
     private void Start()
     {
         LayoutRebuilder.ForceRebuildLayoutImmediate(panel.GetComponent<RectTransform>());
-
-        txtCHM.ForceMeshUpdate();
-        txtMusic.ForceMeshUpdate();
-        txtImagesComputer.ForceMeshUpdate();
-        txtImagesSoftware.ForceMeshUpdate();
-        txtImagesNetworking.ForceMeshUpdate();
 
         Invoke(nameof(StartScrolling), 1f);
     }
@@ -66,7 +69,8 @@ public class CreditsLoader : MonoBehaviour
             if (container.verticalNormalizedPosition >= 0.01f)
             {
                 container.velocity = new Vector2(0f, scrollSensitivity);
-            } else
+            }
+            else
             {
                 isScrolling = false;
             }
