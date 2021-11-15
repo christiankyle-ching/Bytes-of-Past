@@ -5,14 +5,32 @@ using UnityEngine;
 
 public class StudentProfileHandler : MonoBehaviour
 {
-    public GameObject
+    // TODO: Set in Prod
+    int minNameLength = 4;
 
-            txtStudentName,
-            dropdownStudentSection;
+    public TMP_InputField txtStudentName;
+    public TMP_Dropdown dropdownStudentSection;
 
-    public void OnEndEditName(string text)
+    Color defaultColor = Color.white;
+
+    public void OnNameValueChanged(string text)
     {
-        PlayerPrefs.SetString("Profile_Name", text);
+        if (IsNameValid(text))
+        {
+            txtStudentName.textComponent.color = defaultColor;
+        }
+        else
+        {
+            txtStudentName.textComponent.color = Color.red;
+        }
+    }
+
+    public void OnNameEndEdit(string text)
+    {
+        if (IsNameValid(text))
+        {
+            PlayerPrefs.SetString("Profile_Name", text);
+        }
     }
 
     public void OnValueChangedSection(int sectionIndex)
@@ -22,10 +40,15 @@ public class StudentProfileHandler : MonoBehaviour
 
     void Start()
     {
-        txtStudentName.GetComponent<TMP_InputField>().text =
-            StaticData.Instance.GetPlayerName();
+        defaultColor = txtStudentName.textComponent.color;
 
-        dropdownStudentSection.GetComponent<TMP_Dropdown>().value =
-            StaticData.Instance.GetPlayerSection();
+        // Load Saved
+        txtStudentName.text = StaticData.Instance.GetPlayerName();
+        dropdownStudentSection.value = StaticData.Instance.GetPlayerSection();
+    }
+
+    public bool IsNameValid(string name)
+    {
+        return name.Length >= minNameLength;
     }
 }

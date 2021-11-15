@@ -19,7 +19,7 @@ public class ScreenshotShare : MonoBehaviour
         string playerName = StaticData.Instance.GetPlayerName();
 
         _button.interactable = playerName != string.Empty;
-        _buttonText.text = playerName == string.Empty ? "Set your name first!" : "Share";
+        _buttonText.text = playerName == string.Empty ? "Cannot Share Without Name" : "Share";
 
         _button.onClick.AddListener(Share);
     }
