@@ -10,7 +10,7 @@ public class SPDragDrop : MonoBehaviour
     public GameObject placeholderPrefab;
     public GameObject canvas;
 
-    private bool isDragging = false;
+    public bool isDragging = false;
     private bool isDraggable = true;
     private Transform startParent;
     private Vector2 startPos;
@@ -56,6 +56,22 @@ public class SPDragDrop : MonoBehaviour
             {
                 // FIXME: dont know what the heck this is all about but it works
             }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!isDragging) return;
+
+        Collider2D collider = collision.collider;
+
+        if (collider != null)
+        {
+            try
+            {
+                collider.gameObject.GetComponent<CardScrollerButton>().OnHover();
+            }
+            catch { }
         }
     }
 

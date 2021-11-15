@@ -31,8 +31,6 @@ public class DifficultySelect : MonoBehaviour
 
     void OnDifficultySelect(GameDifficulty difficulty)
     {
-        SoundManager.Instance.PlayClickedSFX();
-
         StaticData staticData = StaticData.Instance;
 
         // Set Difficulty

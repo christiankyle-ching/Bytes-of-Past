@@ -382,7 +382,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6
+  m_fontSize: 19.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -473,7 +473,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 250, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4569149454538210266
 CanvasRenderer:
@@ -528,6 +528,7 @@ MonoBehaviour:
   placeholderPrefab: {fileID: 8732318628722396670, guid: 64f9b276a9e8a0f4ba9f977b881da68a,
     type: 3}
   canvas: {fileID: 0}
+  isDragging: 0
 --- !u!114 &4569149454538210265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -665,7 +666,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 37.696823, y: 228.30807}
+  m_Size: {x: 110, y: 250}
   m_EdgeRadius: 0
 --- !u!50 &8525798716218261136
 Rigidbody2D:
@@ -1096,7 +1097,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 8
+  m_fontSize: 16.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
