@@ -25,3 +25,7 @@ Background has a BG prefab that includes cloud animations.
 - Add a `Scene Loader` prefab to each scene. Then hide it in the editor to be able to see the actual scene. `Scene Loader` should be placed as the bottom-most layer to make the scene transitions visible.
 - `BtnBack` for back button. Then, set the `Click` event on the button to the `SceneLoader.GoBack()` method.
 
+## Used Assets
+- [Mirror Networking](https://mirror-networking.com/)
+- https://github.com/JimmyCushnie/FancyTextRendering
+- See .txt files in [Licenses](Assets/Resources/Licenses/) for other attributions.
