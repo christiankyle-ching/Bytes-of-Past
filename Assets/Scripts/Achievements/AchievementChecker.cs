@@ -29,25 +29,28 @@ public static class AchievementChecker
 
         bool acquired = false;
 
+        bool SPMedOrHard = gameData.gameMode == GameMode.SP && gameData.difficulty != GameDifficulty.EASY;
+        bool MP = gameData.gameMode == GameMode.MP;
+        bool isFullLives = gameData.remainingLife >= gameData.initialLife;
+
         // Checker Functions : sets the value of acquired
         // if the achievement is just achieved in this game session (gameData)
         switch (achievementID)
         {
             case 0:
-                acquired = gameData.gameMode == GameMode.SP &&
-                    gameData.remainingLife == gameData.initialLife;
+                acquired = (SPMedOrHard) && isFullLives;
                 break;
             case 1:
-                acquired = gameData.accuracy == 0.5f;
+                acquired = (SPMedOrHard || MP) && gameData.accuracy == 0.5f;
                 break;
             case 2:
-                acquired = gameData.gameWon;
+                acquired = (SPMedOrHard || MP) && gameData.gameWon;
                 break;
             case 3:
-                acquired = gameData.accuracy >= 0.8f;
+                acquired = (SPMedOrHard || MP) && gameData.accuracy >= 0.8f;
                 break;
             case 4:
-                acquired = gameData.gameMode == GameMode.MP && gameData.gameWon;
+                acquired = (MP) && gameData.gameWon;
                 break;
             case 5:
                 bool t1 = PrefsConverter.IntToBoolean(PlayerPrefs.GetInt(TopicUtils.GetPrefKey_IsPlayed(HistoryTopic.COMPUTER), 0));
@@ -71,7 +74,7 @@ public static class AchievementChecker
                     gameData.gameMode == GameMode.SP &&
                     gameData.difficulty == GameDifficulty.HARD &&
                     gameData.gameWon &&
-                    gameData.remainingLife == gameData.initialLife;
+                    isFullLives;
                 if (isRightGameParams)
                 {
                     int currentWins = PlayerPrefs.GetInt(prefKey, 0);

@@ -144,6 +144,8 @@ public class SPGameController : MonoBehaviour
         for (int i = 0; i < count; i++) { AddLife(); }
 
         playerStats.totalLives = count;
+
+        if (_difficulty == GameDifficulty.EASY) playerLivesContainer.GetComponent<CanvasGroup>().alpha = 0f;
     }
 
     void AddLife()

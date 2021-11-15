@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4819708409658245168}
   - component: {fileID: 4819708409658245171}
   - component: {fileID: 4819708409658245170}
+  - component: {fileID: 2219418883248938818}
   m_Layer: 5
   m_Name: PlayerLives
   m_TagString: PlayerLives
@@ -99,3 +100,15 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 1
+--- !u!225 &2219418883248938818
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4819708409658245172}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

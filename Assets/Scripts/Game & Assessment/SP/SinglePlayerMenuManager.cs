@@ -79,7 +79,9 @@ public class SinglePlayerMenuManager : MonoBehaviour
         accuracyText.GetComponent<TextMeshProUGUI>().text =
             playerStats.AccuracyText;
 
+        // Setup Canvas
         endGameMenu.SetActive(true);
+        btnPause.gameObject.SetActive(false);
 
         // Save new accuracy
         staticData

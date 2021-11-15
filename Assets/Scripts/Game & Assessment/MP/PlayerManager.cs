@@ -576,18 +576,25 @@ public class PlayerManager : NetworkBehaviour
             {
                 Debug.Log("END GAME: UPDATE STATS EDITOR");
 
+                // Set the topic as already played
+                PlayerPrefs
+                    .SetInt(
+                    TopicUtils.GetPrefKey_IsPlayed(StaticData.Instance.SelectedTopic),
+                    1);
+
                 StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
-                _topic, playerStats.Accuracy, gameWon);
+                    _topic, playerStats.Accuracy, gameWon);
             }
         }
-        else
-        {
-            StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
-            _topic, playerStats.Accuracy, gameWon);
-        }
 #else
+        // Set the topic as already played
+        PlayerPrefs
+            .SetInt(
+            TopicUtils.GetPrefKey_IsPlayed(StaticData.Instance.SelectedTopic),
+            1);
+
         StaticData.Instance.profileStatisticsData.UpdateMPGameAccuracy(
-                    _topic, playerStats.Accuracy, gameWon);
+            _topic, playerStats.Accuracy, gameWon);        
 #endif
 
         achievementChecker.ViewAcquiredAchievements(new GameData(GameMode.MP, GameDifficulty.EASY, gameWon, playerStats.Accuracy, -1, -1));
