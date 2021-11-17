@@ -18,6 +18,7 @@ public class AppUpdater : MonoBehaviour
     public Button btnClose;
 
     Animator anim;
+    string _downloadUrl = "";
 
     readonly string githubReleasesUrlApi =
         "https://api.github.com/repos/christiankyle-ching/Prototype--Bytes-of-Past/releases?per_page=1&page=1";
@@ -46,10 +47,12 @@ public class AppUpdater : MonoBehaviour
 
     void CheckUpdates()
     {
-        StartCoroutine(GetLatestVersion((version, desc) =>
+        StartCoroutine(GetLatestVersion((version, desc, downloadUrl) =>
         {
             int curVersion = ParseVersion(GetCurrentVersion());
             int latestVersion = ParseVersion(version);
+
+            _downloadUrl = downloadUrl;
 
             // DEBUG: Show latest version
             //txtUpdate.Source = GetChangelog(version, desc);
@@ -65,7 +68,7 @@ public class AppUpdater : MonoBehaviour
 
     public void GoToDownloads()
     {
-        Application.OpenURL(githubReleasesUrl);
+        Application.OpenURL(_downloadUrl);
     }
 
     public string GetCurrentVersion()
@@ -74,7 +77,7 @@ public class AppUpdater : MonoBehaviour
     }
 
     // Callback(string version, string description)
-    public IEnumerator GetLatestVersion(Action<string, string> callback)
+    public IEnumerator GetLatestVersion(Action<string, string, string> callback)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(githubReleasesUrlApi))
         {
@@ -85,7 +88,7 @@ public class AppUpdater : MonoBehaviour
 
             if (webRequest.isHttpError)
             {
-                callback("", "");
+                callback("", "", "");
             }
             else
             {
@@ -95,12 +98,16 @@ public class AppUpdater : MonoBehaviour
                 Regex rxDesc = new Regex(@"""body"":\s*""(?<desc>.*)""\s*}\s*]");
                 Match matchDesc = rxDesc.Match(webRequest.downloadHandler.text);
 
+                Regex rxDownload = new Regex(@"""browser_download_url"":\s*""(?<url>[^""]*)""");
+                Match matchDownload = rxDownload.Match(webRequest.downloadHandler.text);
+
                 if (matchVersion.Success)
                 {
                     string version = matchVersion.Groups["version"].Value;
                     string desc = matchDesc.Success ? matchDesc.Groups["desc"].Value : "";
+                    string url = matchDownload.Success ? matchDownload.Groups["url"].Value : "";
 
-                    callback(version, ParseDescription(desc));
+                    callback(version, ParseDescription(desc), url);
                 }
             }
 
