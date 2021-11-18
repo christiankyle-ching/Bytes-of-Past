@@ -9,13 +9,17 @@ public class SceneLoader : MonoBehaviour
 {
     public Animator transition;
     private float transitionTime = 0.5f;
+    private bool isLoading = false;
 
     public void GoBack()
     {
         try
         {
-            int lastSceneIndex = StaticData.Instance.SceneIndexHistory.Pop();
-            StartCoroutine(LoadScene(lastSceneIndex, true));
+            if (!isLoading)
+            {
+                int lastSceneIndex = StaticData.Instance.SceneIndexHistory.Pop();
+                StartCoroutine(LoadScene("", lastSceneIndex, true));
+            }
         }
         catch (InvalidOperationException)
         {
@@ -71,8 +75,12 @@ public class SceneLoader : MonoBehaviour
         StartCoroutine(LoadScene("Credits"));
     }
 
-    IEnumerator LoadScene(string sceneName, bool isGoingBack = false)
+    IEnumerator LoadScene(string sceneName, int sceneIndex = -1, bool isGoingBack = false)
     {
+        if (isLoading) yield break;
+
+        isLoading = true;
+
         Debug.Log("SceneLoader: " + sceneName);
 
         SoundManager.Instance.PlayClickedSFX();
@@ -85,39 +93,26 @@ public class SceneLoader : MonoBehaviour
         transition.SetTrigger("Start");
         yield return new WaitForSeconds(transitionTime);
 
-        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-        op.allowSceneActivation = false;
-
-        while (!op.isDone)
+        AsyncOperation op;
+        if (sceneIndex > 0)
         {
-            if (op.progress >= 0.9f)
-            {
-                op.allowSceneActivation = true;
-            }
-
-            yield return null;
+            op = SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Single);
         }
-    }
-
-    IEnumerator LoadScene(int buildIndex, bool isGoingBack = false)
-    {
-        SoundManager.Instance.PlayClickedSFX();
-
-        if (!isGoingBack && StaticData.Instance != null)
-            StaticData.Instance
-                .SceneIndexHistory
-                .Push(SceneManager.GetActiveScene().buildIndex);
-
-        transition.SetTrigger("Start");
-        yield return new WaitForSeconds(transitionTime);
-
-        AsyncOperation op = SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Single);
+        else if (sceneName != string.Empty)
+        {
+            op = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        }
+        else
+        {
+            op = SceneManager.LoadSceneAsync("Main Menu", LoadSceneMode.Single);
+        }
         op.allowSceneActivation = false;
 
         while (!op.isDone)
         {
             if (op.progress >= 0.9f)
             {
+                isLoading = false;
                 op.allowSceneActivation = true;
             }
 
