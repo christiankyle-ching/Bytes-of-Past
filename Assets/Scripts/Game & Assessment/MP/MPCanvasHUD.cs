@@ -92,6 +92,6 @@ public class MPCanvasHUD : MonoBehaviour
             NetworkManager.singleton.StopServer();
         }
 
-        sceneLoader.GoToMainMenu();
+        //sceneLoader.GoToMainMenu(); // FIXME: This is not needed because NetworkManager handles scene loading
     }
 }

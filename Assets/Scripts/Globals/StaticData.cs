@@ -62,6 +62,7 @@ public class StaticData : MonoBehaviour
     public HistoryTopic SelectedTopic;
     public GameDifficulty SelectedDifficulty;
     public bool IsPostAssessment;
+    public bool checkedUpdates = false;
 
     public Stack<int> SceneIndexHistory = new Stack<int>();
 

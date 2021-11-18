@@ -16,8 +16,9 @@ public class SettingsScript : MonoBehaviour
     public Slider volumeSlider;
     public TMP_Dropdown qualityDropdown;
     public Button btnUpdate;
+    public AppUpdater updater;
 
-    void Start()
+    void Awake()
     {
         settingsCanvas.SetActive(false);
         btnUpdate.GetComponentInChildren<TextMeshProUGUI>().text = $"Check for Updates (Current: v{Application.version})";
@@ -63,5 +64,11 @@ public class SettingsScript : MonoBehaviour
     {
         volumeSlider.value = value;
         SoundManager.Instance.SetBGMVolume(value);
+    }
+
+    public void ForcedCheckUpdate()
+    {
+        updater.CheckUpdates(true);
+        settingsCanvas.SetActive(false);
     }
 }

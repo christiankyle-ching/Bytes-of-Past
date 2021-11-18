@@ -25,9 +25,6 @@ public class GameLoader : MonoBehaviour
 
         while (!req0.isDone || !req1.isDone || !req2.isDone)
         {
-#if UNITY_EDITOR
-            UpdateProgress(req0.progress, req1.progress, req2.progress);
-#endif
             yield return null;
         }
 
@@ -47,8 +44,8 @@ public class GameLoader : MonoBehaviour
 #endif
 
         //UpdateProgress(req0.progress, req1.progress, req2.progress);
-        Debug.Log($"Finished Loading Resources... {req0.isDone}, {req1.isDone}, {req2.isDone}");
-        Debug.Log($"Finished Loading Resources... {req0.progress}, {req1.progress}, {req2.progress}");
+        //Debug.Log($"Finished Loading Resources... {req0.isDone}, {req1.isDone}, {req2.isDone}");
+        //Debug.Log($"Finished Loading Resources... {req0.progress}, {req1.progress}, {req2.progress}");
 
         // If GameHasRun, go to main menu, else, show tutorial first
         if (PlayerPrefs.GetInt("GameHasRun", 0) == 1)

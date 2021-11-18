@@ -73,33 +73,56 @@ public class SceneLoader : MonoBehaviour
 
     IEnumerator LoadScene(string sceneName, bool isGoingBack = false)
     {
-        SoundManager.Instance.PlayClickedSFX();
-        transition.SetTrigger("Start");
+        Debug.Log("SceneLoader: " + sceneName);
 
-        yield return new WaitForSeconds(transitionTime);
+        SoundManager.Instance.PlayClickedSFX();
 
         if (!isGoingBack && StaticData.Instance != null)
             StaticData.Instance
                 .SceneIndexHistory
                 .Push(SceneManager.GetActiveScene().buildIndex);
 
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        transition.SetTrigger("Start");
+        yield return new WaitForSeconds(transitionTime);
+
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        op.allowSceneActivation = false;
+
+        while (!op.isDone)
+        {
+            if (op.progress >= 0.9f)
+            {
+                op.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
     }
 
     IEnumerator LoadScene(int buildIndex, bool isGoingBack = false)
     {
         SoundManager.Instance.PlayClickedSFX();
 
-        transition.SetTrigger("Start");
-
-        yield return new WaitForSeconds(transitionTime);
-
         if (!isGoingBack && StaticData.Instance != null)
             StaticData.Instance
                 .SceneIndexHistory
                 .Push(SceneManager.GetActiveScene().buildIndex);
 
-        SceneManager.LoadScene(buildIndex, LoadSceneMode.Single);
+        transition.SetTrigger("Start");
+        yield return new WaitForSeconds(transitionTime);
+
+        AsyncOperation op = SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Single);
+        op.allowSceneActivation = false;
+
+        while (!op.isDone)
+        {
+            if (op.progress >= 0.9f)
+            {
+                op.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
     }
 
     public void ResetProfile()
