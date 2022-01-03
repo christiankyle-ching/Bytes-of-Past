@@ -28,8 +28,10 @@ public class SceneLoader : MonoBehaviour
 
     }
 
-    public void GoToMainMenu(bool loadImmediately = false)
+    public void GoToMainMenu(bool loadImmediately = false, bool skipsTutorial = false)
     {
+        if (skipsTutorial) PlayerPrefs.SetInt("TutorialDone", 1);
+
         if (loadImmediately)
             SceneManager.LoadScene("Main Menu");
         else
@@ -141,6 +143,11 @@ public class SceneLoader : MonoBehaviour
     public void GoToTutorial()
     {
         StartCoroutine(LoadScene("Tutorial"));
+    }
+
+    public void SkipTutorial()
+    {
+        GoToMainMenu(skipsTutorial: true);
     }
 
     public void GoToMPTutorial()

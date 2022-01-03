@@ -179,6 +179,7 @@ public class TutorialManager : MonoBehaviour
 
     public void EndTutorial()
     {
+        PlayerPrefs.SetInt("TutorialDone", 1);
         SoundManager.Instance.PlayClickedSFX();
         sceneLoader.GoToTutorial();
     }

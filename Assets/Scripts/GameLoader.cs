@@ -47,17 +47,26 @@ public class GameLoader : MonoBehaviour
         //Debug.Log($"Finished Loading Resources... {req0.isDone}, {req1.isDone}, {req2.isDone}");
         //Debug.Log($"Finished Loading Resources... {req0.progress}, {req1.progress}, {req2.progress}");
 
-        // If GameHasRun, go to main menu, else, show tutorial first
-        if (PlayerPrefs.GetInt("GameHasRun", 0) == 1)
-        {
-            sceneLoader.GoToMainMenu();
-        }
-        else
-        {
-            sceneLoader.GoToTutorial();
-            PlayerPrefs.SetInt("GameHasRun", 1);
-        }
+        /*
+         * TODO: Implementation changed
+         * 
+         * Instead of loading main menu when game first run,
+         * just show an arrow in the main menu pointing to the tutorial button
+         * as per expert evaluation
+        */
 
+        // If GameHasRun, go to main menu, else, show tutorial first
+        //if (PlayerPrefs.GetInt("GameHasRun", 0) == 1)
+        //{
+        //    sceneLoader.GoToMainMenu();
+        //}
+        //else
+        //{
+        //    sceneLoader.GoToTutorial();
+        //    PlayerPrefs.SetInt("GameHasRun", 1);
+        //}
+
+        sceneLoader.GoToMainMenu();
     }
 
     // Method can still be used when we want to use real progress
