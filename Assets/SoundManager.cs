@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource BGMAudioSource;
     public AudioMixerGroup BGMAudioMixer;
 
-    bool isSFXEnabled = true;
+    bool isSFXEnabled = false;
     public static readonly string SFXPREFKEY = "SFXEnabled";
     public static readonly string BGMVOLPREFKEY = "BGMVolume";
 
@@ -101,7 +101,7 @@ public class SoundManager : MonoBehaviour
 
     public float GetBGMVolume()
     {
-        return PlayerPrefs.GetFloat(SoundManager.BGMVOLPREFKEY, 0.5f);
+        return PlayerPrefs.GetFloat(BGMVOLPREFKEY, 0.5f);
     }
 
     #endregion

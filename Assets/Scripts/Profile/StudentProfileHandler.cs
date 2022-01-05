@@ -13,6 +13,9 @@ public class StudentProfileHandler : MonoBehaviour
 
     Color defaultColor = Color.white;
 
+    public GameObject nameErrorTooltip;
+    public GameObject nameEmptyTooltip;
+
     public void OnNameValueChanged(string text)
     {
         if (IsNameValid(text))
@@ -27,9 +30,19 @@ public class StudentProfileHandler : MonoBehaviour
 
     public void OnNameEndEdit(string text)
     {
-        if (IsNameValid(text))
+        if (text == string.Empty)
         {
-            PlayerPrefs.SetString("Profile_Name", text);
+            nameEmptyTooltip.SetActive(true);
+            nameErrorTooltip.SetActive(false);
+        }
+        else
+        {
+            bool isValid = IsNameValid(text);
+
+            if (isValid) PlayerPrefs.SetString("Profile_Name", text);
+
+            nameErrorTooltip.SetActive(!isValid);
+            nameEmptyTooltip.SetActive(false);
         }
     }
 
@@ -45,6 +58,9 @@ public class StudentProfileHandler : MonoBehaviour
         // Load Saved
         txtStudentName.text = StaticData.Instance.GetPlayerName();
         dropdownStudentSection.value = StaticData.Instance.GetPlayerSection();
+
+        // Check on start
+        OnNameEndEdit(txtStudentName.text);
     }
 
     public bool IsNameValid(string name)
