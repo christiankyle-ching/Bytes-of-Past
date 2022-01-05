@@ -48,7 +48,7 @@ public class StudentProfileHandler : MonoBehaviour
 
     public void OnValueChangedSection(int sectionIndex)
     {
-        PlayerPrefs.SetInt("Profile_Section", sectionIndex);
+        StaticData.Instance.SetPlayerSection(sectionIndex);
     }
 
     void Start()
