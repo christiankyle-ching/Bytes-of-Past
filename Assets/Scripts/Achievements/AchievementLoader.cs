@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -46,7 +47,17 @@ public class AchievementLoader : MonoBehaviour
 
         if (!data.isDone)
         {
-            item.transform.Find("ImageCol").Find("Image").GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            Image _image = item.transform.Find("ImageCol").Find("Image").GetComponent<Image>();
+            _image.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+
+            Sprite _sprite = GetSprite(data.id);
+            if (_sprite != null) _image.sprite = _sprite;
+
         }
+    }
+
+    public static Sprite GetSprite(int id)
+    {
+        return Resources.Load<Sprite>($"Achievements/Icons/{id}");
     }
 }

@@ -93,6 +93,7 @@ public static class AchievementChecker
     #region Getter / Setter
     public static AchievementData[] GetAchievements()
     {
+        // Scriptable Objects
         AchievementData[] achievements = Resources.LoadAll<AchievementData>("Achievements");
 
         // Check `isDone` status
