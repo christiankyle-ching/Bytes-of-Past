@@ -467,7 +467,7 @@ public class MPGameManager : NetworkBehaviour
         if (hasDrop)
         {
             message += $"Player {thisTurnPlayer} placed a card {(isDropValid ? "correct" : "wrong")}! ";
-            message += (special != SPECIALACTION.None && isDropValid) ? $"A special action has been activated \"{MPCardInfo.GetSpecialActionLabel(special)}\". " : "";
+            message += (special != SPECIALACTION.None && isDropValid) ? $"A special action has been activated: {MPCardInfo.GetSpecialActionLabel(special)}. " : "";
         }
         else
         {
@@ -679,8 +679,8 @@ public class MPGameManager : NetworkBehaviour
             player.GetComponent<PlayerManager>().TargetShowQuizResult(
                 player.connectionToClient,
                 (answer == string.Empty) ?
-                    "Sorry! You ran out of time." :
-                    "Sorry! Your answer is wrong.",
+                    $"Sorry! You ran out of time. The correct answer is: {currentQuestion.CorrectAnswer}." :
+                    $"Sorry! Your answer is wrong. The correct answer is: {currentQuestion.CorrectAnswer}.",
                 MPGameMessageType.WRONG);
         }
 

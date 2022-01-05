@@ -25,7 +25,14 @@ public class SettingsScript : MonoBehaviour
 
         // Load last saved settings
         switchState = PlayerPrefs.GetInt(SoundManager.SFXPREFKEY, 1);
-        if (switchState < 0) OnSFXSwitchButtonClicked();
+        if (switchState < 0)
+        {
+            OnSFXSwitchButtonClicked();
+        }
+        else
+        {
+            SoundManager.Instance.SetSFXEnabled(switchState > 0);
+        }
 
         volumeSlider.value = SoundManager.Instance.GetBGMVolume(); // Just set the slider, let the SoundManager apply current volume
         volumeSlider.onValueChanged.AddListener(SetVolume);

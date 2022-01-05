@@ -23,7 +23,7 @@ public class AssessmentManager : MonoBehaviour
     public GameObject txtTestTopic;
     public GameObject txtPreOrPostAssessment;
 
-    public ResultIndicator resultIndicator;
+    public MPGameMessage messenger;
 
     // QUESTIONS DATA
     private List<QuestionData> questions = new List<QuestionData>();
@@ -185,11 +185,11 @@ public class AssessmentManager : MonoBehaviour
         if (currentQuestion.isAnswerCorrect(currentChoices[index]))
         {
             currentScore++;
-            resultIndicator.ShowCorrect();
+            messenger.ShowMessage("Great! That's right.", MPGameMessageType.CORRECT);
         }
         else
         {
-            resultIndicator.ShowWrong();
+            messenger.ShowMessage($"Oops, that was wrong! The correct answer is: {currentQuestion.CorrectAnswer}", MPGameMessageType.WRONG);
         }
 
         ShowNextQuestion();

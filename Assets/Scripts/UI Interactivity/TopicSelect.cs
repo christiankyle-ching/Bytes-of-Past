@@ -9,11 +9,16 @@ public class TopicSelect : MonoBehaviour
     StaticData staticData;
 
     public GameObject
-
             sceneLoader,
             btnComputer,
             btnNetworking,
             btnSoftware;
+
+    bool postHasLocked = false;
+    bool preHasUntaken = false;
+
+    public GameObject preAssessmentTooltip;
+    public GameObject postAssessmentTooltip;
 
     void Awake()
     {
@@ -38,6 +43,8 @@ public class TopicSelect : MonoBehaviour
         SetTopicDisabled(btnNetworking.GetComponent<Button>(),
         HistoryTopic.NETWORKING);
         SetTopicDisabled(btnSoftware.GetComponent<Button>(), HistoryTopic.SOFTWARE);
+
+        ShowTooltips();
     }
 
     void SetTopicDisabled(Button button, HistoryTopic topic)
@@ -69,12 +76,16 @@ public class TopicSelect : MonoBehaviour
             if (!postAssessmentAllowed)
                 buttonText.text =
                     isPostAssessmentDone ? "Already Taken" : "Locked";
+
+            if (!postAssessmentAllowed) postHasLocked = true;
         }
         else if (staticData.SelectedGameMode == GameMode.SP)
         {
             if (!isPreAssessmentDone)
             {
                 buttonText.text = "Take Pre-Test";
+
+                preHasUntaken = true;
             }
         }
 
@@ -129,5 +140,11 @@ public class TopicSelect : MonoBehaviour
         staticData.SetGameMode(GameMode.PRE_TEST);
         staticData.IsPostAssessment = false;
         sceneLoader.GetComponent<SceneLoader>().GoToAssessmentTest();
+    }
+
+    void ShowTooltips()
+    {
+        postAssessmentTooltip.SetActive(postHasLocked);
+        preAssessmentTooltip.SetActive(preHasUntaken);
     }
 }

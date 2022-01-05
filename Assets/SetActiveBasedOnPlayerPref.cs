@@ -13,6 +13,7 @@ public class SetActiveBasedOnPlayerPref : MonoBehaviour
     public string playerPrefKey = "";
     public string playerPrefDefaultValue = "";
     public string playerPrefValueToActive = "";
+    public string playerPrefValueToInactive = "";
     public PREFTYPES playerPrefType = PREFTYPES.Int;
 
     void Start()
@@ -48,35 +49,35 @@ public class SetActiveBasedOnPlayerPref : MonoBehaviour
 
     public void DontShowAgain()
     {
-        try
+        if (playerPrefValueToInactive != string.Empty)
         {
-            switch (playerPrefType)
+            try
             {
-                case PREFTYPES.Int:
-                    int dInt = int.Parse(playerPrefDefaultValue);
-                    int aInt = int.Parse(playerPrefValueToActive);
-                    PlayerPrefs.SetInt(playerPrefKey, aInt);
-                    break;
-                case PREFTYPES.Float:
-                    float dFloat = float.Parse(playerPrefDefaultValue);
-                    float aFloat = float.Parse(playerPrefValueToActive);
-                    PlayerPrefs.SetFloat(playerPrefKey, aFloat);
-                    break;
-                case PREFTYPES.String:
-                    string dString = playerPrefDefaultValue;
-                    string aString = playerPrefValueToActive;
-                    PlayerPrefs.SetString(playerPrefKey, aString);
-                    break;
-                default:
-                    break;
+                switch (playerPrefType)
+                {
+                    case PREFTYPES.Int:
+                        int iInt = int.Parse(playerPrefValueToInactive);
+                        PlayerPrefs.SetInt(playerPrefKey, iInt);
+                        break;
+                    case PREFTYPES.Float:
+                        float iFloat = float.Parse(playerPrefValueToInactive);
+                        PlayerPrefs.SetFloat(playerPrefKey, iFloat);
+                        break;
+                    case PREFTYPES.String:
+                        string iString = playerPrefValueToInactive;
+                        PlayerPrefs.SetString(playerPrefKey, iString);
+                        break;
+                    default:
+                        break;
+                }
             }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
 
-            DestroyGO();
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-        }
+        DestroyGO();
     }
 
     public void DestroyGO()
