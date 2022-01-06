@@ -18,6 +18,8 @@ public static class AchievementChecker
                 achievement.isDone = true;
                 acquiredList.Add(achievement);
             }
+
+            Debug.Log(achievement.id);
         }
 
         return acquiredList.ToArray(); // List of all acquired achievements in a single game session

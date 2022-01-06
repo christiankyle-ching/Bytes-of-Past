@@ -285,6 +285,8 @@ public class SPGameController : MonoBehaviour
             messenger.ShowMessage("Oops! You ran out of time.", MPGameMessageType.WRONG);
         }
 
+        if (gameEnded) return; // TODO: Might be problematic
+
         if (gameModeHasQuiz)
         {
             if (turns % quizIntervalRounds == 0)
@@ -312,7 +314,6 @@ public class SPGameController : MonoBehaviour
             randQuestion = questions[5];
             questionManager.ShowQuestion(randQuestion);
         }
-
     }
 
     private bool IsHandEmpty()

@@ -15,8 +15,15 @@ public class EndGameAchievementChecker : MonoBehaviour
         Debug.Log($"Acquired Achievements: {acquiredAchievements.Length}");
         foreach (AchievementData ach in acquiredAchievements)
         {
-            Debug.Log($"{ach.title}: {ach.description}");
+            Debug.Log($"#{ach.id} - {ach.title}: {ach.description}");
             AchievementLoader.AddItem(ach, transform, achievementItemPrefab);
         }
+
+        // TODO: Debug only
+        //AchievementData testAchievement = new AchievementData();
+        //testAchievement.id = 0;
+        //testAchievement.title = "TEST";
+        //testAchievement.description = "Test Achievement Only";
+        //AchievementLoader.AddItem(testAchievement, transform, achievementItemPrefab);
     }
 }

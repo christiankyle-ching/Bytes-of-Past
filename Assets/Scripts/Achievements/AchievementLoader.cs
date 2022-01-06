@@ -35,25 +35,23 @@ public class AchievementLoader : MonoBehaviour
     {
         GameObject item = Instantiate(prefab, parent);
 
-        Debug.Log(item.transform.Find("TextCol").Find("Title") == null);
-        Debug.Log(item.transform.Find("TextCol").Find("Description") == null);
+        //Debug.Log(item.transform.Find("TextCol").Find("Title") == null);
+        //Debug.Log(item.transform.Find("TextCol").Find("Description") == null);
 
-        Debug.Log(item.transform.Find("ImageCol").Find("Image") == null);
+        //Debug.Log(item.transform.Find("ImageCol").Find("Image") == null);
 
-        Debug.Log(data == null);
+        //Debug.Log(data == null);
 
         item.transform.Find("TextCol").Find("Title").GetComponent<TextMeshProUGUI>().text = data.title;
         item.transform.Find("TextCol").Find("Description").GetComponent<TextMeshProUGUI>().text = data.description;
 
-        if (!data.isDone)
-        {
-            Image _image = item.transform.Find("ImageCol").Find("Image").GetComponent<Image>();
-            _image.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        Image _image = item.transform.Find("ImageCol").Find("Image").GetComponent<Image>();
+        // Set Icon Opacity
+        if (!data.isDone) _image.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 
-            Sprite _sprite = GetSprite(data.id);
-            if (_sprite != null) _image.sprite = _sprite;
-
-        }
+        // Set Image
+        Sprite _sprite = GetSprite(data.id);
+        if (_sprite != null) _image.sprite = _sprite;
     }
 
     public static Sprite GetSprite(int id)

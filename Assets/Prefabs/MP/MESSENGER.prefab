@@ -222,6 +222,7 @@ GameObject:
   - component: {fileID: 5647147246897741946}
   - component: {fileID: 5647147246897741945}
   - component: {fileID: 5647147246897741944}
+  - component: {fileID: 684761549886712712}
   m_Layer: 5
   m_Name: MESSENGER
   m_TagString: Untagged
@@ -258,7 +259,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5647147246897741951}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -289,8 +290,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e382fb962f8c8be4682765049814b5a8, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: b87dad86265011c478d23291b7a46009, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -316,9 +317,6 @@ MonoBehaviour:
   checkmark: {fileID: 21300000, guid: 007323c9511980c4e85f2b7c93ef2952, type: 3}
   cross: {fileID: 21300000, guid: 254065be78d9ac646a8a175f8c6745f4, type: 3}
   trade: {fileID: 21300000, guid: f411799d2db434ea7a9cad5c2cbb23d1, type: 3}
-  correctSFX: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
-  defaultSFX: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
-  wrongSFX: {fileID: 8300000, guid: 5039414d94a6e4e70a5ab9e8833e992a, type: 3}
 --- !u!95 &5647147246897741945
 Animator:
   serializedVersion: 3
@@ -434,3 +432,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &684761549886712712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5647147246897741951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
