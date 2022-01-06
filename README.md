@@ -27,5 +27,4 @@ Background has a BG prefab that includes cloud animations.
 
 ## Used Assets
 - [Mirror Networking](https://mirror-networking.com/)
-- https://github.com/JimmyCushnie/FancyTextRendering
 - See .txt files in [Licenses](Assets/Resources/Licenses/) for other attributions.

@@ -1,5 +1,4 @@
-﻿using LogicUI.FancyTextRendering;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ public class AppUpdater : MonoBehaviour
     [Header("UI References")]
     public GameObject updateModal;
     public GameObject checkingModal;
-    public MarkdownRenderer txtUpdate;
+    public TextMeshProUGUI txtUpdate;
     public Button btnUpdate;
     public Button btnClose;
 
@@ -138,7 +137,7 @@ public class AppUpdater : MonoBehaviour
 
             if (latestVersion > curVersion)
             {
-                txtUpdate.Source = GetChangelog(latestVersionString, desc);
+                txtUpdate.text = GetChangelog(latestVersionString, FormatDescription(desc));
                 ShowUpdateModal(true);
                 ShowCheckingModal(false);
 
@@ -171,10 +170,15 @@ public class AppUpdater : MonoBehaviour
         return version;
     }
 
-    private string ParseDescription(string description)
+    private string FormatDescription(string description)
     {
         return description
-            .Replace("\\r\\n", "\n"); // Fix newlines
+            // Fix newlines
+            .Replace("\\r\\n", "\n")
+            // Remove markdown markers
+            .Replace("**", "")
+            .Replace("_", "")
+            .Replace("###", "");
     }
 
     private string GetChangelog(string version, string desc)

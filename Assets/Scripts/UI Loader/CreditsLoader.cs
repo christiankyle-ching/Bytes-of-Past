@@ -1,5 +1,4 @@
-﻿using LogicUI.FancyTextRendering;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,13 +9,13 @@ public class CreditsLoader : MonoBehaviour
     [Header("Child References")]
     public ScrollRect container;
     public GameObject panel;
-    public MarkdownRenderer txtCHM;
-    public MarkdownRenderer txtMusic;
-    public MarkdownRenderer txtSFX;
-    public MarkdownRenderer txtUI;
-    public MarkdownRenderer txtImagesComputer;
-    public MarkdownRenderer txtImagesSoftware;
-    public MarkdownRenderer txtImagesNetworking;
+    public TextMeshProUGUI txtCHM;
+    public TextMeshProUGUI txtMusic;
+    public TextMeshProUGUI txtSFX;
+    public TextMeshProUGUI txtUI;
+    public TextMeshProUGUI txtImagesComputer;
+    public TextMeshProUGUI txtImagesSoftware;
+    public TextMeshProUGUI txtImagesNetworking;
 
     [Header("Auto-Scroll")]
     public float scrollSensitivity = 1000f;
@@ -41,13 +40,13 @@ public class CreditsLoader : MonoBehaviour
         imagesSoftware = Resources.Load<TextAsset>("Licenses/networking_images");
         imagesNetworking = Resources.Load<TextAsset>("Licenses/software_images");
 
-        txtCHM.Source = chm.text;
-        txtMusic.Source = music.text;
-        txtSFX.Source = sfx.text;
-        txtUI.Source = ui.text;
-        txtImagesComputer.Source = imagesComputer.text;
-        txtImagesSoftware.Source = imagesSoftware.text;
-        txtImagesNetworking.Source = imagesNetworking.text;
+        txtCHM.text = chm.text;
+        txtMusic.text = music.text;
+        txtSFX.text = sfx.text;
+        txtUI.text = ui.text;
+        txtImagesComputer.text = imagesComputer.text;
+        txtImagesSoftware.text = imagesSoftware.text;
+        txtImagesNetworking.text = imagesNetworking.text;
     }
 
     private void Start()
