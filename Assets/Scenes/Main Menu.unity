@@ -1945,18 +1945,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330293779}
   m_CullTransparentMesh: 0
---- !u!114 &347714252 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4335262483814040980, guid: 7e0697d524c63104ca50b2c8a027a450,
-    type: 3}
-  m_PrefabInstance: {fileID: 4335262484142880600}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e80fe4fd005205e499cb18bd820e223a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &352202165
 GameObject:
   m_ObjectHideFlags: 0
@@ -4701,6 +4689,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 938920229}
   m_CullTransparentMesh: 0
+--- !u!114 &943686705 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2428483590719104270, guid: 7e0697d524c63104ca50b2c8a027a450,
+    type: 3}
+  m_PrefabInstance: {fileID: 4335262484142880600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e80fe4fd005205e499cb18bd820e223a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &958938860
 GameObject:
   m_ObjectHideFlags: 0
@@ -5958,7 +5958,7 @@ MonoBehaviour:
   volumeSlider: {fileID: 1328286987}
   qualityDropdown: {fileID: 496420922}
   btnUpdate: {fileID: 825532969}
-  updater: {fileID: 347714252}
+  updater: {fileID: 943686705}
 --- !u!1 &1111866648
 GameObject:
   m_ObjectHideFlags: 0

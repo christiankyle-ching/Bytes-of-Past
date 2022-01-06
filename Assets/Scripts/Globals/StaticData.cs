@@ -127,7 +127,6 @@ public class StaticData : MonoBehaviour
 
     public void SetPlayerSection(int index)
     {
-        Debug.Log(index);
         PlayerPrefs.SetInt(PREFKEY_PROFILESECTION, index);
     }
 

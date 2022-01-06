@@ -112,6 +112,8 @@ public class AppUpdater : MonoBehaviour
             return;
         }
 
+        //Debug.Log(jsonData);
+
         Regex rxVersion = new Regex(@"""tag_name"":\s*""(?<version>[a-z0-9.]*)""");
         Regex rxDesc = new Regex(@"""body"":\s*""(?<desc>.*)""\s*}\s*]");
         Regex rxDownload = new Regex(@"""browser_download_url"":\s*""(?<url>[^""]*)""");
@@ -134,6 +136,8 @@ public class AppUpdater : MonoBehaviour
             // DEBUG: Show latest version
             //txtUpdate.Source = GetChangelog(version, desc);
             //SetupCanvas(true);
+
+            //Debug.Log(latestVersion + " > " + curVersion + "?");
 
             if (latestVersion > curVersion)
             {

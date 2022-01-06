@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 4335262483814040983}
   - component: {fileID: 4335262483814040982}
   - component: {fileID: 4335262483814040981}
+  - component: {fileID: 2428483590719104270}
   m_Layer: 5
   m_Name: AppUpdater
   m_TagString: Untagged
@@ -175,6 +176,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2428483590719104270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4335262483814040979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e80fe4fd005205e499cb18bd820e223a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateModal: {fileID: 4335262484559689603}
+  checkingModal: {fileID: 6336333839166868170}
+  txtUpdate: {fileID: 4335262485258125907}
+  btnUpdate: {fileID: 4335262484381553711}
+  btnClose: {fileID: 4335262484999283357}
 --- !u!1 &4335262484002070056
 GameObject:
   m_ObjectHideFlags: 0
