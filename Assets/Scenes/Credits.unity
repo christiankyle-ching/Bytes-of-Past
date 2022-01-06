@@ -284,10 +284,10 @@ RectTransform:
   - {fileID: 763539017}
   - {fileID: 1633800702}
   - {fileID: 1186746156}
-  - {fileID: 1173743504}
-  - {fileID: 835478334}
   - {fileID: 807411833}
   - {fileID: 561848251}
+  - {fileID: 1173743504}
+  - {fileID: 835478334}
   m_Father: {fileID: 40181704}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -557,9 +557,6 @@ GameObject:
   - component: {fileID: 158300697}
   - component: {fileID: 158300696}
   - component: {fileID: 158300695}
-  - component: {fileID: 158300698}
-  - component: {fileID: 158300699}
-  - component: {fileID: 158300700}
   m_Layer: 5
   m_Name: MUSIC
   m_TagString: Untagged
@@ -696,109 +693,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 158300693}
   m_CullTransparentMesh: 0
---- !u!114 &158300698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 158300693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55388d382d2fe7346bcea11e5bcc20bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LinkNormalColor:
-    serializedVersion: 2
-    rgba: 4280150753
-  LinkHoveredColor:
-    serializedVersion: 2
-    rgba: 4284081635
-  LinkClickColor:
-    serializedVersion: 2
-    rgba: 4280728510
---- !u!114 &158300699
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 158300693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb87846e43a704469d9be7ef4faa09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Source: 
-  RenderSettings:
-    Bold:
-      RenderBold: 1
-    Italics:
-      RenderItalics: 1
-    Strikethrough:
-      RenderStrikethrough: 1
-    Monospace:
-      RenderMonospace: 1
-      UseCustomFont: 1
-      FontAssetPathRelativeToResources: Noto/Noto Mono/NotoMono-Regular
-      DrawOverlay: 1
-      OverlayColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-      OverlayPaddingPixels: 25
-      ManuallySetCharacterSpacing: 0
-      CharacterSpacing: 0.69
-      AddSeparationSpacing: 1
-      SeparationSpacing: 0.3
-    Lists:
-      RenderUnorderedLists: 1
-      RenderOrderedLists: 1
-      UnorderedListBullet: "\u2022"
-      OrderedListNumberSuffix: .
-      VerticalOffset: 0.76
-      BulletOffsetPixels: 100
-      ContentSeparationPixels: 20
-    Links:
-      RenderLinks: 1
-      RenderAutoLinks: 1
-      LinkColor: {r: 0.11372549, g: 0.4862745, b: 0.91764706, a: 1}
-    Headers:
-      RenderPoundSignHeaders: 1
-      RenderLineHeaders: 1
-      Levels:
-      - Size: 2
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.7
-      - Size: 1.7
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.3
-      - Size: 1.5
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-      - Size: 1.3
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-    Superscript:
-      RenderSuperscript: 1
-      RenderChainSuperscript: 1
---- !u!114 &158300700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 158300693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f3119129029dc4b9d53dc875875f63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &561848250
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,9 +705,6 @@ GameObject:
   - component: {fileID: 561848254}
   - component: {fileID: 561848253}
   - component: {fileID: 561848252}
-  - component: {fileID: 561848255}
-  - component: {fileID: 561848256}
-  - component: {fileID: 561848257}
   m_Layer: 5
   m_Name: SOFTWARE
   m_TagString: Untagged
@@ -833,7 +724,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 51865947}
-  m_RootOrder: 13
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -950,109 +841,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 561848250}
   m_CullTransparentMesh: 0
---- !u!114 &561848255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561848250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55388d382d2fe7346bcea11e5bcc20bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LinkNormalColor:
-    serializedVersion: 2
-    rgba: 4280150753
-  LinkHoveredColor:
-    serializedVersion: 2
-    rgba: 4284081635
-  LinkClickColor:
-    serializedVersion: 2
-    rgba: 4280728510
---- !u!114 &561848256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561848250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb87846e43a704469d9be7ef4faa09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Source: 
-  RenderSettings:
-    Bold:
-      RenderBold: 1
-    Italics:
-      RenderItalics: 1
-    Strikethrough:
-      RenderStrikethrough: 1
-    Monospace:
-      RenderMonospace: 1
-      UseCustomFont: 1
-      FontAssetPathRelativeToResources: Noto/Noto Mono/NotoMono-Regular
-      DrawOverlay: 1
-      OverlayColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-      OverlayPaddingPixels: 25
-      ManuallySetCharacterSpacing: 0
-      CharacterSpacing: 0.69
-      AddSeparationSpacing: 1
-      SeparationSpacing: 0.3
-    Lists:
-      RenderUnorderedLists: 1
-      RenderOrderedLists: 1
-      UnorderedListBullet: "\u2022"
-      OrderedListNumberSuffix: .
-      VerticalOffset: 0.76
-      BulletOffsetPixels: 100
-      ContentSeparationPixels: 20
-    Links:
-      RenderLinks: 1
-      RenderAutoLinks: 1
-      LinkColor: {r: 0.11372549, g: 0.4862745, b: 0.91764706, a: 1}
-    Headers:
-      RenderPoundSignHeaders: 1
-      RenderLineHeaders: 1
-      Levels:
-      - Size: 2
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.7
-      - Size: 1.7
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.3
-      - Size: 1.5
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-      - Size: 1.3
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-    Superscript:
-      RenderSuperscript: 1
-      RenderChainSuperscript: 1
---- !u!114 &561848257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561848250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f3119129029dc4b9d53dc875875f63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &763539016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,9 +853,6 @@ GameObject:
   - component: {fileID: 763539020}
   - component: {fileID: 763539019}
   - component: {fileID: 763539018}
-  - component: {fileID: 763539021}
-  - component: {fileID: 763539022}
-  - component: {fileID: 763539023}
   m_Layer: 5
   m_Name: UI IMAGES
   m_TagString: Untagged
@@ -1204,109 +989,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 763539016}
   m_CullTransparentMesh: 0
---- !u!114 &763539021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 763539016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55388d382d2fe7346bcea11e5bcc20bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LinkNormalColor:
-    serializedVersion: 2
-    rgba: 4280150753
-  LinkHoveredColor:
-    serializedVersion: 2
-    rgba: 4284081635
-  LinkClickColor:
-    serializedVersion: 2
-    rgba: 4280728510
---- !u!114 &763539022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 763539016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb87846e43a704469d9be7ef4faa09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Source: 
-  RenderSettings:
-    Bold:
-      RenderBold: 1
-    Italics:
-      RenderItalics: 1
-    Strikethrough:
-      RenderStrikethrough: 1
-    Monospace:
-      RenderMonospace: 1
-      UseCustomFont: 1
-      FontAssetPathRelativeToResources: Noto/Noto Mono/NotoMono-Regular
-      DrawOverlay: 1
-      OverlayColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-      OverlayPaddingPixels: 25
-      ManuallySetCharacterSpacing: 0
-      CharacterSpacing: 0.69
-      AddSeparationSpacing: 1
-      SeparationSpacing: 0.3
-    Lists:
-      RenderUnorderedLists: 1
-      RenderOrderedLists: 1
-      UnorderedListBullet: "\u2022"
-      OrderedListNumberSuffix: .
-      VerticalOffset: 0.76
-      BulletOffsetPixels: 100
-      ContentSeparationPixels: 20
-    Links:
-      RenderLinks: 1
-      RenderAutoLinks: 1
-      LinkColor: {r: 0.11372549, g: 0.4862745, b: 0.91764706, a: 1}
-    Headers:
-      RenderPoundSignHeaders: 1
-      RenderLineHeaders: 1
-      Levels:
-      - Size: 2
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.7
-      - Size: 1.7
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.3
-      - Size: 1.5
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-      - Size: 1.3
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-    Superscript:
-      RenderSuperscript: 1
-      RenderChainSuperscript: 1
---- !u!114 &763539023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 763539016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f3119129029dc4b9d53dc875875f63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &804052266
 GameObject:
   m_ObjectHideFlags: 0
@@ -1471,7 +1153,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 51865947}
-  m_RootOrder: 12
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1666,9 +1348,6 @@ GameObject:
   - component: {fileID: 835478337}
   - component: {fileID: 835478336}
   - component: {fileID: 835478335}
-  - component: {fileID: 835478338}
-  - component: {fileID: 835478339}
-  - component: {fileID: 835478340}
   m_Layer: 5
   m_Name: NETWORKING
   m_TagString: Untagged
@@ -1688,7 +1367,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 51865947}
-  m_RootOrder: 11
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1805,109 +1484,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835478333}
   m_CullTransparentMesh: 0
---- !u!114 &835478338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835478333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55388d382d2fe7346bcea11e5bcc20bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LinkNormalColor:
-    serializedVersion: 2
-    rgba: 4280150753
-  LinkHoveredColor:
-    serializedVersion: 2
-    rgba: 4284081635
-  LinkClickColor:
-    serializedVersion: 2
-    rgba: 4280728510
---- !u!114 &835478339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835478333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb87846e43a704469d9be7ef4faa09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Source: 
-  RenderSettings:
-    Bold:
-      RenderBold: 1
-    Italics:
-      RenderItalics: 1
-    Strikethrough:
-      RenderStrikethrough: 1
-    Monospace:
-      RenderMonospace: 1
-      UseCustomFont: 1
-      FontAssetPathRelativeToResources: Noto/Noto Mono/NotoMono-Regular
-      DrawOverlay: 1
-      OverlayColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-      OverlayPaddingPixels: 25
-      ManuallySetCharacterSpacing: 0
-      CharacterSpacing: 0.69
-      AddSeparationSpacing: 1
-      SeparationSpacing: 0.3
-    Lists:
-      RenderUnorderedLists: 1
-      RenderOrderedLists: 1
-      UnorderedListBullet: "\u2022"
-      OrderedListNumberSuffix: .
-      VerticalOffset: 0.76
-      BulletOffsetPixels: 100
-      ContentSeparationPixels: 20
-    Links:
-      RenderLinks: 1
-      RenderAutoLinks: 1
-      LinkColor: {r: 0.11372549, g: 0.4862745, b: 0.91764706, a: 1}
-    Headers:
-      RenderPoundSignHeaders: 1
-      RenderLineHeaders: 1
-      Levels:
-      - Size: 2
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.7
-      - Size: 1.7
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.3
-      - Size: 1.5
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-      - Size: 1.3
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-    Superscript:
-      RenderSuperscript: 1
-      RenderChainSuperscript: 1
---- !u!114 &835478340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835478333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f3119129029dc4b9d53dc875875f63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &986830828
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2284,13 +1860,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 40181708}
   panel: {fileID: 51865946}
-  txtCHM: {fileID: 1938006406}
-  txtMusic: {fileID: 158300699}
-  txtSFX: {fileID: 2090749656}
-  txtUI: {fileID: 763539022}
-  txtImagesComputer: {fileID: 1186746161}
-  txtImagesSoftware: {fileID: 835478339}
-  txtImagesNetworking: {fileID: 561848256}
+  txtCHM: {fileID: 1938006402}
+  txtMusic: {fileID: 158300696}
+  txtSFX: {fileID: 2090749653}
+  txtUI: {fileID: 763539019}
+  txtImagesComputer: {fileID: 1186746158}
+  txtImagesSoftware: {fileID: 561848253}
+  txtImagesNetworking: {fileID: 835478336}
   scrollSensitivity: 100
 --- !u!1 &1173743503
 GameObject:
@@ -2322,7 +1898,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 51865947}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2438,9 +2014,6 @@ GameObject:
   - component: {fileID: 1186746159}
   - component: {fileID: 1186746158}
   - component: {fileID: 1186746157}
-  - component: {fileID: 1186746160}
-  - component: {fileID: 1186746161}
-  - component: {fileID: 1186746162}
   m_Layer: 5
   m_Name: COMPUTER
   m_TagString: Untagged
@@ -2577,109 +2150,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1186746155}
   m_CullTransparentMesh: 0
---- !u!114 &1186746160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186746155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55388d382d2fe7346bcea11e5bcc20bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LinkNormalColor:
-    serializedVersion: 2
-    rgba: 4280150753
-  LinkHoveredColor:
-    serializedVersion: 2
-    rgba: 4284081635
-  LinkClickColor:
-    serializedVersion: 2
-    rgba: 4280728510
---- !u!114 &1186746161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186746155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb87846e43a704469d9be7ef4faa09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Source: 
-  RenderSettings:
-    Bold:
-      RenderBold: 1
-    Italics:
-      RenderItalics: 1
-    Strikethrough:
-      RenderStrikethrough: 1
-    Monospace:
-      RenderMonospace: 1
-      UseCustomFont: 1
-      FontAssetPathRelativeToResources: Noto/Noto Mono/NotoMono-Regular
-      DrawOverlay: 1
-      OverlayColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-      OverlayPaddingPixels: 25
-      ManuallySetCharacterSpacing: 0
-      CharacterSpacing: 0.69
-      AddSeparationSpacing: 1
-      SeparationSpacing: 0.3
-    Lists:
-      RenderUnorderedLists: 1
-      RenderOrderedLists: 1
-      UnorderedListBullet: "\u2022"
-      OrderedListNumberSuffix: .
-      VerticalOffset: 0.76
-      BulletOffsetPixels: 100
-      ContentSeparationPixels: 20
-    Links:
-      RenderLinks: 1
-      RenderAutoLinks: 1
-      LinkColor: {r: 0.11372549, g: 0.4862745, b: 0.91764706, a: 1}
-    Headers:
-      RenderPoundSignHeaders: 1
-      RenderLineHeaders: 1
-      Levels:
-      - Size: 2
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.7
-      - Size: 1.7
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.3
-      - Size: 1.5
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-      - Size: 1.3
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-    Superscript:
-      RenderSuperscript: 1
-      RenderChainSuperscript: 1
---- !u!114 &1186746162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186746155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f3119129029dc4b9d53dc875875f63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1527885694
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3256,9 +2726,6 @@ GameObject:
   - component: {fileID: 1938006403}
   - component: {fileID: 1938006402}
   - component: {fileID: 1938006404}
-  - component: {fileID: 1938006405}
-  - component: {fileID: 1938006406}
-  - component: {fileID: 1938006407}
   m_Layer: 5
   m_Name: CHM
   m_TagString: Untagged
@@ -3395,109 +2862,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
---- !u!114 &1938006405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1938006400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55388d382d2fe7346bcea11e5bcc20bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LinkNormalColor:
-    serializedVersion: 2
-    rgba: 4280150753
-  LinkHoveredColor:
-    serializedVersion: 2
-    rgba: 4284081635
-  LinkClickColor:
-    serializedVersion: 2
-    rgba: 4280728510
---- !u!114 &1938006406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1938006400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb87846e43a704469d9be7ef4faa09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Source: 
-  RenderSettings:
-    Bold:
-      RenderBold: 1
-    Italics:
-      RenderItalics: 1
-    Strikethrough:
-      RenderStrikethrough: 1
-    Monospace:
-      RenderMonospace: 1
-      UseCustomFont: 1
-      FontAssetPathRelativeToResources: Noto/Noto Mono/NotoMono-Regular
-      DrawOverlay: 1
-      OverlayColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-      OverlayPaddingPixels: 25
-      ManuallySetCharacterSpacing: 0
-      CharacterSpacing: 0.69
-      AddSeparationSpacing: 1
-      SeparationSpacing: 0.3
-    Lists:
-      RenderUnorderedLists: 1
-      RenderOrderedLists: 1
-      UnorderedListBullet: "\u2022"
-      OrderedListNumberSuffix: .
-      VerticalOffset: 0.76
-      BulletOffsetPixels: 100
-      ContentSeparationPixels: 20
-    Links:
-      RenderLinks: 1
-      RenderAutoLinks: 1
-      LinkColor: {r: 0.11372549, g: 0.4862745, b: 0.91764706, a: 1}
-    Headers:
-      RenderPoundSignHeaders: 1
-      RenderLineHeaders: 1
-      Levels:
-      - Size: 2
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.7
-      - Size: 1.7
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.3
-      - Size: 1.5
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-      - Size: 1.3
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-    Superscript:
-      RenderSuperscript: 1
-      RenderChainSuperscript: 1
---- !u!114 &1938006407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1938006400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f3119129029dc4b9d53dc875875f63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2038953607
 GameObject:
   m_ObjectHideFlags: 0
@@ -3656,9 +3020,6 @@ GameObject:
   - component: {fileID: 2090749654}
   - component: {fileID: 2090749653}
   - component: {fileID: 2090749652}
-  - component: {fileID: 2090749655}
-  - component: {fileID: 2090749656}
-  - component: {fileID: 2090749657}
   m_Layer: 5
   m_Name: SFX
   m_TagString: Untagged
@@ -3795,106 +3156,3 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2090749650}
   m_CullTransparentMesh: 0
---- !u!114 &2090749655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090749650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55388d382d2fe7346bcea11e5bcc20bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LinkNormalColor:
-    serializedVersion: 2
-    rgba: 4280150753
-  LinkHoveredColor:
-    serializedVersion: 2
-    rgba: 4284081635
-  LinkClickColor:
-    serializedVersion: 2
-    rgba: 4280728510
---- !u!114 &2090749656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090749650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb87846e43a704469d9be7ef4faa09a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Source: 
-  RenderSettings:
-    Bold:
-      RenderBold: 1
-    Italics:
-      RenderItalics: 1
-    Strikethrough:
-      RenderStrikethrough: 1
-    Monospace:
-      RenderMonospace: 1
-      UseCustomFont: 1
-      FontAssetPathRelativeToResources: Noto/Noto Mono/NotoMono-Regular
-      DrawOverlay: 1
-      OverlayColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-      OverlayPaddingPixels: 25
-      ManuallySetCharacterSpacing: 0
-      CharacterSpacing: 0.69
-      AddSeparationSpacing: 1
-      SeparationSpacing: 0.3
-    Lists:
-      RenderUnorderedLists: 1
-      RenderOrderedLists: 1
-      UnorderedListBullet: "\u2022"
-      OrderedListNumberSuffix: .
-      VerticalOffset: 0.76
-      BulletOffsetPixels: 100
-      ContentSeparationPixels: 20
-    Links:
-      RenderLinks: 1
-      RenderAutoLinks: 1
-      LinkColor: {r: 0.11372549, g: 0.4862745, b: 0.91764706, a: 1}
-    Headers:
-      RenderPoundSignHeaders: 1
-      RenderLineHeaders: 1
-      Levels:
-      - Size: 2
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.7
-      - Size: 1.7
-        Bold: 1
-        Underline: 1
-        Case: 0
-        VerticalSpacing: 0.3
-      - Size: 1.5
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-      - Size: 1.3
-        Bold: 1
-        Underline: 0
-        Case: 0
-        VerticalSpacing: 0
-    Superscript:
-      RenderSuperscript: 1
-      RenderChainSuperscript: 1
---- !u!114 &2090749657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090749650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f3119129029dc4b9d53dc875875f63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
