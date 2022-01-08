@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public enum GameMode
@@ -26,10 +28,18 @@ public enum GameDifficulty
     HARD = 2
 }
 
+public enum StudentSection
+{
+    Generosity, Faith, Endurance, Diligence, Courage
+}
+
 public class StaticData : MonoBehaviour
 {
     private static StaticData _instance;
     public static StaticData Instance { get { return _instance; } }
+
+    public static Regex nameValidator =
+        new Regex(@"\b\s*(?<lname>[a-zA-Z]+)\s*,\s*(?<fname>[a-zA-Z]+)\b");
 
     private void Awake()
     {
@@ -107,44 +117,122 @@ public class StaticData : MonoBehaviour
     static readonly string PREFKEY_PLAYERAVATAR = "Profile_Avatar";
 
     // ------------------------------ STUDENT NAME ------------------------------
+    static int minNameLength = 4;
 
-    public string GetPlayerName()
+    public static bool IsNameValid(string strName)
+    {
+        bool isLongEnough = strName.Length >= minNameLength;
+        bool isRightFormat = nameValidator.IsMatch(strName);
+
+        return isLongEnough && isRightFormat;
+    }
+
+    public string GetDBPlayerName()
     {
         return PlayerPrefs.GetString(PREFKEY_PROFILENAME, "");
     }
 
-    public void SetPlayerName(string playerName)
+
+    public string GetPlayerFirstName()
     {
+        return StudentName_ExtractFirstName(GetDBPlayerName());
+    }
+
+    public string GetPlayerLastName()
+    {
+        return StudentName_ExtractLastName(GetDBPlayerName());
+    }
+
+    public string GetPlayerShortName()
+    {
+        string fName = GetPlayerFirstName();
+        string lName = GetPlayerLastName();
+
+        Debug.Log("FIRSTNAME: " + fName);
+
+        return $"{fName.Substring(0, 1)}. {lName}";
+    }
+
+    public string GetPlayerFullName()
+    {
+        string fName = GetPlayerFirstName();
+        string lName = GetPlayerLastName();
+
+        return $"{fName} {lName}";
+    }
+
+    public string GetPlayerInversedFullName()
+    {
+        string fName = GetPlayerFirstName();
+        string lName = GetPlayerLastName();
+
+        return $"{lName}, {fName}";
+    }
+
+    public string FormatPlayerName(string strName)
+    {
+        string fName = StudentName_ExtractFirstName(strName);
+        string lName = StudentName_ExtractLastName(strName);
+
+        return $"{lName}, {fName}";
+    }
+
+    public void SetPlayerName(string strName)
+    {
+        string playerName = FormatPlayerName(strName.Trim());
+
+        Debug.Log("CHANGE_NAME: " + playerName);
+
         PlayerPrefs.SetString(PREFKEY_PROFILENAME, playerName);
     }
 
+    public string StudentName_ExtractFirstName(string strName)
+    {
+        try
+        {
+            return nameValidator.Match(strName).Groups["fname"].Value;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("ERROR: Extracting First Name - " + ex);
+            return "";
+        }
+    }
+
+    public string StudentName_ExtractLastName(string strName)
+    {
+        try
+        {
+            return nameValidator.Match(strName).Groups["lname"].Value;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("ERROR: Extracting Last Name - " + ex);
+            return "";
+        }
+    }
+
     // ------------------------------ SECTION ------------------------------
+
 
     public int GetPlayerSection()
     {
         return PlayerPrefs.GetInt(PREFKEY_PROFILESECTION, 0);
     }
 
-    public void SetPlayerSection(int index)
+    public void SetPlayerSection(StudentSection s)
     {
-        PlayerPrefs.SetInt(PREFKEY_PROFILESECTION, index);
+        PlayerPrefs.SetInt(PREFKEY_PROFILESECTION, (int)s);
     }
 
     public string GetPlayerSectionString()
     {
-        int index = GetPlayerSection();
+        return Enum.GetName(typeof(StudentSection), GetPlayerSection());
+    }
 
-        switch (index)
-        {
-            case 0:
-                return "Grade 9-1";
-            case 1:
-                return "Grade 9-2";
-            case 2:
-                return "Grade 9-3";
-            default:
-                return "";
-        }
+    public List<string> GetPlayerSections()
+    {
+        return Enum.GetNames(typeof(StudentSection)).ToList();
     }
 
     // ------------------------------ AVATAR ------------------------------

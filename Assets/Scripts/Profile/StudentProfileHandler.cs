@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
 public class StudentProfileHandler : MonoBehaviour
 {
-    // TODO: Set in Prod
-    int minNameLength = 4;
-
     public TMP_InputField txtStudentName;
     public TMP_Dropdown dropdownStudentSection;
 
@@ -16,9 +14,11 @@ public class StudentProfileHandler : MonoBehaviour
     public GameObject nameErrorTooltip;
     public GameObject nameEmptyTooltip;
 
+    Regex nameValidator = new Regex(@"\b\s*(?<fname>[a-zA-Z]+)\s*,\s*(?<lname>[a-zA-Z]+)\b");
+
     public void OnNameValueChanged(string text)
     {
-        if (IsNameValid(text))
+        if (StaticData.IsNameValid(text))
         {
             txtStudentName.textComponent.color = defaultColor;
         }
@@ -37,9 +37,9 @@ public class StudentProfileHandler : MonoBehaviour
         }
         else
         {
-            bool isValid = IsNameValid(text);
+            bool isValid = StaticData.IsNameValid(text);
 
-            if (isValid) PlayerPrefs.SetString("Profile_Name", text);
+            if (isValid) StaticData.Instance.SetPlayerName(text);
 
             nameErrorTooltip.SetActive(!isValid);
             nameEmptyTooltip.SetActive(false);
@@ -48,23 +48,28 @@ public class StudentProfileHandler : MonoBehaviour
 
     public void OnValueChangedSection(int sectionIndex)
     {
-        StaticData.Instance.SetPlayerSection(sectionIndex);
+        StaticData.Instance.SetPlayerSection((StudentSection)sectionIndex);
     }
 
     void Start()
     {
         defaultColor = txtStudentName.textComponent.color;
 
+        LoadStudentSections();
+
         // Load Saved
-        txtStudentName.text = StaticData.Instance.GetPlayerName();
+        txtStudentName.text = StaticData.Instance.GetDBPlayerName();
         dropdownStudentSection.value = StaticData.Instance.GetPlayerSection();
 
         // Check on start
         OnNameEndEdit(txtStudentName.text);
     }
 
-    public bool IsNameValid(string name)
+    public void LoadStudentSections()
     {
-        return name.Length >= minNameLength;
+        dropdownStudentSection.ClearOptions();
+        dropdownStudentSection.AddOptions(StaticData.Instance.GetPlayerSections());
     }
+
+
 }

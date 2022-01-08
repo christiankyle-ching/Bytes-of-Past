@@ -41,7 +41,9 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
     void LoadProfileInfo()
     {
-        txtProfile.text = $"{StaticData.Instance.GetPlayerName()} ({StaticData.Instance.GetPlayerSectionString()})";
+        string playerName = StaticData.Instance.GetPlayerInversedFullName();
+        string playerSection = StaticData.Instance.GetPlayerSectionString();
+        txtProfile.text = $"{playerName} ({playerSection})";
     }
 
     void LoadAssessmentScores()

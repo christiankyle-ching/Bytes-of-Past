@@ -16,7 +16,7 @@ public class ScreenshotShare : MonoBehaviour
         _button = GetComponent<Button>();
         _buttonText = _button.gameObject.GetComponentInChildren<TextMeshProUGUI>();
 
-        string playerName = StaticData.Instance.GetPlayerName();
+        string playerName = StaticData.Instance.GetPlayerFullName();
 
         _button.interactable = playerName != string.Empty;
         _buttonText.text = playerName == string.Empty ? "Cannot Share Without Name" : "Share";

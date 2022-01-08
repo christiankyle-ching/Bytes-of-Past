@@ -12,6 +12,6 @@ public class ProfileLoader : MonoBehaviour
     private void Start()
     {
         avatar.SetPreview(StaticData.Instance.GetPlayerAvatar());
-        playerName.text = StaticData.Instance.GetPlayerName();
+        playerName.text = StaticData.Instance.GetPlayerShortName();
     }
 }

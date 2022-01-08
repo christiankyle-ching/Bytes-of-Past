@@ -4178,12 +4178,12 @@ PrefabInstance:
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 579.48193
+      value: 614.032
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 138.08499
+      value: 265.58112
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
@@ -4223,12 +4223,12 @@ PrefabInstance:
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 206
+      value: 223.3
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 48
+      value: -15.7
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
@@ -4248,8 +4248,9 @@ PrefabInstance:
     - target: {fileID: 3151068007278764257, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_text
-      value: "\u2022 Minimum of 4 characters.\n\u2022 Only letters allowed (A to
-        Z)."
+      value: "\u2022 Minimum of 4 characters.\n\u2022 Only letters (A to Z) and comma
+        (,) allowed .\n\u2022 Please follow the format:\n    \u2022 LAST NAME, FIRST
+        NAME"
       objectReference: {fileID: 0}
     - target: {fileID: 3151068007278764257, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
@@ -7188,7 +7189,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: NAME
+  m_text: LAST NAME, FIRST NAME
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f58414adb907af64db967f0436cd3eb3, type: 2}
   m_sharedMaterial: {fileID: 4086647068407926491, guid: f58414adb907af64db967f0436cd3eb3,
@@ -7216,10 +7217,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.55
-  m_fontSizeBase: 35
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -8304,15 +8305,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.55
-  m_fontSizeBase: 35
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -9106,15 +9107,15 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 5
+  m_ContentType: 4
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 1
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 5
-  m_RegexValue: 
+  m_CharacterValidation: 4
+  m_RegexValue: '[a-zA-Z, ]*'
   m_GlobalPointSize: 24
   m_CharacterLimit: 35
   m_OnEndEdit:
@@ -11021,6 +11022,10 @@ MonoBehaviour:
     - m_Text: Grade 9 - 2
       m_Image: {fileID: 0}
     - m_Text: Grade 9 - 3
+      m_Image: {fileID: 0}
+    - m_Text: Grade 9 - 4
+      m_Image: {fileID: 0}
+    - m_Text: Grade 9 - 5
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
