@@ -119,7 +119,7 @@ public class StaticData : MonoBehaviour
     // ------------------------------ STUDENT NAME ------------------------------
     static int minNameLength = 4;
 
-    public static bool IsNameValid(string strName)
+    public static bool IsPlayerNameValid(string strName)
     {
         bool isLongEnough = strName.Length >= minNameLength;
         bool isRightFormat = nameValidator.IsMatch(strName);

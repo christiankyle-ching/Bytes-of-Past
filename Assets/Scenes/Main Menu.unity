@@ -4249,7 +4249,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: "\u2022 Minimum of 4 characters.\n\u2022 Only letters (A to Z) and comma
-        (,) allowed .\n\u2022 Please follow the format:\n    \u2022 LAST NAME, FIRST
+        (,) allowed.\n\u2022 Please follow the format:\n    \u2022 LAST NAME, FIRST
         NAME"
       objectReference: {fileID: 0}
     - target: {fileID: 3151068007278764257, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
@@ -9107,14 +9107,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 4
+  m_ContentType: 0
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 1
+  m_KeyboardType: 0
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 4
+  m_CharacterValidation: 0
   m_RegexValue: '[a-zA-Z, ]*'
   m_GlobalPointSize: 24
   m_CharacterLimit: 35

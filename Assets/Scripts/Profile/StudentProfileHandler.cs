@@ -18,7 +18,7 @@ public class StudentProfileHandler : MonoBehaviour
 
     public void OnNameValueChanged(string text)
     {
-        if (StaticData.IsNameValid(text))
+        if (StaticData.IsPlayerNameValid(text))
         {
             txtStudentName.textComponent.color = defaultColor;
         }
@@ -37,7 +37,7 @@ public class StudentProfileHandler : MonoBehaviour
         }
         else
         {
-            bool isValid = StaticData.IsNameValid(text);
+            bool isValid = StaticData.IsPlayerNameValid(text);
 
             if (isValid) StaticData.Instance.SetPlayerName(text);
 

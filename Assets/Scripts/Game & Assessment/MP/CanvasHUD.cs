@@ -13,6 +13,7 @@ public class CanvasHUD : MonoBehaviour
 
     public GameObject PanelStart;
     public GameObject PanelStop;
+    public GameObject tooltipNameError;
 
     public TMP_InputField inputFieldAddress;
     public TextMeshProUGUI ipAddress;
@@ -34,6 +35,11 @@ public class CanvasHUD : MonoBehaviour
         btnHost.onClick.AddListener(HostGame);
         btnJoin.onClick.AddListener(JoinGame);
         btnStop.onClick.AddListener(CancelConnect);
+
+        bool isPlayerNameValid = StaticData.IsPlayerNameValid(StaticData.Instance.GetDBPlayerName());
+        btnJoin.interactable = isPlayerNameValid;
+        btnHost.interactable = isPlayerNameValid;
+        tooltipNameError.SetActive(!isPlayerNameValid);
 
         SetupCanvas();
     }
