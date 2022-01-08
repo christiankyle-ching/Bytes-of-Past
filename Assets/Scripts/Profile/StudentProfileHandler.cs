@@ -14,10 +14,22 @@ public class StudentProfileHandler : MonoBehaviour
     public GameObject nameErrorTooltip;
     public GameObject nameEmptyTooltip;
 
-    Regex nameValidator = new Regex(@"\b\s*(?<fname>[a-zA-Z]+)\s*,\s*(?<lname>[a-zA-Z]+)\b");
+    const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+    const string SYMBOLS = ", ";
 
     public void OnNameValueChanged(string text)
     {
+        // Don't allow other characters
+        if (text.Length > 0)
+        {
+            string lastChar = text.Substring(text.Length - 1, 1).ToLower();
+            if (!(ALPHABET.Contains(lastChar) || SYMBOLS.Contains(lastChar)))
+            {
+                txtStudentName.text = text.Substring(0, text.Length - 1);
+                return;
+            }
+        }
+
         if (StaticData.IsPlayerNameValid(text))
         {
             txtStudentName.textComponent.color = defaultColor;

@@ -39,7 +39,7 @@ public class StaticData : MonoBehaviour
     public static StaticData Instance { get { return _instance; } }
 
     public static Regex nameValidator =
-        new Regex(@"\b\s*(?<lname>[a-zA-Z]+)\s*,\s*(?<fname>[a-zA-Z]+)\b");
+        new Regex(@"\b\s*(?<lname>[a-zA-Z\s]+)\s*,\s*(?<fname>[a-zA-Z\s]+)\b");
 
     private void Awake()
     {
@@ -122,7 +122,7 @@ public class StaticData : MonoBehaviour
     public static bool IsPlayerNameValid(string strName)
     {
         bool isLongEnough = strName.Length >= minNameLength;
-        bool isRightFormat = nameValidator.IsMatch(strName);
+        bool isRightFormat = nameValidator.IsMatch(strName) && strName.Split(',').Length == 2;
 
         return isLongEnough && isRightFormat;
     }
@@ -131,7 +131,6 @@ public class StaticData : MonoBehaviour
     {
         return PlayerPrefs.GetString(PREFKEY_PROFILENAME, "");
     }
-
 
     public string GetPlayerFirstName()
     {
@@ -171,8 +170,10 @@ public class StaticData : MonoBehaviour
 
     public string FormatPlayerName(string strName)
     {
-        string fName = StudentName_ExtractFirstName(strName);
-        string lName = StudentName_ExtractLastName(strName);
+        string cleanName = RemoveExtraSpaces(strName);
+
+        string fName = StudentName_ExtractFirstName(cleanName);
+        string lName = StudentName_ExtractLastName(cleanName);
 
         return $"{lName}, {fName}";
     }
@@ -245,7 +246,10 @@ public class StaticData : MonoBehaviour
     {
         PlayerPrefs.SetInt(PREFKEY_PLAYERAVATAR, (int)_av);
     }
-
     #endregion
 
+    public string RemoveExtraSpaces(string str)
+    {
+        return Regex.Replace(str.Trim(), @"\s+", " ");
+    }
 }

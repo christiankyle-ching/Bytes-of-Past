@@ -2739,12 +2739,12 @@ PrefabInstance:
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 606.2074
+      value: 599.6533
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 87.29739
+      value: 126.62207
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
@@ -2784,12 +2784,12 @@ PrefabInstance:
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 809.9
+      value: 790
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 452.2
+      value: 416
       objectReference: {fileID: 0}
     - target: {fileID: 3151068006088540361, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
@@ -2809,7 +2809,7 @@ PrefabInstance:
     - target: {fileID: 3151068007278764257, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
       propertyPath: m_text
-      value: Setup your name first!
+      value: Enter your name first in the Main Menu!
       objectReference: {fileID: 0}
     - target: {fileID: 3151068007278764257, guid: e617938a4a0e08a4295ce9d3bf3cfcf2,
         type: 3}
