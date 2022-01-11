@@ -85,17 +85,20 @@ public class AssessmentManager : MonoBehaviour
         txtPreOrPostAssessment.GetComponent<TextMeshProUGUI>().text =
             isPostAssessment ? "Post-Assessment" : "Pre-Assessment";
 
-        if (!isPostAssessment)
-        {
-            // If Pre-Assessment, load first 15 questions only
-            questions = resourcesQuestions.Take(15).ToList();
-        }
-        else
-        {
-            // Else, shuffle the questions
-            questions =
-                resourcesQuestions.OrderBy(x => Random.Range(0f, 1f)).ToList();
-        }
+        //if (!isPostAssessment)
+        //{
+        //    // If Pre-Assessment, load first 15 questions only
+        //    questions = resourcesQuestions.Take(15).ToList();
+        //}
+        //else
+        //{
+        //    // Else, shuffle the questions
+        //    questions =
+        //        resourcesQuestions.OrderBy(x => Random.Range(0f, 1f)).ToList();
+        //}
+
+        // Shuffle the questions
+        questions = resourcesQuestions.OrderBy(x => Random.Range(0f, 1f)).ToList();
     }
 
     void ShowNextQuestion()
