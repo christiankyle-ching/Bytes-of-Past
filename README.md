@@ -1,5 +1,9 @@
 # Prototype--Bytes-of-Past
 
+## Screenshots
+![main_menu](https://user-images.githubusercontent.com/57316283/149713447-c6c90c37-8a23-4085-82f5-7718f0cfd402.png)
+![multiplayer](https://user-images.githubusercontent.com/57316283/149713459-f044c0ce-fbb0-428d-a228-80de0812866d.png)
+
 ## Development Tools
 
 ### Unity
