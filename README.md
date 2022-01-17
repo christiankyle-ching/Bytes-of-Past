@@ -1,4 +1,5 @@
-# Prototype--Bytes-of-Past
+# Bytes of Past
+An Android multiplayer card game made with Unity and Mirror, similar to the Timeline (tabletop card game), where you should arrange the inventions related to ICT according to the year they are invented.
 
 ## Screenshots
 ![main_menu](https://user-images.githubusercontent.com/57316283/149713447-c6c90c37-8a23-4085-82f5-7718f0cfd402.png)
