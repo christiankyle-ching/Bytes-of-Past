@@ -22,7 +22,7 @@ public class ProfileStatisticsLoader : MonoBehaviour
 
     StaticData staticData;
 
-    int preAssessmentTotalQuestions = 15;
+    int preAssessmentTotalQuestions = 20;
     int postAssessmentTotalQuestions = 20;
 
     void Awake()
